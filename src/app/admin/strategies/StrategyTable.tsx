@@ -210,22 +210,48 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
 
                                 <div className="space-y-4">
                                     <div>
-                                        <h4 className="text-sm font-semibold text-black/60 uppercase tracking-wide">2. Universal Dynamic Payload (Pine Script)</h4>
+                                        <h4 className="text-sm font-semibold text-black/60 uppercase tracking-wide">2. Webhook Payloads</h4>
                                         <p className="text-sm text-black/50 mb-4 mt-1">
-                                            Paste this single JSON block into your TradingView Alert Message. It automatically handles Entries and Exits based on your Pine Script `strategy.order.action` output (e.g. `buy`/`sell` or custom ID strings).
+                                            Choose one of the required JSON payload methods Below to transmit signals to AutoAlpha.
                                         </p>
                                     </div>
 
-                                    <div className="space-y-2">
-                                        <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">Universal Payload</span>
+                                    {/* Method 1: Universal */}
+                                    <div className="space-y-2 p-4 bg-gray-50 rounded-[1.5rem] border border-black/[0.03]">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <span className="text-xs font-bold text-gray-600 bg-gray-200/50 px-2 py-1 rounded">Method A</span>
+                                            <span className="text-sm font-semibold text-[#1D1D1F]">Universal TV Payload</span>
+                                        </div>
+                                        <p className="text-xs text-black/50 mb-2">Paste this exact block into your TradingView Alert Message box. It relies on TV's native `strategy.order.action` system.</p>
                                         <div className="relative group">
                                             <code className="block w-full bg-[#1D1D1F] text-white p-4 rounded-[1rem] text-[13px] overflow-x-auto whitespace-pre font-mono shadow-inner">
                                                 {JSON.stringify({ webhookToken: strategy.webhookToken, symbol: "{{ticker}}", action: "{{strategy.order.action}}", price: "{{strategy.order.price}}", order_id: "{{strategy.order.id}}" }, null, 2)}
                                             </code>
                                         </div>
                                     </div>
+
+                                    {/* Method 2: Pine Script Native */}
+                                    <div className="space-y-2 p-4 bg-blue-50/50 rounded-[1.5rem] border border-blue-100">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <span className="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded">Method B</span>
+                                            <span className="text-sm font-semibold text-blue-900">Advanced Pine Script (Recommended)</span>
+                                        </div>
+                                        <p className="text-xs text-blue-800/60 mb-2">Build the precise JSON string exactly inside your Pine Script code variables (e.g. `msg_long`), and paste only this single variable hook into your TradingView Alert Message box:</p>
+                                        <div className="relative group mb-3">
+                                            <code className="block w-full bg-[#1D1D1F] text-blue-300 p-3 rounded-lg text-[13px] whitespace-pre font-mono shadow-inner font-bold">
+                                                {`{{strategy.order.alert_message}}`}
+                                            </code>
+                                        </div>
+                                        <p className="text-xs text-blue-800/60">Example Pine Script Implementation:</p>
+                                        <div className="relative group">
+                                            <code className="block w-full bg-white border border-blue-100/50 text-blue-900 p-3 rounded-lg text-[11px] overflow-x-auto whitespace-pre font-mono shadow-sm">
+                                                {`msg_long = '{"webhookToken": "${strategy.webhookToken}", "symbol": "' + syminfo.ticker + '", "action": "long", "price": ' + str.tostring(close) + ', "order_id": "Long_Entry_01"}'\n\nstrategy.entry("Long", strategy.long, alert_message = msg_long)`}
+                                            </code>
+                                        </div>
+                                    </div>
+
                                 </div>
-                                <p className="text-xs text-black/40 font-medium pb-2">Note: For a test strategy, you can use the `test-webhook.js` script to manually fire this payload locally instead of using TradingView.</p>
+                                <p className="text-xs text-black/40 font-medium pb-2 text-center">For testing, you can use the `test-webhook.js` Node script to fire signals locally.</p>
                             </div>
 
                         </div>
