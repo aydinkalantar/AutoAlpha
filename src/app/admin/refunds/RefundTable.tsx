@@ -44,7 +44,7 @@ export default function RefundTable({ users }: { users: User[] }) {
     return (
         <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-[2rem] overflow-hidden shadow-2xl shadow-black-[0.03] dark:shadow-white/5">
             <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm text-[#1D1D1F]">
+                <table className="w-full text-left text-sm text-foreground">
                     <thead className="bg-black/5 dark:bg-white/5 text-xs font-bold uppercase text-muted-foreground border-b border-black/5 dark:border-white/10">
                         <tr>
                             <th className="px-8 py-5">User Email</th>
@@ -58,12 +58,12 @@ export default function RefundTable({ users }: { users: User[] }) {
                             const total = user.usdtBalance + user.usdcBalance;
                             return (
                                 <tr key={user.id} className="hover:bg-black/[0.02] transition-colors bg-white">
-                                    <td className="px-8 py-6 font-bold text-[#1D1D1F]">
+                                    <td className="px-8 py-6 font-bold text-foreground">
                                         <div className="flex items-center gap-2">
                                             {user.email}
                                         </div>
                                     </td>
-                                    <td className="px-8 py-6 font-mono text-[#1D1D1F] text-lg font-bold">
+                                    <td className="px-8 py-6 font-mono text-foreground text-lg font-bold">
                                         ${total.toFixed(2)}
                                     </td>
                                     <td className="px-8 py-6">
@@ -76,7 +76,7 @@ export default function RefundTable({ users }: { users: User[] }) {
                                         <button
                                             onClick={() => handleExecuteRefund(user.id)}
                                             disabled={isPending}
-                                            className="text-[#1D1D1F] bg-[#F5F5F7] px-4 py-2 rounded-full hover:bg-black/5 transition-colors flex items-center gap-2 font-bold text-xs uppercase tracking-tight disabled:opacity-50"
+                                            className="text-foreground bg-[#F5F5F7] px-4 py-2 rounded-full hover:bg-black/5 transition-colors flex items-center gap-2 font-bold text-xs uppercase tracking-tight disabled:opacity-50"
                                             title="Execute Gateway Refund"
                                         >
                                             <span>

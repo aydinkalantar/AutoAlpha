@@ -49,19 +49,19 @@ export default function LedgerTable({ ledgers }: { ledgers: LedgerWithUser[] }) 
                 <div className="flex bg-[#F5F5F7] p-1 rounded-xl">
                     <button
                         onClick={() => setFilter('ALL')}
-                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${filter === 'ALL' ? 'bg-white shadow-sm text-[#1D1D1F]' : 'text-black/50 hover:text-black'}`}
+                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${filter === 'ALL' ? 'bg-white shadow-sm text-foreground' : 'text-foreground/50 hover:text-black'}`}
                     >
                         All Entries
                     </button>
                     <button
                         onClick={() => setFilter('FEES')}
-                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${filter === 'FEES' ? 'bg-white shadow-sm text-[#1D1D1F]' : 'text-black/50 hover:text-black'}`}
+                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${filter === 'FEES' ? 'bg-white shadow-sm text-foreground' : 'text-foreground/50 hover:text-black'}`}
                     >
                         Performance Fees
                     </button>
                     <button
                         onClick={() => setFilter('ADJUSTMENTS')}
-                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${filter === 'ADJUSTMENTS' ? 'bg-white shadow-sm text-[#1D1D1F]' : 'text-black/50 hover:text-black'}`}
+                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${filter === 'ADJUSTMENTS' ? 'bg-white shadow-sm text-foreground' : 'text-foreground/50 hover:text-black'}`}
                     >
                         Manual Adjustments
                     </button>
@@ -78,7 +78,7 @@ export default function LedgerTable({ ledgers }: { ledgers: LedgerWithUser[] }) 
 
             <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-[2rem] overflow-hidden shadow-2xl shadow-black-[0.03] dark:shadow-white/5">
                 <div className="overflow-x-auto">
-                    <table className="w-full text-left text-sm text-[#1D1D1F]">
+                    <table className="w-full text-left text-sm text-foreground">
                         <thead className="bg-black/5 dark:bg-white/5 text-xs font-bold uppercase text-muted-foreground border-b border-black/5 dark:border-white/10">
                             <tr>
                                 <th className="px-8 py-5">Date</th>
@@ -99,7 +99,7 @@ export default function LedgerTable({ ledgers }: { ledgers: LedgerWithUser[] }) 
                                         {ledger.user?.email || 'System'}
                                     </td>
                                     <td className="px-8 py-5 font-mono font-bold whitespace-nowrap">
-                                        <span className={ledger.amount > 0 ? 'text-green-600' : 'text-[#1D1D1F]'}>
+                                        <span className={ledger.amount > 0 ? 'text-green-600' : 'text-foreground'}>
                                             {ledger.amount > 0 ? '+' : ''}{ledger.amount.toFixed(4)} {ledger.currency}
                                         </span>
                                     </td>

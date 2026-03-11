@@ -9,7 +9,7 @@ export default function StrategyTable({ strategies }: { strategies: Strategy[] }
     return (
         <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-[2rem] overflow-hidden shadow-2xl shadow-black-[0.03] dark:shadow-white/5">
             <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm text-[#1D1D1F]">
+                <table className="w-full text-left text-sm text-foreground">
                     <thead className="bg-black/5 dark:bg-white/5 text-xs font-bold uppercase text-muted-foreground border-b border-black/5 dark:border-white/10">
                         <tr>
                             <th className="px-8 py-5">Name</th>
@@ -76,7 +76,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
     return (
         <>
             <tr className="hover:bg-black/[0.02] transition-colors group">
-                <td className="px-8 py-5 font-bold text-[#1D1D1F] whitespace-nowrap">
+                <td className="px-8 py-5 font-bold text-foreground whitespace-nowrap">
                     {strategy.name}
                 </td>
                 <td className="px-8 py-5 whitespace-nowrap">
@@ -84,7 +84,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                         <span className="font-semibold text-black/80">
                             {strategy.pair || `${strategy.targetExchange} ${strategy.marketType}`} <span className="text-black/40 text-xs ml-1">({strategy.marketType})</span>
                         </span>
-                        <span className="text-black/50 text-xs mt-0.5 font-medium">
+                        <span className="text-foreground/50 text-xs mt-0.5 font-medium">
                             {strategy.leverage}x <span className="opacity-50">(Max: {strategy.maxLeverage}x)</span>
                         </span>
                     </div>
@@ -116,7 +116,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                     <div className="flex justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
                         <button
                             onClick={() => setShowEditModal(true)}
-                            className="w-10 h-10 bg-[#F5F5F7] hover:bg-black/5 rounded-full flex items-center justify-center text-black/60 hover:text-[#1D1D1F] transition-colors"
+                            className="w-10 h-10 bg-[#F5F5F7] hover:bg-black/5 rounded-full flex items-center justify-center text-black/60 hover:text-foreground transition-colors"
                             title="Edit Settings"
                         >
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -125,7 +125,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                         </button>
                         <button
                             onClick={() => setShowInstructions(true)}
-                            className="w-10 h-10 bg-[#F5F5F7] hover:bg-black/5 rounded-full flex items-center justify-center text-black/60 hover:text-[#1D1D1F] transition-colors"
+                            className="w-10 h-10 bg-[#F5F5F7] hover:bg-black/5 rounded-full flex items-center justify-center text-black/60 hover:text-foreground transition-colors"
                             title="Webhook Instructions"
                         >
                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -135,7 +135,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                         <button
                             onClick={handleWebhook}
                             disabled={isPending}
-                            className="w-10 h-10 bg-[#F5F5F7] hover:bg-black/5 rounded-full flex items-center justify-center text-black/60 hover:text-[#1D1D1F] transition-colors disabled:opacity-50"
+                            className="w-10 h-10 bg-[#F5F5F7] hover:bg-black/5 rounded-full flex items-center justify-center text-black/60 hover:text-foreground transition-colors disabled:opacity-50"
                             title="Regenerate Webhook"
                         >
                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -183,13 +183,13 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                         <div className="p-8 space-y-8">
                             <div className="flex justify-between items-start">
                                 <div>
-                                    <h3 className="text-2xl font-bold text-[#1D1D1F] tracking-tight">Strategy Instructions</h3>
-                                    <p className="text-black/50 mt-1 font-medium">{strategy.name} Connection Guide</p>
+                                    <h3 className="text-2xl font-bold text-foreground tracking-tight">Strategy Instructions</h3>
+                                    <p className="text-foreground/50 mt-1 font-medium">{strategy.name} Connection Guide</p>
                                 </div>
                                 <button
                                     onClick={() => setShowInstructions(false)}
                                     title="Close"
-                                    className="p-2 bg-[#F5F5F7] hover:bg-black/5 rounded-full text-black/50 hover:text-black transition-colors"
+                                    className="p-2 bg-[#F5F5F7] hover:bg-black/5 rounded-full text-foreground/50 hover:text-black transition-colors"
                                 >
                                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
@@ -200,7 +200,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                             <div className="space-y-6">
                                 <div className="space-y-2">
                                     <h4 className="text-sm font-semibold text-black/60 uppercase tracking-wide">1. Webhook URL</h4>
-                                    <p className="text-sm text-black/50 mb-2">Paste this exact URL into your TradingView Alert's Webhook URL field. (Replace <code className="bg-black/5 px-1 rounded">your-domain.com</code> with your actual deployed app domain or local ngrok URL).</p>
+                                    <p className="text-sm text-foreground/50 mb-2">Paste this exact URL into your TradingView Alert's Webhook URL field. (Replace <code className="bg-black/5 px-1 rounded">your-domain.com</code> with your actual deployed app domain or local ngrok URL).</p>
                                     <div className="relative group">
                                         <code className="block w-full bg-[#1D1D1F] text-white p-4 rounded-[1rem] text-sm overflow-x-auto whitespace-pre font-mono shadow-inner">
                                             {typeof window !== 'undefined' ? `${window.location.origin}/api/webhook/tradingview` : 'https://your-domain.com/api/webhook/tradingview'}
@@ -211,7 +211,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                                 <div className="space-y-4">
                                     <div>
                                         <h4 className="text-sm font-semibold text-black/60 uppercase tracking-wide">2. Webhook Payloads</h4>
-                                        <p className="text-sm text-black/50 mb-4 mt-1">
+                                        <p className="text-sm text-foreground/50 mb-4 mt-1">
                                             Choose one of the required JSON payload methods Below to transmit signals to AutoAlpha.
                                         </p>
                                     </div>
@@ -220,9 +220,9 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                                     <div className="space-y-2 p-4 bg-black/5 dark:bg-white/5 rounded-[1.5rem] border border-black/5 dark:border-white/10">
                                         <div className="flex items-center gap-2 mb-1">
                                             <span className="text-xs font-bold text-gray-600 bg-gray-200/50 px-2 py-1 rounded">Method A</span>
-                                            <span className="text-sm font-semibold text-[#1D1D1F]">Universal TV Payload</span>
+                                            <span className="text-sm font-semibold text-foreground">Universal TV Payload</span>
                                         </div>
-                                        <p className="text-xs text-black/50 mb-2">Paste this exact block into your TradingView Alert Message box. It relies on TV's native `strategy.order.action` system.</p>
+                                        <p className="text-xs text-foreground/50 mb-2">Paste this exact block into your TradingView Alert Message box. It relies on TV's native `strategy.order.action` system.</p>
                                         <div className="relative group">
                                             <code className="block w-full bg-[#1D1D1F] text-white p-4 rounded-[1rem] text-[13px] overflow-x-auto whitespace-pre font-mono shadow-inner">
                                                 {JSON.stringify({ webhookToken: strategy.webhookToken, symbol: "{{ticker}}", action: "{{strategy.order.action}}", price: "{{strategy.order.price}}", order_id: "{{strategy.order.id}}" }, null, 2)}
@@ -275,14 +275,14 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                         >
                             <div className="flex justify-between items-start">
                                 <div>
-                                    <h3 className="text-2xl font-bold text-[#1D1D1F] tracking-tight">Edit Strategy</h3>
-                                    <p className="text-black/50 mt-1 font-medium">Safely modify {strategy.name}</p>
+                                    <h3 className="text-2xl font-bold text-foreground tracking-tight">Edit Strategy</h3>
+                                    <p className="text-foreground/50 mt-1 font-medium">Safely modify {strategy.name}</p>
                                 </div>
                                 <button
                                     type="button"
                                     onClick={() => setShowEditModal(false)}
                                     title="Close"
-                                    className="p-2 bg-[#F5F5F7] hover:bg-black/5 rounded-full text-black/50 hover:text-black transition-colors"
+                                    className="p-2 bg-[#F5F5F7] hover:bg-black/5 rounded-full text-foreground/50 hover:text-black transition-colors"
                                 >
                                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
@@ -293,27 +293,27 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                     <label className="text-xs font-bold text-black/60 uppercase tracking-wide">Strategy Name</label>
-                                    <input required name="name" defaultValue={strategy.name} className="w-full bg-[#F5F5F7] text-[#1D1D1F] px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
+                                    <input required name="name" defaultValue={strategy.name} className="w-full bg-[#F5F5F7] text-foreground px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-xs font-bold text-black/60 uppercase tracking-wide">Perf. Fee %</label>
-                                    <input required type="number" step="0.1" name="performanceFee" defaultValue={strategy.performanceFeePercentage} className="w-full bg-[#F5F5F7] text-[#1D1D1F] px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
+                                    <input required type="number" step="0.1" name="performanceFee" defaultValue={strategy.performanceFeePercentage} className="w-full bg-[#F5F5F7] text-foreground px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-xs font-bold text-black/60 uppercase tracking-wide">Default Equity %</label>
-                                    <input required type="number" step="0.1" name="defaultEquity" defaultValue={strategy.defaultEquityPercentage} className="w-full bg-[#F5F5F7] text-[#1D1D1F] px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
+                                    <input required type="number" step="0.1" name="defaultEquity" defaultValue={strategy.defaultEquityPercentage} className="w-full bg-[#F5F5F7] text-foreground px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-xs font-bold text-black/60 uppercase tracking-wide">Expected ROI %</label>
-                                    <input type="number" step="0.1" name="expectedRoi" defaultValue={strategy.expectedRoiPercentage || ''} placeholder="Optional" className="w-full bg-[#F5F5F7] text-[#1D1D1F] px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
+                                    <input type="number" step="0.1" name="expectedRoi" defaultValue={strategy.expectedRoiPercentage || ''} placeholder="Optional" className="w-full bg-[#F5F5F7] text-foreground px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-xs font-bold text-black/60 uppercase tracking-wide">Win Rate %</label>
-                                    <input type="number" step="0.1" name="winRate" defaultValue={strategy.winRatePercentage || ''} placeholder="Optional" className="w-full bg-[#F5F5F7] text-[#1D1D1F] px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
+                                    <input type="number" step="0.1" name="winRate" defaultValue={strategy.winRatePercentage || ''} placeholder="Optional" className="w-full bg-[#F5F5F7] text-foreground px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-xs font-bold text-black/60 uppercase tracking-wide">Max Drawdown %</label>
-                                    <input type="number" step="0.1" name="drawdown" defaultValue={strategy.drawdownPercentage || ''} placeholder="Optional" className="w-full bg-[#F5F5F7] text-[#1D1D1F] px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
+                                    <input type="number" step="0.1" name="drawdown" defaultValue={strategy.drawdownPercentage || ''} placeholder="Optional" className="w-full bg-[#F5F5F7] text-foreground px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
                                 </div>
                             </div>
 

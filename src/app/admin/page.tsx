@@ -101,7 +101,7 @@ export default async function AdminOverviewPage() {
     return (
         <div className="space-y-8 max-w-6xl mx-auto">
             <div className="relative z-10">
-                <h1 className="text-4xl font-black tracking-tight text-foreground">Command Center</h1>
+                <h1 className="text-4xl font-bold text-foreground tracking-tight">Command Center</h1>
                 <p className="text-foreground/60 mt-2 text-lg font-medium">Global operations, revenue, and health overview.</p>
             </div>
 
@@ -111,25 +111,25 @@ export default async function AdminOverviewPage() {
                     title="Total Revenue"
                     value={`$${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                     subtitle="Lifetime API Fees"
-                    icon={<DollarSign className="w-5 h-5 text-black/50" />}
+                    icon={<DollarSign className="w-5 h-5 text-foreground/50" />}
                 />
                 <KPICard
                     title="Platform AUM"
                     value={`$${platformAUM.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                     subtitle="Active Subscriptions"
-                    icon={<Activity className="w-5 h-5 text-black/50" />}
+                    icon={<Activity className="w-5 h-5 text-foreground/50" />}
                 />
                 <KPICard
                     title="Active Users"
                     value={activeUsersCount.toString()}
                     subtitle="Registered Accounts"
-                    icon={<Users className="w-5 h-5 text-black/50" />}
+                    icon={<Users className="w-5 h-5 text-foreground/50" />}
                 />
                 <KPICard
                     title="Queue Health"
                     value={waitingJobsCount.toString()}
                     subtitle="Pending Pending Trade Jobs"
-                    icon={<Box className="w-5 h-5 text-black/50" />}
+                    icon={<Box className="w-5 h-5 text-foreground/50" />}
                     alert={waitingJobsCount > 10}
                 />
             </div>
@@ -160,7 +160,7 @@ function KPICard({ title, value, subtitle, icon, alert }: { title: string, value
                 </div>
             </div>
             <div className="relative z-10">
-                <div className="text-3xl font-black tracking-tight text-foreground mb-1">{value}</div>
+                <div className="text-3xl font-black text-foreground tracking-tight mb-1">{value}</div>
                 <div className="text-xs font-semibold text-foreground/40">{subtitle}</div>
             </div>
         </div>

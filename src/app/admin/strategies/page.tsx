@@ -11,8 +11,8 @@ export default async function AdminStrategiesPage() {
     return (
         <div className="p-8 md:p-12 max-w-7xl mx-auto space-y-12">
             <div className="relative z-10">
-                <h1 className="text-4xl font-black text-foreground tracking-tight">Strategy Management</h1>
-                <p className="text-foreground/50 mt-2 font-medium">Create new trading strategies and manage webhook connections.</p>
+                <h1 className="text-4xl font-bold text-foreground tracking-tight">Strategy Management</h1>
+                <p className="text-foreground/60 mt-2 text-lg">Create new trading strategies and manage webhook connections.</p>
             </div>
 
             <CreateStrategyForm />

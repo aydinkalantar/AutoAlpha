@@ -10,8 +10,8 @@ export default async function AdminSettingsPage() {
     return (
         <div className="p-8 md:p-12 max-w-4xl mx-auto space-y-12">
             <div className="relative z-10">
-                <h1 className="text-4xl font-black text-foreground tracking-tight">Platform Settings</h1>
-                <p className="text-foreground/50 mt-2 font-medium">Configure global payment integrations and environment variables.</p>
+                <h1 className="text-4xl font-bold text-foreground tracking-tight">Platform Settings</h1>
+                <p className="text-foreground/60 mt-2 text-lg">Configure global payment integrations and environment variables.</p>
             </div>
 
             <SettingsForm config={config} />

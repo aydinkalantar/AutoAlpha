@@ -33,7 +33,7 @@ export default function InvestorTable({ users }: InvestorTableProps) {
         <>
             <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-[2rem] overflow-hidden shadow-2xl shadow-black-[0.03] dark:shadow-white/5">
                 <div className="overflow-x-auto">
-                    <table className="w-full text-left text-sm text-[#1D1D1F]">
+                    <table className="w-full text-left text-sm text-foreground">
                         <thead className="bg-black/5 dark:bg-white/5 text-xs font-bold uppercase text-muted-foreground border-b border-black/5 dark:border-white/10">
                             <tr>
                                 <th className="px-8 py-5">User Email</th>
@@ -48,7 +48,7 @@ export default function InvestorTable({ users }: InvestorTableProps) {
                                 const hasValidKeys = user.exchangeKeys && user.exchangeKeys.length > 0 && user.exchangeKeys.some(k => k.isValid);
                                 return (
                                     <tr key={user.id} className="hover:bg-black/[0.02] transition-colors bg-white">
-                                        <td className="px-8 py-6 font-bold text-[#1D1D1F] flex items-center gap-3">
+                                        <td className="px-8 py-6 font-bold text-foreground flex items-center gap-3">
                                             {user.email}
                                             {!(user as any).isActive && user.role !== 'ADMIN' && (
                                                 <span className="inline-flex items-center px-2 py-[2px] rounded text-[10px] font-bold bg-amber-100 text-amber-700 uppercase tracking-widest">
@@ -67,10 +67,10 @@ export default function InvestorTable({ users }: InvestorTableProps) {
                                                 </span>
                                             )}
                                         </td>
-                                        <td className="px-8 py-6 font-mono font-bold text-[#1D1D1F]">
+                                        <td className="px-8 py-6 font-mono font-bold text-foreground">
                                             ${user.usdtBalance.toFixed(2)}
                                         </td>
-                                        <td className="px-8 py-6 font-mono font-bold text-[#1D1D1F]">
+                                        <td className="px-8 py-6 font-mono font-bold text-foreground">
                                             ${user.usdcBalance.toFixed(2)}
                                         </td>
                                         <td className="px-8 py-6 flex items-center justify-end gap-2">
@@ -86,7 +86,7 @@ export default function InvestorTable({ users }: InvestorTableProps) {
                                             )}
                                             <button
                                                 onClick={() => openAdjustModal(user.id, user.email)}
-                                                className="text-[#1D1D1F] bg-[#F5F5F7] px-4 py-2 rounded-full hover:bg-black/5 transition-colors flex items-center gap-2 font-bold text-xs uppercase tracking-tight"
+                                                className="text-foreground bg-[#F5F5F7] px-4 py-2 rounded-full hover:bg-black/5 transition-colors flex items-center gap-2 font-bold text-xs uppercase tracking-tight"
                                                 title="Adjust Balance"
                                             >
                                                 <span>

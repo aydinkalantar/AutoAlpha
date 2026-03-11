@@ -31,10 +31,10 @@ export default function LiveExecutionsClient() {
         <div className="space-y-6">
             <div className="flex justify-between items-end mb-8">
                 <div>
-                    <h1 className="text-4xl font-bold text-[#1D1D1F] tracking-tight">Live Terminal</h1>
-                    <p className="text-black/50 mt-2 font-medium">Real-time TradingView webhook receipts and execution status.</p>
+                    <h1 className="text-4xl font-bold text-foreground tracking-tight">Live Terminal</h1>
+                    <p className="text-foreground/60 mt-2 text-lg">Real-time TradingView webhook receipts and execution status.</p>
                 </div>
-                <div className="flex items-center gap-3 text-sm font-medium text-black/50">
+                <div className="flex items-center gap-3 text-sm font-medium text-foreground/50">
                     <span className="flex items-center gap-2">
                         <span className="relative flex h-2.5 w-2.5">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
@@ -52,7 +52,7 @@ export default function LiveExecutionsClient() {
                 <div className="space-y-4">
                     <div className="flex items-center gap-2 mb-2">
                         <TerminalSquare className="w-5 h-5 text-black/40" />
-                        <h2 className="text-lg font-bold text-[#1D1D1F]">Queue Engine Jobs</h2>
+                        <h2 className="text-lg font-bold text-foreground">Queue Engine Jobs</h2>
                         <span className="ml-2 px-2 py-0.5 rounded-md bg-black/5 text-[10px] font-bold uppercase tracking-widest text-black/40">BullMQ</span>
                     </div>
 
@@ -105,7 +105,7 @@ export default function LiveExecutionsClient() {
                 <div className="space-y-4">
                     <div className="flex items-center gap-2 mb-2">
                         <Activity className="w-5 h-5 text-black/40" />
-                        <h2 className="text-lg font-bold text-[#1D1D1F]">Exchange Dispatches</h2>
+                        <h2 className="text-lg font-bold text-foreground">Exchange Dispatches</h2>
                         <span className="ml-2 px-2 py-0.5 rounded-md bg-black/5 text-[10px] font-bold uppercase tracking-widest text-black/40">ccxt Success</span>
                     </div>
 
@@ -126,8 +126,8 @@ export default function LiveExecutionsClient() {
                                     </div>
                                 )}
                                 <div className="flex justify-between items-center mb-1">
-                                    <span className="font-bold text-[#1D1D1F] text-lg">{pos.symbol} <span className="text-black/40 font-medium text-sm ml-1">{pos.side}</span></span>
-                                    <span className={`text-xs font-bold px-2 py-0.5 rounded uppercase tracking-wider ${pos.isOpen ? 'bg-blue-50 text-blue-600' : 'bg-black/5 text-black/50'}`}>
+                                    <span className="font-bold text-foreground text-lg">{pos.symbol} <span className="text-black/40 font-medium text-sm ml-1">{pos.side}</span></span>
+                                    <span className={`text-xs font-bold px-2 py-0.5 rounded uppercase tracking-wider ${pos.isOpen ? 'bg-blue-50 text-blue-600' : 'bg-black/5 text-foreground/50'}`}>
                                         {pos.isOpen ? 'OPEN' : 'CLOSED'}
                                     </span>
                                 </div>
@@ -136,7 +136,7 @@ export default function LiveExecutionsClient() {
                                 <div className="grid grid-cols-2 gap-4 text-sm mt-4 border-t border-black/5 dark:border-white/10 pt-4">
                                     <div>
                                         <div className="text-black/40 text-xs mb-0.5 uppercase tracking-wider font-bold">Qty / Size</div>
-                                        <div className="font-mono text-[#1D1D1F] font-semibold">{pos.filledAmount}</div>
+                                        <div className="font-mono text-foreground font-semibold">{pos.filledAmount}</div>
                                     </div>
                                     <div className="text-right">
                                         <div className="text-black/40 text-xs mb-0.5 uppercase tracking-wider font-bold">Exchange ID</div>
@@ -144,7 +144,7 @@ export default function LiveExecutionsClient() {
                                     </div>
                                     {(!pos.isOpen && pos.realizedPnl !== undefined) && (
                                         <div className="col-span-2 mt-2 bg-black/5 dark:bg-white/5 p-3 rounded-xl border border-black/5 dark:border-white/10 flex justify-between items-center">
-                                            <div className="text-black/50 font-bold uppercase tracking-widest text-[10px]">Net PnL (After Fees)</div>
+                                            <div className="text-foreground/50 font-bold uppercase tracking-widest text-[10px]">Net PnL (After Fees)</div>
                                             <div className={`font-mono font-bold ${pos.realizedPnl > 0 ? 'text-green-600' : pos.realizedPnl < 0 ? 'text-red-500' : 'text-black/80'}`}>
                                                 {pos.realizedPnl > 0 ? '+' : ''}${pos.realizedPnl.toFixed(4)}
                                             </div>
