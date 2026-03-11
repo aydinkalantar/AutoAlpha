@@ -180,7 +180,7 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
         </section>
 
         {/* 5. How It Works */}
-        <section id="how-it-works" className="w-full py-32 bg-white/20 dark:bg-black/40 backdrop-blur-3xl border-y border-black/5 dark:border-white/5 relative z-10">
+        <section id="how-it-works" className="w-full py-32 bg-white/20 dark:bg-white/5 backdrop-blur-3xl border-y border-black/5 dark:border-white/5 relative z-10">
           <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/5 via-transparent to-purple-500/5" />
           <div className="max-w-7xl mx-auto px-6 relative z-20">
             <h2 className="text-4xl md:text-6xl font-black tracking-tight text-center mb-20">Set It Up Once.<br />Let the Engine Take Over.</h2>
@@ -297,7 +297,7 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
       </main>
 
       {/* Footer */}
-      <footer className="w-full py-16 border-t border-black/5 dark:border-white/10 bg-white/10 dark:bg-black/40 backdrop-blur-2xl mt-20 z-10 relative">
+      <footer className="w-full py-16 border-t border-black/5 dark:border-white/10 bg-white/10 dark:bg-white/5 backdrop-blur-2xl mt-20 z-10 relative">
         <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent pointer-events-none" />
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8 relative z-10">
           <div className="flex items-center gap-3">

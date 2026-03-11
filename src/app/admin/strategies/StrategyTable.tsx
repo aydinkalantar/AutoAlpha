@@ -7,7 +7,7 @@ import { toggleStrategyActive, generateWebhook, deleteStrategy, toggleStrategyPu
 
 export default function StrategyTable({ strategies }: { strategies: Strategy[] }) {
     return (
-        <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-[2rem] overflow-hidden shadow-2xl shadow-black-[0.03] dark:shadow-white/5">
+        <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-[2rem] overflow-hidden shadow-2xl shadow-black-[0.03] dark:shadow-white/5">
             <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm text-[#1D1D1F]">
                     <thead className="bg-black/5 dark:bg-white/5 text-xs font-bold uppercase text-muted-foreground border-b border-black/5 dark:border-white/10">
@@ -179,7 +179,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
             {/* Instructions Modal Overlay (Portaled to body to fix hydration error) */}
             {showInstructions && typeof document !== 'undefined' && createPortal(
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-opacity">
-                    <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl rounded-[2rem] shadow-2xl overflow-hidden w-full max-w-2xl transform transition-all border border-black/5 dark:border-white/10">
+                    <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl rounded-[2rem] shadow-2xl overflow-hidden w-full max-w-2xl transform transition-all border border-black/5 dark:border-white/10">
                         <div className="p-8 space-y-8">
                             <div className="flex justify-between items-start">
                                 <div>
@@ -263,7 +263,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
             {/* Edit Modal Overlay */}
             {showEditModal && typeof document !== 'undefined' && createPortal(
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-opacity overflow-y-auto">
-                    <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl rounded-[2rem] shadow-2xl overflow-hidden w-full max-w-2xl transform transition-all border border-black/5 dark:border-white/10 mt-10 mb-10">
+                    <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl rounded-[2rem] shadow-2xl overflow-hidden w-full max-w-2xl transform transition-all border border-black/5 dark:border-white/10 mt-10 mb-10">
                         <form
                             action={async (formData) => {
                                 startTransition(async () => {

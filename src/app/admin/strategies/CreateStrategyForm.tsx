@@ -25,7 +25,7 @@ export default function CreateStrategyForm() {
     };
 
     return (
-        <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-[2rem] p-8 mb-12 shadow-2xl shadow-black-[0.03] dark:shadow-white/5 relative overflow-hidden">
+        <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-[2rem] p-8 mb-12 shadow-2xl shadow-black-[0.03] dark:shadow-white/5 relative overflow-hidden">
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/20 to-transparent" />
             <h2 className="text-2xl font-bold text-foreground mb-8 tracking-tight relative z-10">Create New Strategy</h2>
 

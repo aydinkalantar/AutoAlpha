@@ -66,7 +66,7 @@ export default async function DashboardPage() {
                     </div>
                 </div>
 
-                <div className="bg-white/50 dark:bg-black/40 backdrop-blur-2xl inline-flex flex-col py-4 px-8 rounded-[1.5rem] border border-black/5 dark:border-white/10 shadow-xl relative overflow-hidden">
+                <div className="bg-white/50 dark:bg-white/5 backdrop-blur-2xl inline-flex flex-col py-4 px-8 rounded-[1.5rem] border border-black/5 dark:border-white/10 shadow-xl relative overflow-hidden">
                     <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/20 to-transparent" />
                     <span className="text-sm font-bold tracking-wider uppercase mb-1 relative z-10 text-cyan-600 dark:text-cyan-400">
                         {isPaperMode ? 'Paper Capital' : 'Available Capital'}

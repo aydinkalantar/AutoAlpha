@@ -90,7 +90,7 @@ export default function AccountingSection({ ledgers, positions, usdtBalance, usd
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
             {/* Smart Gas Tank */}
-            <div className="bg-white/50 dark:bg-black/40 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-6 relative overflow-hidden flex flex-col justify-between">
+            <div className="bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-6 relative overflow-hidden flex flex-col justify-between">
                 <div className={`absolute inset-x-0 top-0 h-1 ${isLowGas ? 'bg-rose-500' : 'bg-emerald-500'}`} />
                 <div>
                     <div className="flex items-center gap-2 mb-2">
@@ -137,7 +137,7 @@ export default function AccountingSection({ ledgers, positions, usdtBalance, usd
             </div>
 
             {/* Tax & Accounting Export */}
-            <div className="bg-white/50 dark:bg-black/40 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-6 relative overflow-hidden flex flex-col justify-between">
+            <div className="bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-6 relative overflow-hidden flex flex-col justify-between">
                 <div>
                     <div className="flex items-center gap-2 mb-2">
                         <Download className="w-5 h-5 text-purple-500" />

@@ -58,7 +58,7 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
     return (
         <>
             {/* Desktop Sidebar */}
-            <div className={cn("hidden md:flex bg-white/50 dark:bg-black/40 backdrop-blur-2xl border-r border-black/5 dark:border-white/10 h-screen fixed top-0 left-0 flex-col z-50 transition-all duration-300", isCollapsed ? "w-20" : "w-64")}>
+            <div className={cn("hidden md:flex bg-white/50 dark:bg-white/5 backdrop-blur-2xl border-r border-black/5 dark:border-white/10 h-screen fixed top-0 left-0 flex-col z-50 transition-all duration-300", isCollapsed ? "w-20" : "w-64")}>
                 <div className="h-20 flex items-center justify-between px-4 border-b border-black/5 dark:border-white/10">
                     <div className={cn("flex items-center gap-3 overflow-hidden transition-all duration-300", isCollapsed ? "w-8 opacity-0 pointer-events-none absolute" : "w-auto opacity-100 relative")}>
                         <div className="w-8 h-8 rounded-lg outline-none flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
@@ -120,7 +120,7 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                             <Wallet className="w-5 h-5 flex-shrink-0" />
                             {!isCollapsed && <span className="whitespace-nowrap">Deposit</span>}
                         </button>
-                        <button onClick={() => setIsWithdrawOpen(true)} className={cn("flex items-center justify-center gap-2 py-3 text-sm font-bold bg-white/50 dark:bg-black/40 backdrop-blur-md text-foreground border border-black/5 dark:border-white/10 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-all w-full", isCollapsed ? "px-0" : "px-3")}>
+                        <button onClick={() => setIsWithdrawOpen(true)} className={cn("flex items-center justify-center gap-2 py-3 text-sm font-bold bg-white/50 dark:bg-white/5 backdrop-blur-md text-foreground border border-black/5 dark:border-white/10 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-all w-full", isCollapsed ? "px-0" : "px-3")}>
                             <ArrowUpRight className="w-5 h-5 flex-shrink-0 opacity-70" />
                             {!isCollapsed && <span className="whitespace-nowrap">Withdraw</span>}
                         </button>

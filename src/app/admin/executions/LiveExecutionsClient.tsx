@@ -109,7 +109,7 @@ export default function LiveExecutionsClient() {
                         <span className="ml-2 px-2 py-0.5 rounded-md bg-black/5 text-[10px] font-bold uppercase tracking-widest text-black/40">ccxt Success</span>
                     </div>
 
-                    <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl rounded-[2rem] border border-black/5 dark:border-white/10 p-6 h-[600px] overflow-y-auto space-y-4 shadow-sm shadow-black-[0.03] dark:shadow-white/5">
+                    <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl rounded-[2rem] border border-black/5 dark:border-white/10 p-6 h-[600px] overflow-y-auto space-y-4 shadow-sm shadow-black-[0.03] dark:shadow-white/5">
                         {data.positions.length === 0 && !loading && (
                             <div className="h-full flex items-center justify-center text-black/30 font-medium text-sm">
                                 No exchange positions recorded recently.

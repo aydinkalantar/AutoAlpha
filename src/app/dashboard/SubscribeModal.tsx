@@ -73,7 +73,7 @@ export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBala
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-lg">
-            <div className="w-full max-w-md bg-white/50 dark:bg-black/40 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-[1.5rem] shadow-2xl relative overflow-hidden flex flex-col">
+            <div className="w-full max-w-md bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-[1.5rem] shadow-2xl relative overflow-hidden flex flex-col">
                 <div className="px-6 py-4 flex justify-between items-center border-b border-black/5 dark:border-white/5">
                     <h2 className="text-xl font-bold text-foreground tracking-tight">Subscribe</h2>
                     <button

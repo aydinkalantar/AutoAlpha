@@ -31,7 +31,7 @@ export default function StrategyMarketplace({ strategies, subscriptions, userId,
                 <h2 className="text-3xl font-bold text-foreground tracking-tight">Active Strategies</h2>
 
                 {/* iOS Style Segmented Control */}
-                <div className="bg-white/10 dark:bg-black/40 backdrop-blur-xl p-1.5 rounded-2xl flex border border-black/5 dark:border-white/10 relative">
+                <div className="bg-white/10 dark:bg-white/5 backdrop-blur-xl p-1.5 rounded-2xl flex border border-black/5 dark:border-white/10 relative">
                     {['SPOT', 'FUTURES'].map((tab) => (
                         <button
                             key={tab}
@@ -53,7 +53,7 @@ export default function StrategyMarketplace({ strategies, subscriptions, userId,
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredStrategies.map(strategy => (
-                    <div key={strategy.id} className="bg-white/50 dark:bg-black/40 backdrop-blur-2xl rounded-[2rem] p-8 flex flex-col transition-all hover:-translate-y-2 hover:shadow-[0_10px_40px_rgba(168,85,247,0.15)] shadow-xl relative overflow-hidden border border-black/5 dark:border-white/10 hover:border-purple-500/50 group">
+                    <div key={strategy.id} className="bg-white/50 dark:bg-white/5 backdrop-blur-2xl rounded-[2rem] p-8 flex flex-col transition-all hover:-translate-y-2 hover:shadow-[0_10px_40px_rgba(168,85,247,0.15)] shadow-xl relative overflow-hidden border border-black/5 dark:border-white/10 hover:border-purple-500/50 group">
                         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/20 to-transparent" />
                         <div className="relative z-10 flex justify-between items-start mb-6">
                             <h3 className="text-2xl font-black tracking-tight text-foreground">{strategy.name}</h3>

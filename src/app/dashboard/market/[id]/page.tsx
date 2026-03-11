@@ -61,14 +61,14 @@ export default async function StrategyTearsheetPage({ params }: { params: { id: 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Main Left Column (Chart & details) */}
                 <div className="col-span-1 lg:col-span-2 space-y-8">
-                    <div className="bg-white/50 dark:bg-black/40 backdrop-blur-2xl rounded-[1.5rem] border border-black/5 dark:border-white/10 p-8 shadow-xl relative overflow-hidden">
+                    <div className="bg-white/50 dark:bg-white/5 backdrop-blur-2xl rounded-[1.5rem] border border-black/5 dark:border-white/10 p-8 shadow-xl relative overflow-hidden">
                         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/20 to-transparent" />
                         <h2 className="text-xl font-bold text-foreground mb-2">Simulated Equity Curve</h2>
                         <p className="text-sm text-foreground/50 mb-6 font-medium">Historical performance based on backtested models. Past performance does not guarantee future results.</p>
                         <EquityCurveChart strategyId={strategy.id} expectedRoiPercentage={strategy.expectedRoiPercentage} />
                     </div>
 
-                    <div className="bg-white/50 dark:bg-black/40 backdrop-blur-2xl rounded-[1.5rem] border border-black/5 dark:border-white/10 p-8 shadow-xl relative overflow-hidden">
+                    <div className="bg-white/50 dark:bg-white/5 backdrop-blur-2xl rounded-[1.5rem] border border-black/5 dark:border-white/10 p-8 shadow-xl relative overflow-hidden">
                         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/20 to-transparent" />
                         <h2 className="text-xl font-bold text-foreground mb-4">Algorithm Thesis & Methodology</h2>
                         <div className="prose prose-sm dark:prose-invert max-w-none text-foreground/80 space-y-4 font-medium leading-relaxed">
@@ -90,7 +90,7 @@ export default async function StrategyTearsheetPage({ params }: { params: { id: 
 
                 {/* Right Column (Metrics & Actions) */}
                 <div className="col-span-1 space-y-8">
-                    <div className="bg-white/50 dark:bg-black/40 backdrop-blur-2xl rounded-[1.5rem] border border-black/5 dark:border-white/10 p-6 shadow-xl relative overflow-hidden space-y-6">
+                    <div className="bg-white/50 dark:bg-white/5 backdrop-blur-2xl rounded-[1.5rem] border border-black/5 dark:border-white/10 p-6 shadow-xl relative overflow-hidden space-y-6">
                         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/20 to-transparent" />
                         <h2 className="text-xl font-bold text-foreground">Risk Profile</h2>
 

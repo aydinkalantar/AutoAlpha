@@ -106,7 +106,7 @@ export default function LiveRadar({ openPositions: initialPositions }: LiveRadar
 
     if (openPositions.length === 0) {
         return (
-            <div className="bg-white/50 dark:bg-[#1C1C1E]/80 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-2xl p-6 text-center py-12">
+            <div className="bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-2xl p-6 text-center py-12">
                 <Activity className="w-12 h-12 text-cyan-500/50 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold tracking-tight mb-2">No Active Positions</h3>
                 <p className="text-sm text-foreground/50">Execution engine is patiently scanning the market for new opportunities...</p>
@@ -115,7 +115,7 @@ export default function LiveRadar({ openPositions: initialPositions }: LiveRadar
     }
 
     return (
-        <div className="bg-white/50 dark:bg-[#1C1C1E]/80 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-2xl overflow-hidden relative">
+        <div className="bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-2xl overflow-hidden relative">
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
             <div className="p-6">
                 <div className="flex flex-col mb-6">

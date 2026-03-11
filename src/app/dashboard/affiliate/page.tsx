@@ -13,7 +13,7 @@ function StatCard({ title, value, icon: Icon, subtext, colorGroup = "default" }:
     const isGreen = colorGroup === "green";
 
     return (
-        <div className={`bg-white/5 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-3xl p-6 relative overflow-hidden group ${isGreen ? 'hover:border-green-500/30' : 'hover:border-cyan-500/30'} transition-colors`}>
+        <div className={`bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-3xl p-6 relative overflow-hidden group ${isGreen ? 'hover:border-green-500/30' : 'hover:border-cyan-500/30'} transition-colors`}>
             <div className={`absolute top-0 right-0 w-32 h-32 blur-[50px] rounded-full group-hover:opacity-100 transition-opacity ${isGreen ? 'bg-gradient-to-br from-green-500/10 to-emerald-600/10' : 'bg-gradient-to-br from-cyan-500/10 to-purple-600/10'}`} />
             <div className="relative z-10">
                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 border border-black/5 dark:border-white/10 ${isGreen ? 'bg-gradient-to-br from-green-400/20 to-emerald-600/20' : 'bg-gradient-to-br from-cyan-400/20 to-purple-600/20'}`}>
@@ -85,7 +85,7 @@ export default async function AffiliateHubPage() {
             </div>
 
             <div className="relative z-10">
-                <div className="bg-white/50 dark:bg-black/40 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-[2rem] p-8 max-w-2xl shadow-xl">
+                <div className="bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-[2rem] p-8 max-w-2xl shadow-xl">
                     <h2 className="text-2xl font-bold text-foreground mb-2">Your Unique Link</h2>
                     <p className="text-foreground/60 mb-6">Share this code with your audience during their registration.</p>
 
@@ -101,7 +101,7 @@ export default async function AffiliateHubPage() {
                                     readOnly
                                     title="Referral Code"
                                     placeholder="Referral Code"
-                                    className="w-full bg-white/50 dark:bg-black/40 border border-black/5 dark:border-white/10 rounded-xl pl-12 pr-4 py-4 text-foreground font-mono text-lg focus:outline-none focus:ring-2 focus:ring-cyan-500/50 shadow-inner"
+                                    className="w-full bg-white/50 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-xl pl-12 pr-4 py-4 text-foreground font-mono text-lg focus:outline-none focus:ring-2 focus:ring-cyan-500/50 shadow-inner"
                                     value={user.referralCode || "Generating..."}
                                 />
                             </div>
@@ -123,7 +123,7 @@ export default async function AffiliateHubPage() {
                 ) : (
                     <div className="space-y-4">
                         {user.ledgers.map((ledger) => (
-                            <div key={ledger.id} className="flex items-center justify-between p-6 bg-white/5 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl">
+                            <div key={ledger.id} className="flex items-center justify-between p-6 bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl">
                                 <div>
                                     <p className="text-foreground font-medium">{ledger.description}</p>
                                     <p className="text-foreground/40 text-sm mt-1">

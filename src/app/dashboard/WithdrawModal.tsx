@@ -61,7 +61,7 @@ export default function WithdrawModal({ userId, balances, isOpen = false, onClos
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={handleClose} />
 
-            <div className="relative w-full max-w-md bg-white/50 dark:bg-black/40 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-[1.5rem] shadow-2xl overflow-hidden flex flex-col">
+            <div className="relative w-full max-w-md bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-[1.5rem] shadow-2xl overflow-hidden flex flex-col">
                 {/* Header */}
                 <div className="px-6 py-4 border-b border-black/5 dark:border-white/10 flex items-center justify-between">
                     <h2 className="text-xl font-bold text-foreground">Withdraw Capital</h2>
@@ -102,7 +102,7 @@ export default function WithdrawModal({ userId, balances, isOpen = false, onClos
                                         onClick={() => setCurrency('USDT')}
                                         className={`py-4 px-4 rounded-[1.2rem] border text-sm font-semibold transition-all shadow-sm ${currency === 'USDT'
                                             ? "bg-gradient-to-br from-cyan-400 to-purple-600 border-transparent text-white"
-                                            : "bg-white/50 dark:bg-black/40 border-black/5 dark:border-white/10 text-foreground/60 hover:bg-black/5 dark:hover:bg-white/5"
+                                            : "bg-white/50 dark:bg-white/5 border-black/5 dark:border-white/10 text-foreground/60 hover:bg-black/5 dark:hover:bg-white/5"
                                             }`}
                                     >
                                         USDT
@@ -112,7 +112,7 @@ export default function WithdrawModal({ userId, balances, isOpen = false, onClos
                                         onClick={() => setCurrency('USDC')}
                                         className={`py-4 px-4 rounded-[1.2rem] border text-sm font-semibold transition-all shadow-sm ${currency === 'USDC'
                                             ? "bg-gradient-to-br from-cyan-400 to-purple-600 border-transparent text-white"
-                                            : "bg-white/50 dark:bg-black/40 border-black/5 dark:border-white/10 text-foreground/60 hover:bg-black/5 dark:hover:bg-white/5"
+                                            : "bg-white/50 dark:bg-white/5 border-black/5 dark:border-white/10 text-foreground/60 hover:bg-black/5 dark:hover:bg-white/5"
                                             }`}
                                     >
                                         USDC
@@ -139,7 +139,7 @@ export default function WithdrawModal({ userId, balances, isOpen = false, onClos
                                         required
                                         min="10"
                                         step="0.01"
-                                        className="w-full bg-white/50 dark:bg-black/40 border border-black/5 dark:border-white/10 rounded-2xl pl-10 pr-6 py-4 text-3xl font-bold text-foreground placeholder:text-foreground/20 focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner"
+                                        className="w-full bg-white/50 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-2xl pl-10 pr-6 py-4 text-3xl font-bold text-foreground placeholder:text-foreground/20 focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner"
                                         placeholder="0.00"
                                     />
                                 </div>
@@ -153,7 +153,7 @@ export default function WithdrawModal({ userId, balances, isOpen = false, onClos
                                     value={address}
                                     onChange={(e) => setAddress(e.target.value)}
                                     required
-                                    className="w-full bg-white/50 dark:bg-black/40 border border-black/5 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-foreground/40 font-mono focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner"
+                                    className="w-full bg-white/50 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-foreground/40 font-mono focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner"
                                     placeholder="0x..."
                                 />
                             </div>
@@ -193,7 +193,7 @@ export default function WithdrawModal({ userId, balances, isOpen = false, onClos
                                         required
                                         min="10"
                                         step="0.01"
-                                        className="w-full bg-white/50 dark:bg-black/40 border border-black/5 dark:border-white/10 rounded-2xl pl-10 pr-6 py-4 text-3xl font-bold text-foreground placeholder:text-foreground/20 focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner"
+                                        className="w-full bg-white/50 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-2xl pl-10 pr-6 py-4 text-3xl font-bold text-foreground placeholder:text-foreground/20 focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner"
                                         placeholder="0.00"
                                     />
                                 </div>

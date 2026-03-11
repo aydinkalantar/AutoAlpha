@@ -18,7 +18,7 @@ export const dynamic = 'force-dynamic';
 
 function DetailCard({ icon: Icon, label, value, isSensitive = false }: { icon: any, label: string, value: string, isSensitive?: boolean }) {
     return (
-        <div className="bg-white/5 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl p-6 relative overflow-hidden group">
+        <div className="bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl p-6 relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="flex items-center gap-4 relative z-10">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-400/20 to-purple-600/20 flex items-center justify-center flex-shrink-0 border border-black/5 dark:border-white/10">
@@ -68,7 +68,7 @@ export default async function AccountHubPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
-                <div className="lg:col-span-3 bg-white/50 dark:bg-black/40 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-[2rem] p-8 shadow-2xl flex flex-col md:flex-row items-center gap-8">
+                <div className="lg:col-span-3 bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-[2rem] p-8 shadow-2xl flex flex-col md:flex-row items-center gap-8">
                     <div className="w-32 h-32 rounded-full bg-gradient-to-br from-cyan-400 to-purple-600 p-1 flex-shrink-0 shadow-xl shadow-purple-500/20">
                         <div className="w-full h-full rounded-full bg-background/80 dark:bg-background/50 backdrop-blur-md flex items-center justify-center overflow-hidden">
                             <User className="w-16 h-16 text-foreground/40" />
@@ -111,7 +111,7 @@ export default async function AccountHubPage() {
             <div className="relative z-10 space-y-6">
                 <h3 className="text-xl font-bold text-foreground">Navigation Hub</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <Link href="/dashboard/settings" className="bg-white/5 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl p-6 flex items-center justify-between group hover:bg-black/5 dark:hover:bg-white/5 transition-all">
+                    <Link href="/dashboard/settings" className="bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl p-6 flex items-center justify-between group hover:bg-black/5 dark:hover:bg-white/5 transition-all">
                         <div className="flex items-center gap-4">
                             <div className="p-3 bg-foreground/5 rounded-xl text-foreground">
                                 <Settings className="w-6 h-6" />
@@ -121,7 +121,7 @@ export default async function AccountHubPage() {
                         <ChevronRight className="w-5 h-5 text-foreground/40 group-hover:text-foreground transition-colors" />
                     </Link>
 
-                    <Link href="/dashboard/affiliate" className="bg-white/5 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl p-6 flex items-center justify-between group hover:bg-black/5 dark:hover:bg-white/5 transition-all">
+                    <Link href="/dashboard/affiliate" className="bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl p-6 flex items-center justify-between group hover:bg-black/5 dark:hover:bg-white/5 transition-all">
                         <div className="flex items-center gap-4">
                             <div className="p-3 bg-purple-500/10 rounded-xl text-purple-500">
                                 <Gift className="w-6 h-6" />
@@ -132,7 +132,7 @@ export default async function AccountHubPage() {
                     </Link>
 
                     {/* Accounting is typically in bottom nav, but good to have here just in case users expect it in the Hub */}
-                    <Link href="/dashboard/accounting" className="bg-white/5 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl p-6 flex items-center justify-between group hover:bg-black/5 dark:hover:bg-white/5 transition-all md:hidden">
+                    <Link href="/dashboard/accounting" className="bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl p-6 flex items-center justify-between group hover:bg-black/5 dark:hover:bg-white/5 transition-all md:hidden">
                         <div className="flex items-center gap-4">
                             <div className="p-3 bg-cyan-500/10 rounded-xl text-cyan-500">
                                 <FileText className="w-6 h-6" />
@@ -146,7 +146,7 @@ export default async function AccountHubPage() {
 
             <div className="relative z-10 space-y-6">
                 <h3 className="text-xl font-bold text-foreground">Security Actions</h3>
-                <div className="bg-white/5 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl p-6">
+                <div className="bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl p-6">
                     <p className="text-foreground/60 mb-6">Security actions such as password resets and 2FA configuration are handled via your NextAuth provider. If you signed in via Google, manage your security there. If using credentials, contact support.</p>
                     <button disabled className="px-6 py-3 rounded-xl bg-foreground/5 text-foreground/50 border border-foreground/10 font-bold cursor-not-allowed">
                         Change Password

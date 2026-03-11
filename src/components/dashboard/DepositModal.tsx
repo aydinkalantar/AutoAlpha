@@ -88,7 +88,7 @@ export default function DepositModal({ isOpen, onClose }: DepositModalProps) {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
 
-            <div className="relative w-full max-w-md max-h-[85vh] bg-white/50 dark:bg-black/40 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-[1.5rem] shadow-2xl overflow-hidden flex flex-col">
+            <div className="relative w-full max-w-md max-h-[85vh] bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-[1.5rem] shadow-2xl overflow-hidden flex flex-col">
                 {/* Header */}
                 <div className="px-6 py-4 border-b border-black/5 dark:border-white/10 flex items-center justify-between">
                     <h2 className="text-xl font-bold text-foreground">Fund Account</h2>
@@ -107,7 +107,7 @@ export default function DepositModal({ isOpen, onClose }: DepositModalProps) {
                                 type="number"
                                 value={amount}
                                 onChange={(e) => setAmount(e.target.value)}
-                                className="w-full bg-white/50 dark:bg-black/40 border border-black/5 dark:border-white/10 rounded-2xl pl-10 pr-24 py-4 text-3xl font-bold text-foreground placeholder:text-foreground/20 focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner"
+                                className="w-full bg-white/50 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-2xl pl-10 pr-24 py-4 text-3xl font-bold text-foreground placeholder:text-foreground/20 focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner"
                                 placeholder="0.00"
                             />
                             {/* Currency Toggle inside input */}
@@ -134,14 +134,14 @@ export default function DepositModal({ isOpen, onClose }: DepositModalProps) {
                         <div className="grid grid-cols-2 gap-3">
                             <button
                                 onClick={() => setMethod('web3')}
-                                className={`flex flex-col items-center justify-center gap-2 p-4 rounded-xl border transition-all ${method === 'web3' ? 'border-transparent bg-gradient-to-br from-cyan-400/20 to-purple-600/20 shadow-inner' : 'border-black/5 dark:border-white/10 bg-white/50 dark:bg-black/40 hover:bg-black/5 dark:hover:bg-white/5'}`}
+                                className={`flex flex-col items-center justify-center gap-2 p-4 rounded-xl border transition-all ${method === 'web3' ? 'border-transparent bg-gradient-to-br from-cyan-400/20 to-purple-600/20 shadow-inner' : 'border-black/5 dark:border-white/10 bg-white/50 dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/5'}`}
                             >
                                 <Wallet className={`w-6 h-6 ${method === 'web3' ? 'text-purple-500 dark:text-purple-400' : 'text-foreground/60'}`} />
                                 <span className={`text-sm font-bold ${method === 'web3' ? 'text-purple-600 dark:text-purple-400' : 'text-foreground/80'}`}>Web3 Wallet</span>
                             </button>
                             <button
                                 onClick={() => setMethod('card')}
-                                className={`flex flex-col items-center justify-center gap-2 p-4 rounded-xl border transition-all ${method === 'card' ? 'border-transparent bg-gradient-to-br from-cyan-400/20 to-purple-600/20 shadow-inner' : 'border-black/5 dark:border-white/10 bg-white/50 dark:bg-black/40 hover:bg-black/5 dark:hover:bg-white/5'}`}
+                                className={`flex flex-col items-center justify-center gap-2 p-4 rounded-xl border transition-all ${method === 'card' ? 'border-transparent bg-gradient-to-br from-cyan-400/20 to-purple-600/20 shadow-inner' : 'border-black/5 dark:border-white/10 bg-white/50 dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/5'}`}
                             >
                                 <CreditCard className={`w-6 h-6 ${method === 'card' ? 'text-purple-500 dark:text-purple-400' : 'text-foreground/60'}`} />
                                 <span className={`text-sm font-bold ${method === 'card' ? 'text-purple-600 dark:text-purple-400' : 'text-foreground/80'}`}>Credit/Debit</span>
@@ -167,7 +167,7 @@ export default function DepositModal({ isOpen, onClose }: DepositModalProps) {
                                     title="Select Blockchain Network"
                                     aria-label="Select Blockchain Network"
                                     onChange={(e) => setNetwork(e.target.value as any)}
-                                    className="w-full bg-white/50 dark:bg-black/40 border border-black/5 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner"
+                                    className="w-full bg-white/50 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner"
                                 >
                                     <option value="ethereum">Ethereum (ERC-20)</option>
                                     <option value="arbitrum">Arbitrum One</option>
@@ -177,7 +177,7 @@ export default function DepositModal({ isOpen, onClose }: DepositModalProps) {
                                 </select>
                             </div>
 
-                            <div className="p-4 bg-white/50 dark:bg-black/40 rounded-xl border border-black/5 dark:border-white/10 space-y-2">
+                            <div className="p-4 bg-white/50 dark:bg-white/5 rounded-xl border border-black/5 dark:border-white/10 space-y-2">
                                 <p className="text-xs text-foreground/60 font-medium uppercase tracking-wider">Deposit Address</p>
                                 <p className="font-mono text-sm break-all text-foreground select-all bg-black/5 dark:bg-white/5 p-3 rounded-lg">{ADMIN_WALLET}</p>
                                 <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-xl flex items-start gap-3">
@@ -197,7 +197,7 @@ export default function DepositModal({ isOpen, onClose }: DepositModalProps) {
                                     type="text"
                                     value={txHash}
                                     onChange={(e) => setTxHash(e.target.value)}
-                                    className="w-full bg-white/50 dark:bg-black/40 border border-black/5 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-foreground/40 font-mono focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner"
+                                    className="w-full bg-white/50 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-foreground/40 font-mono focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner"
                                     placeholder="0x..."
                                 />
                             </div>
@@ -213,7 +213,7 @@ export default function DepositModal({ isOpen, onClose }: DepositModalProps) {
                         </div>
                     ) : (
                         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
-                            <div className="p-4 bg-white/50 dark:bg-black/40 rounded-xl border border-black/5 dark:border-white/10 space-y-3">
+                            <div className="p-4 bg-white/50 dark:bg-white/5 rounded-xl border border-black/5 dark:border-white/10 space-y-3">
                                 <div className="flex justify-between items-center text-sm">
                                     <span className="text-foreground/60">Deposit Amount</span>
                                     <span className="font-medium">${numAmount.toFixed(2)} {currency}</span>

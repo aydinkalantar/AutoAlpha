@@ -55,7 +55,7 @@ export default function LoginPage() {
             </Link>
 
             <div className="w-full max-w-md relative z-10">
-                <div className="bg-white/50 dark:bg-black/40 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-3xl p-8 shadow-2xl">
+                <div className="bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-3xl p-8 shadow-2xl">
                     <div className="text-center mb-8">
                         <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-purple-600 p-0.5 mx-auto mb-6">
                             <div className="w-full h-full rounded-[14px] bg-background flex items-center justify-center">
@@ -83,7 +83,7 @@ export default function LoginPage() {
                                 <input
                                     type="email"
                                     required
-                                    className="w-full bg-white/50 dark:bg-black/40 border border-black/5 dark:border-white/10 rounded-xl pl-10 pr-4 py-3 text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner"
+                                    className="w-full bg-white/50 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-xl pl-10 pr-4 py-3 text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner"
                                     placeholder="investor@example.com"
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -100,7 +100,7 @@ export default function LoginPage() {
                                 <input
                                     type="password"
                                     required
-                                    className="w-full bg-white/50 dark:bg-black/40 border border-black/5 dark:border-white/10 rounded-xl pl-10 pr-4 py-3 text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner"
+                                    className="w-full bg-white/50 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-xl pl-10 pr-4 py-3 text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner"
                                     placeholder="••••••••"
                                     value={formData.password}
                                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}

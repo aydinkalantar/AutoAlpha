@@ -174,7 +174,7 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2">
                         {/* KPI Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                            <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl p-6 shadow-lg">
+                            <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl p-6 shadow-lg">
                                 <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">Total Net P&L</h3>
                                 <div className="text-2xl font-bold flex items-baseline gap-2">
                                     <span className={stats.netPnl >= 0 ? "text-emerald-500" : "text-rose-500"}>
@@ -186,7 +186,7 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                                 </div>
                             </div>
 
-                            <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl p-6 shadow-lg">
+                            <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl p-6 shadow-lg">
                                 <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">Win Rate</h3>
                                 <div className="text-2xl font-bold text-foreground">
                                     {stats.winRate.toFixed(1)}%
@@ -194,14 +194,14 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                                 <p className="text-xs text-muted-foreground mt-1">Over {stats.totalTrades} Trades</p>
                             </div>
 
-                            <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl p-6 shadow-lg">
+                            <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl p-6 shadow-lg">
                                 <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">Max Drawdown</h3>
                                 <div className="text-2xl font-bold text-rose-500">
                                     {maxDrawdown}%
                                 </div>
                             </div>
 
-                            <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl p-6 shadow-lg">
+                            <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl p-6 shadow-lg">
                                 <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">Profit Factor</h3>
                                 <div className="text-2xl font-bold text-foreground">
                                     {stats.profitFactor.toFixed(2)}
@@ -210,7 +210,7 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                         </div>
 
                         {/* Equity Curve */}
-                        <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl shadow-lg overflow-hidden">
+                        <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl shadow-lg overflow-hidden">
                             <div className="p-6 border-b border-black/5 dark:border-white/10">
                                 <h3 className="text-lg font-bold text-foreground">Equity Curve</h3>
                                 <p className="text-sm text-muted-foreground">Mathematical algorithmic growth over time.</p>
@@ -278,7 +278,7 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
 
                 {activeTab === 'trades' && (
                     <div className="animate-in fade-in slide-in-from-bottom-2">
-                        <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl shadow-lg overflow-hidden">
+                        <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl shadow-lg overflow-hidden">
                             <div className="p-6 border-b border-black/5 dark:border-white/10">
                                 <h3 className="text-lg font-bold text-foreground">Trade History</h3>
                                 <p className="text-sm text-muted-foreground">Recent algorithmic executions.</p>

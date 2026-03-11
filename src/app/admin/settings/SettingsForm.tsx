@@ -24,7 +24,7 @@ export default function SettingsForm({ config }: { config: SystemConfig }) {
     return (
         <div className="space-y-12">
             <form onSubmit={handleSubmit} className="space-y-8">
-            <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-[2rem] shadow-2xl p-8 shadow-black-[0.03] dark:shadow-white/5 space-y-8 relative overflow-hidden">
+            <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-[2rem] shadow-2xl p-8 shadow-black-[0.03] dark:shadow-white/5 space-y-8 relative overflow-hidden">
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/20 to-transparent" />
                 <div className="relative z-10">
                     <h2 className="text-xl font-bold text-foreground">Stripe Integration</h2>

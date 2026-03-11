@@ -34,7 +34,7 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
 
     return (
         <>
-            <div className={cn("bg-white/50 dark:bg-black/40 backdrop-blur-2xl border-r border-black/5 dark:border-white/10 h-screen fixed top-0 left-0 flex flex-col z-50 transition-all duration-300", isCollapsed ? "w-20" : "w-64")}>
+            <div className={cn("bg-white/50 dark:bg-white/5 backdrop-blur-2xl border-r border-black/5 dark:border-white/10 h-screen fixed top-0 left-0 flex flex-col z-50 transition-all duration-300", isCollapsed ? "w-20" : "w-64")}>
                 <div className="h-20 flex items-center justify-between px-4 border-b border-black/5 dark:border-white/10">
                     <div className={cn("flex items-center gap-3 overflow-hidden transition-all duration-300", isCollapsed ? "w-8 opacity-0 pointer-events-none absolute" : "w-auto opacity-100 relative")}>
                         <div className="w-8 h-8 rounded-lg outline-none flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">

@@ -82,7 +82,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
 
             <div className="col-span-1 xl:col-span-3 flex overflow-x-auto sm:overflow-visible snap-x snap-mandatory pb-6 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0 sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 hide-scrollbar">
                 {/* Win Rate KPI */}
-                <div className="min-w-[85vw] sm:min-w-0 flex-shrink-0 snap-center bg-white/50 dark:bg-[#1C1C1E]/80 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-6 flex flex-col justify-between relative overflow-hidden group">
+                <div className="min-w-[85vw] sm:min-w-0 flex-shrink-0 snap-center bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-6 flex flex-col justify-between relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     <div className="flex justify-between items-start mb-4">
                         <div className="p-2 bg-emerald-500/10 rounded-xl">
@@ -99,7 +99,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
                 </div>
 
                 {/* Profit Factor KPI */}
-                <div className="min-w-[85vw] sm:min-w-0 flex-shrink-0 snap-center bg-white/50 dark:bg-[#1C1C1E]/80 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-6 flex flex-col justify-between relative overflow-hidden group">
+                <div className="min-w-[85vw] sm:min-w-0 flex-shrink-0 snap-center bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-6 flex flex-col justify-between relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     <div className="flex justify-between items-start mb-4">
                         <div className="p-2 bg-cyan-500/10 rounded-xl">
@@ -116,7 +116,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
                 </div>
 
                 {/* Max Drawdown KPI */}
-                <div className="min-w-[85vw] sm:min-w-0 flex-shrink-0 snap-center bg-white/50 dark:bg-[#1C1C1E]/80 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-6 flex flex-col justify-between relative overflow-hidden group">
+                <div className="min-w-[85vw] sm:min-w-0 flex-shrink-0 snap-center bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-6 flex flex-col justify-between relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-br from-rose-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     <div className="flex justify-between items-start mb-4">
                         <div className="p-2 bg-rose-500/10 rounded-xl">
@@ -135,7 +135,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
             </div>
 
             {/* Allocation Donut */}
-            <div className="col-span-1 xl:col-span-1 bg-white/50 dark:bg-[#1C1C1E]/80 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-6 flex flex-col relative overflow-hidden">
+            <div className="col-span-1 xl:col-span-1 bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-6 flex flex-col relative overflow-hidden">
                 <div className="flex items-center gap-2 mb-4">
                     <PieChartIcon className="w-4 h-4 text-cyan-500" />
                     <h3 className="text-sm font-semibold tracking-tight text-foreground/70 uppercase">Capital Allocation</h3>
