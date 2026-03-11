@@ -5,11 +5,15 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
 
-const tradeQueue = new Queue('trade-execution', {
-    connection: {
+const redisConnection: any = process.env.REDIS_URL 
+    ? new (require('ioredis'))(process.env.REDIS_URL, { maxRetriesPerRequest: null }) 
+    : {
         host: process.env.REDIS_HOST || 'localhost',
         port: parseInt(process.env.REDIS_PORT || '6379'),
-    }
+    };
+
+const tradeQueue = new Queue('trade-execution', {
+    connection: redisConnection
 });
 
 export const dynamic = 'force-dynamic';

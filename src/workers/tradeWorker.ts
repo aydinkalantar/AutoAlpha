@@ -419,7 +419,7 @@ const worker = new Worker('qa-test-queue', async (job: Job) => {
         throw error;
     }
 }, {
-    connection: {
+    connection: process.env.REDIS_URL ? new (require('ioredis'))(process.env.REDIS_URL, { maxRetriesPerRequest: null }) : {
         host: process.env.REDIS_HOST || 'localhost',
         port: parseInt(process.env.REDIS_PORT || '6379'),
     }
