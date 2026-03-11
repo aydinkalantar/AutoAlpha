@@ -5,6 +5,8 @@ RUN npm ci --legacy-peer-deps
 
 FROM node:20-alpine AS builder
 WORKDIR /app
+# Install openssl compatibility for Prisma Client on Alpine
+RUN apk add --no-cache openssl1.1-compat
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
@@ -13,12 +15,17 @@ COPY . .
 RUN npx prisma generate
 
 # Build Next.js & compile workers
-RUN npm run build
+# Set a dummy DATABASE_URL and REDIS_HOST so Next.js static prerendering doesn't crash if it evaluates imports during build
+ARG DATABASE_URL="postgresql://mock:mock@localhost:5432/mock"
+ARG REDIS_HOST="localhost"
+RUN DATABASE_URL=${DATABASE_URL} REDIS_HOST=${REDIS_HOST} npm run build
 RUN npx tsc src/workers/tradeWorker.ts --outDir ./dist/workers --esModuleInterop
 RUN npx tsc src/workers/cronJobs.ts --outDir ./dist/workers --esModuleInterop
 
 FROM node:20-alpine AS runner
 WORKDIR /app
+# Also install OpenSSL in the runner image so the runtime can execute Prisma queries
+RUN apk add --no-cache openssl1.1-compat
 
 ENV NODE_ENV production
 ENV REDIS_HOST redis
