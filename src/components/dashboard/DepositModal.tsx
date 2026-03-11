@@ -11,6 +11,7 @@ interface DepositModalProps {
 export default function DepositModal({ isOpen, onClose }: DepositModalProps) {
     const [currency, setCurrency] = useState<'USDT' | 'USDC'>('USDT');
     const [method, setMethod] = useState<'web3' | 'card'>('web3');
+    const [network, setNetwork] = useState<'ethereum' | 'arbitrum' | 'optimism' | 'base' | 'polygon'>('ethereum');
     const [amount, setAmount] = useState<string>('100');
     const [txHash, setTxHash] = useState<string>('');
     const [isProcessing, setIsProcessing] = useState(false);
@@ -43,7 +44,7 @@ export default function DepositModal({ isOpen, onClose }: DepositModalProps) {
             const res = await fetch('/api/payments/verify-web3', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ txHash, currency, amount: numAmount })
+                body: JSON.stringify({ txHash, currency, amount: numAmount, network })
             });
 
             if (!res.ok) {
@@ -158,6 +159,22 @@ export default function DepositModal({ isOpen, onClose }: DepositModalProps) {
                     {/* Method Specific UI */}
                     {method === 'web3' ? (
                         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
+                            
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-foreground/80">Select Blockchain Network</label>
+                                <select 
+                                    value={network}
+                                    onChange={(e) => setNetwork(e.target.value as any)}
+                                    className="w-full bg-white/50 dark:bg-black/40 border border-black/5 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner"
+                                >
+                                    <option value="ethereum">Ethereum (ERC-20)</option>
+                                    <option value="arbitrum">Arbitrum One</option>
+                                    <option value="optimism">Optimism (OP Mainnet)</option>
+                                    <option value="base">Base</option>
+                                    <option value="polygon">Polygon (MATIC)</option>
+                                </select>
+                            </div>
+
                             <div className="p-4 bg-white/50 dark:bg-black/40 rounded-xl border border-black/5 dark:border-white/10 space-y-2">
                                 <p className="text-xs text-foreground/60 font-medium uppercase tracking-wider">Deposit Address</p>
                                 <p className="font-mono text-sm break-all text-foreground select-all bg-black/5 dark:bg-white/5 p-3 rounded-lg">{ADMIN_WALLET}</p>
@@ -166,7 +183,7 @@ export default function DepositModal({ isOpen, onClose }: DepositModalProps) {
                                     <div className="space-y-1">
                                         <p className="text-sm font-bold text-red-500 uppercase tracking-wide">Critical Warning</p>
                                         <p className="text-xs text-red-500/90 leading-relaxed">
-                                            Send <span className="font-black underline mx-1">exactly {numAmount || '0.00'} {currency}</span> to this address EXCLUSIVELY via the <span className="font-bold">Ethereum (ERC-20)</span> network. Sending via Arbitrum, Optimism, Base, or Polygon WILL result in permanent loss of funds.
+                                            Send <span className="font-black underline mx-1">exactly {numAmount || '0.00'} {currency}</span> to this address EXCLUSIVELY via the <span className="font-bold underline uppercase">{network}</span> network. Sending via the wrong chain WILL result in permanent loss of funds.
                                         </p>
                                     </div>
                                 </div>
