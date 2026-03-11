@@ -164,6 +164,8 @@ export default function DepositModal({ isOpen, onClose }: DepositModalProps) {
                                 <label className="text-sm font-medium text-foreground/80">Select Blockchain Network</label>
                                 <select 
                                     value={network}
+                                    title="Select Blockchain Network"
+                                    aria-label="Select Blockchain Network"
                                     onChange={(e) => setNetwork(e.target.value as any)}
                                     className="w-full bg-white/50 dark:bg-black/40 border border-black/5 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner"
                                 >
