@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition, useState } from 'react';
-import { updateSystemConfig } from './actions';
+import { updateSystemConfig, wipeSandboxData } from './actions';
 import { SystemConfig } from '@prisma/client';
 import { Save, AlertTriangle } from 'lucide-react';
 
@@ -22,7 +22,8 @@ export default function SettingsForm({ config }: { config: SystemConfig }) {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <div className="space-y-12">
+            <form onSubmit={handleSubmit} className="space-y-8">
             <div className="bg-white/50 dark:bg-black/40 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-[2rem] shadow-2xl p-8 shadow-black/[0.03] space-y-8 relative overflow-hidden">
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/20 to-transparent" />
                 <div className="relative z-10">
@@ -139,6 +140,35 @@ export default function SettingsForm({ config }: { config: SystemConfig }) {
                     <span>{isPending ? 'Saving...' : 'Save Configuration'}</span>
                 </button>
             </div>
-        </form>
+            </form>
+
+            <div className="bg-red-50/50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/30 rounded-[2rem] p-8 space-y-6">
+                <div>
+                    <h2 className="text-xl font-bold text-red-600 flex items-center gap-2">
+                        Danger Zone: Sandbox Simulator
+                        <AlertTriangle className="w-5 h-5" />
+                    </h2>
+                    <p className="text-red-600/70 text-sm mt-1 font-medium">
+                        Instantly permanently delete all Sandbox (Testnet) Trades, Positions, and simulated Ledgers. This action cannot be undone, but will not affect Live Capital revenue.
+                    </p>
+                </div>
+                <button
+                    type="button"
+                    onClick={() => {
+                        if (confirm('Are you absolutely sure you want to permanently delete all Sandbox simulation data?')) {
+                            startTransition(async () => {
+                                await wipeSandboxData();
+                                alert('Sandbox data wiped successfully.');
+                            });
+                        }
+                    }}
+                    disabled={isPending}
+                    className="flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all font-bold disabled:opacity-50"
+                >
+                    <AlertTriangle className="w-4 h-4" />
+                    {isPending ? 'Processing...' : 'Wipe All Sandbox Data'}
+                </button>
+            </div>
+        </div>
     );
 }

@@ -3,6 +3,35 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from 'next/cache';
 
+export async function wipeSandboxData() {
+    try {
+        await prisma.$transaction([
+            prisma.position.deleteMany({ where: { isPaper: true } }),
+            prisma.ledger.deleteMany({
+                where: {
+                    OR: [
+                        { description: { contains: 'Simulated', mode: 'insensitive' } },
+                        { description: { contains: 'Paper', mode: 'insensitive' } },
+                        { description: { contains: 'Sandbox', mode: 'insensitive' } }
+                    ]
+                }
+            }),
+            prisma.notification.deleteMany({
+                where: {
+                    OR: [
+                        { message: { contains: 'Simulated', mode: 'insensitive' } },
+                        { message: { contains: 'Paper', mode: 'insensitive' } },
+                        { message: { contains: 'Sandbox', mode: 'insensitive' } },
+                    ]
+                }
+            })
+        ]);
+        revalidatePath('/admin', 'layout');
+        return { success: true };
+    } catch (e: any) {
+        return { success: false, error: e.message };
+    }
+}
 
 
 export async function getSystemConfig() {
