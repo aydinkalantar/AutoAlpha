@@ -1,5 +1,6 @@
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import NotificationBell from '@/components/dashboard/NotificationBell';
+import RealtimeProvider from '@/components/dashboard/RealtimeProvider';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from "@/lib/prisma";
@@ -40,13 +41,15 @@ export default async function DashboardLayout({
                 <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-cyan-600/10 dark:bg-cyan-600/20 blur-[120px] rounded-full mix-blend-screen dark:mix-blend-color-dodge" />
             </div>
 
-            <DashboardSidebar
-                notificationBell={<NotificationBell userId={user?.id} />}
-                userId={user?.id}
-                balances={{ usdtBalance: user?.usdtBalance ?? 0, usdcBalance: user?.usdcBalance ?? 0 }}
-            >
-                {children}
-            </DashboardSidebar>
+            <RealtimeProvider>
+                <DashboardSidebar
+                    notificationBell={<NotificationBell userId={user?.id} />}
+                    userId={user?.id}
+                    balances={{ usdtBalance: user?.usdtBalance ?? 0, usdcBalance: user?.usdcBalance ?? 0 }}
+                >
+                    {children}
+                </DashboardSidebar>
+            </RealtimeProvider>
         </div>
     );
 }

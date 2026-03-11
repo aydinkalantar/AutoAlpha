@@ -13,15 +13,15 @@ export async function GET(req: Request) {
         const userId = (session.user as any).id;
         const { searchParams } = new URL(req.url);
         const isPaperRaw = searchParams.get('isPaper');
-        const isPaperMode = isPaperRaw === 'true';
+        
+        let whereClause: any = { userId, isOpen: true };
+        if (isPaperRaw !== null) {
+            whereClause.isPaper = isPaperRaw === 'true';
+        }
 
-        // Fetch only open positions matching the requested mode
+        // Fetch open positions matching the user constraint
         const openPositions = await prisma.position.findMany({
-            where: {
-                userId,
-                isOpen: true,
-                isPaper: isPaperMode
-            },
+            where: whereClause,
             orderBy: { createdAt: 'desc' }
         });
 
