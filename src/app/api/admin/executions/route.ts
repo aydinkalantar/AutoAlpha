@@ -6,7 +6,7 @@ import { authOptions } from "@/lib/auth";
 
 
 const redisConnection: any = process.env.REDIS_URL 
-    ? new (require('ioredis'))(process.env.REDIS_URL, { maxRetriesPerRequest: null }) 
+    ? new (require('ioredis'))(process.env.REDIS_URL, { maxRetriesPerRequest: null, family: 0 }) 
     : {
         host: process.env.REDIS_HOST || 'localhost',
         port: parseInt(process.env.REDIS_PORT || '6379'),
