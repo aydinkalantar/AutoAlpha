@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import LiveRadar from './LiveRadar';
 import AnalyticsRow from './AnalyticsRow';
+import StrategyPerformance from './StrategyPerformance';
 import DashboardChart from './DashboardChart';
 import { prisma } from "@/lib/prisma";
 import TestnetToggle from './TestnetToggle';
@@ -87,6 +88,13 @@ export default async function DashboardPage() {
                 <div className="col-span-1 lg:col-span-4 mt-2">
                     <LiveRadar openPositions={openPositions as any} />
                 </div>
+
+                {/* Bottom Row: Strategy Performance & Trade History Tabs */}
+                {modeSubscriptions.length > 0 && (
+                    <div className="col-span-1 lg:col-span-4 mt-4">
+                        <StrategyPerformance />
+                    </div>
+                )}
             </div>
         </div>
     );
