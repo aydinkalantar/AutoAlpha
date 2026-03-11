@@ -45,6 +45,7 @@ model User {
   emailVerified       DateTime?
   image               String?
   role                String         @default("USER")
+  isActive            Boolean        @default(false)
   usdtBalance         Float          @default(0)
   usdcBalance         Float          @default(0)
   paperUsdtBalance    Float          @default(10000.0)

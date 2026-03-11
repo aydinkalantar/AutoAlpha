@@ -33,9 +33,10 @@ export const authOptions: AuthOptions = {
                         create: {
                             email: "admin@autoalpha.ai",
                             role: "ADMIN",
+                            isActive: true,
                         }
                     });
-                    return { id: adminUser.id, email: adminUser.email, role: adminUser.role };
+                    return { id: adminUser.id, email: adminUser.email, role: adminUser.role, isActive: adminUser.isActive };
                 }
 
                 const user = await prisma.user.findUnique({
@@ -52,7 +53,7 @@ export const authOptions: AuthOptions = {
                     return null;
                 }
 
-                return { id: user.id, email: user.email, role: user.role };
+                return { id: user.id, email: user.email, role: user.role, isActive: user.isActive };
             }
         })
     ],
@@ -68,6 +69,7 @@ export const authOptions: AuthOptions = {
             if (user) {
                 token.id = user.id;
                 token.role = (user as any).role;
+                token.isActive = (user as any).isActive;
             }
             return token;
         },
@@ -75,6 +77,7 @@ export const authOptions: AuthOptions = {
             if (session?.user) {
                 (session.user as any).id = token.id;
                 (session.user as any).role = token.role;
+                (session.user as any).isActive = token.isActive;
             }
             return session;
         }

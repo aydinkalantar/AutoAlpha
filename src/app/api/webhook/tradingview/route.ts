@@ -7,7 +7,7 @@ import Redis from 'ioredis';
 
 
 const redisConnection: any = process.env.REDIS_URL 
-    ? new Redis(process.env.REDIS_URL, { maxRetriesPerRequest: null }) 
+    ? new Redis(process.env.REDIS_URL, { maxRetriesPerRequest: null, family: 0 }) 
     : {
         host: process.env.REDIS_HOST || 'localhost',
         port: parseInt(process.env.REDIS_PORT || '6379'),
@@ -18,7 +18,7 @@ export const tradeQueue = new Queue('qa-test-queue', {
 });
 
 const redisClient = process.env.REDIS_URL 
-    ? new Redis(process.env.REDIS_URL, { maxRetriesPerRequest: null, lazyConnect: true }) 
+    ? new Redis(process.env.REDIS_URL, { maxRetriesPerRequest: null, lazyConnect: true, family: 0 }) 
     : new Redis({
         host: process.env.REDIS_HOST || 'localhost',
         port: parseInt(process.env.REDIS_PORT || '6379'),

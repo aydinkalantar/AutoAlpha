@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import CreditDebitModal from './CreditDebitModal';
 import { User, ExchangeKey } from '@prisma/client';
+import { updateUserStatus } from './actions';
 
 type UserWithKeys = User & {
     exchangeKeys: ExchangeKey[];
@@ -15,10 +16,17 @@ interface InvestorTableProps {
 export default function InvestorTable({ users }: InvestorTableProps) {
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState<{ id: string; email: string } | null>(null);
+    const [isPending, startTransition] = useTransition();
 
     const openAdjustModal = (id: string, email: string) => {
         setSelectedUser({ id, email });
         setModalOpen(true);
+    };
+
+    const handleToggleStatus = (userId: string, currentStatus: boolean) => {
+        startTransition(async () => {
+            await updateUserStatus(userId, !currentStatus);
+        });
     };
 
     return (
@@ -40,8 +48,13 @@ export default function InvestorTable({ users }: InvestorTableProps) {
                                 const hasValidKeys = user.exchangeKeys && user.exchangeKeys.length > 0 && user.exchangeKeys.some(k => k.isValid);
                                 return (
                                     <tr key={user.id} className="hover:bg-black/[0.02] transition-colors bg-white">
-                                        <td className="px-8 py-6 font-bold text-[#1D1D1F]">
+                                        <td className="px-8 py-6 font-bold text-[#1D1D1F] flex items-center gap-3">
                                             {user.email}
+                                            {!(user as any).isActive && user.role !== 'ADMIN' && (
+                                                <span className="inline-flex items-center px-2 py-[2px] rounded text-[10px] font-bold bg-amber-100 text-amber-700 uppercase tracking-widest">
+                                                    Pending
+                                                </span>
+                                            )}
                                         </td>
                                         <td className="px-8 py-6">
                                             {hasValidKeys ? (
@@ -60,7 +73,17 @@ export default function InvestorTable({ users }: InvestorTableProps) {
                                         <td className="px-8 py-6 font-mono font-bold text-[#1D1D1F]">
                                             ${user.usdcBalance.toFixed(2)}
                                         </td>
-                                        <td className="px-8 py-6 flex items-center justify-end">
+                                        <td className="px-8 py-6 flex items-center justify-end gap-2">
+                                            {!(user as any).isActive && user.role !== 'ADMIN' && (
+                                                <button
+                                                    onClick={() => handleToggleStatus(user.id, (user as any).isActive)}
+                                                    disabled={isPending}
+                                                    className="text-white bg-[#1D1D1F] px-4 py-2 rounded-full hover:bg-black/80 transition-colors flex items-center gap-2 font-bold text-xs uppercase tracking-tight disabled:opacity-50"
+                                                    title="Approve Account"
+                                                >
+                                                    Approve
+                                                </button>
+                                            )}
                                             <button
                                                 onClick={() => openAdjustModal(user.id, user.email)}
                                                 className="text-[#1D1D1F] bg-[#F5F5F7] px-4 py-2 rounded-full hover:bg-black/5 transition-colors flex items-center gap-2 font-bold text-xs uppercase tracking-tight"

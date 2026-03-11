@@ -11,8 +11,22 @@ export async function getUsers() {
             exchangeKeys: true,
             subscriptions: true,
             ledgers: true
+        },
+        orderBy: {
+            createdAt: 'desc'
         }
     });
+}
+
+export async function updateUserStatus(userId: string, isActive: boolean) {
+    if (!userId) throw new Error('Invalid user ID');
+
+    await prisma.user.update({
+        where: { id: userId },
+        data: { isActive }
+    });
+
+    revalidatePath('/admin/investors');
 }
 
 export async function adjustBalance(formData: FormData) {
