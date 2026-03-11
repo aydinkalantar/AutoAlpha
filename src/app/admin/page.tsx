@@ -99,7 +99,7 @@ export default async function AdminOverviewPage() {
     }));
 
     return (
-        <div className="space-y-8 max-w-6xl">
+        <div className="space-y-8 max-w-6xl mx-auto">
             <div className="relative z-10">
                 <h1 className="text-4xl font-black tracking-tight text-foreground">Command Center</h1>
                 <p className="text-foreground/60 mt-2 text-lg font-medium">Global operations, revenue, and health overview.</p>
