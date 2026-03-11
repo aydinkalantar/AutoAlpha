@@ -22,7 +22,7 @@ export interface OHLCVData {
 export interface TradeSignal {
     time: UTCTimestamp | BusinessDay | string; // Must exactly match the type/format you pass to OHLCV
     price: number;
-    action: 'long' | 'short' | 'exit';
+    action: 'long_enter' | 'short_enter' | 'long_exit' | 'short_exit';
 }
 
 interface TradingChartProps {
@@ -108,15 +108,28 @@ export default function TradingChart({
                 let position: SeriesMarker<any>['position'] = 'inBar';
                 let color = '#f6ad55'; // Orange for EXIT
                 let shape: SeriesMarker<any>['shape'] = 'circle';
+                let text = '';
 
-                if (signal.action === 'long') {
+                if (signal.action === 'long_enter') {
                     position = 'belowBar';
                     color = '#26a69a'; // Buy Green
                     shape = 'arrowUp';
-                } else if (signal.action === 'short') {
+                    text = 'LONG ENTRY';
+                } else if (signal.action === 'short_enter') {
                     position = 'aboveBar';
                     color = '#ef5350'; // Sell Red
                     shape = 'arrowDown';
+                    text = 'SHORT ENTRY';
+                } else if (signal.action === 'long_exit') {
+                    position = 'aboveBar';
+                    color = '#f6ad55'; // Orange Exit
+                    shape = 'arrowDown';
+                    text = 'LONG EXIT';
+                } else if (signal.action === 'short_exit') {
+                    position = 'belowBar';
+                    color = '#f6ad55'; // Orange Exit
+                    shape = 'arrowUp';
+                    text = 'SHORT EXIT';
                 }
 
                 return {
@@ -124,7 +137,7 @@ export default function TradingChart({
                     position,
                     color,
                     shape,
-                    text: signal.action.toUpperCase(),
+                    text: text,
                     id: `trade_marker_${index}`,
                 };
             });

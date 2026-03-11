@@ -3,8 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import type { UTCTimestamp } from 'lightweight-charts';
 import { Activity, XCircle, TrendingUp, TrendingDown, RefreshCw } from "lucide-react";
-import TradingChart from '@/components/dashboard/TradingChart';
-
 
 type Position = {
     id: string;
@@ -26,7 +24,6 @@ export default function LiveRadar({ openPositions: initialPositions }: LiveRadar
     const [openPositions, setOpenPositions] = useState<Position[]>(initialPositions);
     const [prices, setPrices] = useState<Record<string, number>>({});
     const [loadingCloseId, setLoadingCloseId] = useState<string | null>(null);
-    const [ohlcvData, setOhlcvData] = useState<any[]>([]);
 
     // Sync state if props change (e.g., from toggling testnet mode)
     useEffect(() => {
@@ -91,42 +88,6 @@ export default function LiveRadar({ openPositions: initialPositions }: LiveRadar
         return () => clearInterval(interval);
     }, [symbols.join(',')]);
 
-    // Fetch Live Chart Candlesticks (klines) for the visual overlay
-    useEffect(() => {
-        if (symbols.length === 0) return;
-
-        const fetchKlines = async () => {
-            try {
-                // Default the entire Radar chart to the active pair the user is primarily trading
-                const targetSymbol = symbols[0];
-                let formattedSymbol = targetSymbol.replace('/', '').toUpperCase();
-                if (formattedSymbol.endsWith('USD') && !formattedSymbol.endsWith('USDT')) {
-                    formattedSymbol += 'T';
-                }
-
-                const res = await fetch(`https://api.binance.us/api/v3/klines?symbol=${formattedSymbol}&interval=15m&limit=100`);
-                if (res.ok) {
-                    const data = await res.json();
-                    const formattedData = data.map((candle: any[]) => ({
-                        time: Math.floor(candle[0] / 1000) as UTCTimestamp,
-                        open: parseFloat(candle[1]),
-                        high: parseFloat(candle[2]),
-                        low: parseFloat(candle[3]),
-                        close: parseFloat(candle[4])
-                    }));
-                    setOhlcvData(formattedData);
-                }
-            } catch (error) {
-                console.error("Error fetching live klines for chart:", error);
-            }
-        };
-
-        fetchKlines();
-        // Update the visual chart candles every 60 seconds
-        const klineInterval = setInterval(fetchKlines, 60000);
-        return () => clearInterval(klineInterval);
-    }, [symbols[0]]);
-
     const handleForceClose = async (positionId: string) => {
         setLoadingCloseId(positionId);
         try {
@@ -169,13 +130,6 @@ export default function LiveRadar({ openPositions: initialPositions }: LiveRadar
                     </h3>
                     <p className="text-sm text-foreground/50 mt-1">The engine is actively managing these open positions.</p>
                 </div>
-
-                {/* Embedded Chart View */}
-                {ohlcvData.length > 0 && (
-                    <div className="mb-6 h-[300px] w-full border border-black/5 dark:border-white/10 rounded-xl overflow-hidden bg-black/5 dark:bg-[#121212]">
-                        <TradingChart ohlcvData={ohlcvData} tradeSignals={[]} />
-                    </div>
-                )}
 
                 <div className="overflow-x-auto pb-4">
                     {/* Desktop Table View */}

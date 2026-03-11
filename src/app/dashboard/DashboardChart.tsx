@@ -20,10 +20,10 @@ export default function DashboardChart() {
         });
 
         const mockSignals = [
-            { time: mockOhlcvData[5].time, price: mockOhlcvData[5].close, action: 'long' as const },
-            { time: mockOhlcvData[14].time, price: mockOhlcvData[14].high, action: 'exit' as const },
-            { time: mockOhlcvData[18].time, price: mockOhlcvData[18].open, action: 'short' as const },
-            { time: mockOhlcvData[26].time, price: mockOhlcvData[26].low, action: 'exit' as const },
+            { time: mockOhlcvData[5].time, price: mockOhlcvData[5].close, action: 'long_enter' as const },
+            { time: mockOhlcvData[14].time, price: mockOhlcvData[14].high, action: 'long_exit' as const },
+            { time: mockOhlcvData[18].time, price: mockOhlcvData[18].open, action: 'short_enter' as const },
+            { time: mockOhlcvData[26].time, price: mockOhlcvData[26].low, action: 'short_exit' as const },
         ];
 
         return { mockOhlcvData, mockSignals };
