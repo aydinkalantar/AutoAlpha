@@ -2,41 +2,25 @@
 
 import React, { useState } from 'react';
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { format } from "date-fns";
 
-// Mock Data
-const MOCK_EQUITY_DATA = [
-    { date: "2023-10-01", equity: 10000 },
-    { date: "2023-10-05", equity: 10250 },
-    { date: "2023-10-10", equity: 10100 },
-    { date: "2023-10-15", equity: 10600 },
-    { date: "2023-10-20", equity: 10450 },
-    { date: "2023-10-25", equity: 11200 },
-    { date: "2023-11-01", equity: 11500 },
-    { date: "2023-11-05", equity: 11300 },
-    { date: "2023-11-10", equity: 11800 },
-    { date: "2023-11-15", equity: 12100 },
-];
-
-const MOCK_TRADES = [
-    { id: "1", date: "2023-11-15 14:30", side: "LONG", entry: 35000, exit: 36000, size: 0.5, pnl: 500 },
-    { id: "2", date: "2023-11-12 09:15", side: "SHORT", entry: 37000, exit: 36500, size: 0.5, pnl: 250 },
-    { id: "3", date: "2023-11-10 16:45", side: "LONG", entry: 36200, exit: 35800, size: 0.5, pnl: -200 },
-    { id: "4", date: "2023-11-08 11:20", side: "LONG", entry: 34500, exit: 35500, size: 0.5, pnl: 500 },
-    { id: "5", date: "2023-11-05 08:00", side: "SHORT", entry: 35200, exit: 35800, size: 0.5, pnl: -300 },
-];
-
-const MOCK_STATS = {
-    netPnl: 2100,
-    netPnlPercent: 21.0,
-    winRate: 65.5,
-    totalTrades: 42,
-    maxDrawdown: -4.5,
-    profitFactor: 1.8,
-    avgWin: 350,
-    avgLoss: -150,
-    bestTrade: 800,
-    worstTrade: -400,
+type PositionRecord = {
+    id: string;
+    symbol: string;
+    side: "LONG" | "SHORT" | "BUY" | "SELL";
+    entryPrice: number;
+    exitPrice: number | null;
+    filledAmount: number;
+    realizedPnl: number | null;
+    createdAt: Date;
+    closedAt: Date | null;
+    leverage: number;
 };
+
+interface StrategyPerformanceProps {
+    closedPositions: PositionRecord[];
+    currentBalance: number;
+}
 
 // Custom Tooltip for Recharts
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -53,8 +37,111 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     return null;
 };
 
-export default function StrategyPerformance() {
+export default function StrategyPerformance({ closedPositions = [], currentBalance = 0 }: StrategyPerformanceProps) {
     const [activeTab, setActiveTab] = useState<'overview' | 'trades'>('overview');
+
+    // 1. Calculate Real-Time Mathematical KPIs based entirely on the Prisma objects
+    const stats = React.useMemo(() => {
+        let netPnl = 0;
+        let totalWins = 0;
+        let totalLosses = 0;
+        let grossProfit = 0;
+        let grossLoss = 0;
+        let bestTrade = 0;
+        let worstTrade = 0;
+
+        closedPositions.forEach((pos) => {
+            const pnl = pos.realizedPnl || 0;
+            netPnl += pnl;
+
+            if (pnl > 0) {
+                totalWins++;
+                grossProfit += pnl;
+                if (pnl > bestTrade) bestTrade = pnl;
+            } else if (pnl < 0) {
+                totalLosses++;
+                grossLoss += Math.abs(pnl);
+                if (pnl < worstTrade) worstTrade = pnl;
+            }
+        });
+
+        const totalTrades = closedPositions.length;
+        const winRate = totalTrades > 0 ? (totalWins / totalTrades) * 100 : 0;
+        const profitFactor = grossLoss > 0 ? grossProfit / grossLoss : (grossProfit > 0 ? grossProfit : 0);
+        
+        const avgWin = totalWins > 0 ? grossProfit / totalWins : 0;
+        const avgLoss = totalLosses > 0 ? grossLoss / totalLosses : 0;
+        
+        // Reverse engineer Starting Principal to calculate true net margin ROI %
+        const startingPrincipal = currentBalance - netPnl;
+        const netPnlPercent = startingPrincipal > 0 ? (netPnl / startingPrincipal) * 100 : 0;
+
+        // Max Drawdown (Calculated precisely during the Equity Curve generation below)
+        return {
+            netPnl,
+            netPnlPercent,
+            winRate,
+            totalTrades,
+            profitFactor,
+            avgWin,
+            avgLoss,
+            bestTrade,
+            worstTrade,
+            startingPrincipal
+        };
+    }, [closedPositions, currentBalance]);
+
+    // 2. Synthesize accurate Recharts Line mapping
+    const equityData = React.useMemo(() => {
+        const data: { date: string; equity: number }[] = [];
+        
+        // Seed the array with the exact calculated starting principle before the engine went active
+        if (closedPositions.length > 0) {
+            data.push({
+                date: "Start",
+                equity: stats.startingPrincipal
+            });
+        } else {
+            // New user, generic baseline flatline
+            return [{ date: "Today", equity: currentBalance }];
+        }
+
+        let rollingEquity = stats.startingPrincipal;
+        
+        // As defined in the parent, closedPositions is already chronologically sorted oldest->newest
+        closedPositions.forEach((pos) => {
+            rollingEquity += (pos.realizedPnl || 0);
+            const closeDate = pos.closedAt ? new Date(pos.closedAt) : new Date(pos.createdAt);
+            
+            data.push({
+                date: format(closeDate, 'MMM dd HH:mm'),
+                equity: Number(rollingEquity.toFixed(2))
+            });
+        });
+
+        return data;
+    }, [closedPositions, stats.startingPrincipal, currentBalance]);
+
+    // Calculate Dynamic Max Drawdown iterating through the equityData timeline
+    const maxDrawdown = React.useMemo(() => {
+        let maxPeak = stats.startingPrincipal;
+        let maxDD = 0;
+
+        equityData.forEach(point => {
+            if (point.equity > maxPeak) {
+                maxPeak = point.equity;
+            }
+            const currentDrawdown = maxPeak > 0 ? ((maxPeak - point.equity) / maxPeak) * 100 : 0;
+            if (currentDrawdown > maxDD) {
+                maxDD = currentDrawdown;
+            }
+        });
+
+        return -Number(maxDD.toFixed(2));
+    }, [equityData, stats.startingPrincipal]);
+
+    // 3. Reverse chronological map for Trade Logs (Latest history at the top)
+    const reversedHistory = [...closedPositions].reverse();
 
     return (
         <div className="w-full space-y-6">
@@ -90,11 +177,11 @@ export default function StrategyPerformance() {
                             <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-border rounded-xl p-6 shadow-lg">
                                 <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">Total Net P&L</h3>
                                 <div className="text-2xl font-bold flex items-baseline gap-2">
-                                    <span className={MOCK_STATS.netPnl >= 0 ? "text-emerald-500" : "text-rose-500"}>
-                                        ${MOCK_STATS.netPnl.toLocaleString()}
+                                    <span className={stats.netPnl >= 0 ? "text-emerald-500" : "text-rose-500"}>
+                                        ${stats.netPnl.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </span>
-                                    <span className={`text-sm ${MOCK_STATS.netPnlPercent >= 0 ? "text-emerald-500/80" : "text-rose-500/80"}`}>
-                                        ({MOCK_STATS.netPnlPercent > 0 ? '+' : ''}{MOCK_STATS.netPnlPercent}%)
+                                    <span className={`text-sm ${stats.netPnlPercent >= 0 ? "text-emerald-500/80" : "text-rose-500/80"}`}>
+                                        ({stats.netPnlPercent > 0 ? '+' : ''}{stats.netPnlPercent.toFixed(2)}%)
                                     </span>
                                 </div>
                             </div>
@@ -102,22 +189,22 @@ export default function StrategyPerformance() {
                             <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-border rounded-xl p-6 shadow-lg">
                                 <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">Win Rate</h3>
                                 <div className="text-2xl font-bold text-foreground">
-                                    {MOCK_STATS.winRate}%
+                                    {stats.winRate.toFixed(1)}%
                                 </div>
-                                <p className="text-xs text-muted-foreground mt-1">Over {MOCK_STATS.totalTrades} Trades</p>
+                                <p className="text-xs text-muted-foreground mt-1">Over {stats.totalTrades} Trades</p>
                             </div>
 
                             <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-border rounded-xl p-6 shadow-lg">
                                 <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">Max Drawdown</h3>
                                 <div className="text-2xl font-bold text-rose-500">
-                                    {MOCK_STATS.maxDrawdown}%
+                                    {maxDrawdown}%
                                 </div>
                             </div>
 
                             <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-border rounded-xl p-6 shadow-lg">
                                 <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">Profit Factor</h3>
                                 <div className="text-2xl font-bold text-foreground">
-                                    {MOCK_STATS.profitFactor}
+                                    {stats.profitFactor.toFixed(2)}
                                 </div>
                             </div>
                         </div>
@@ -126,12 +213,12 @@ export default function StrategyPerformance() {
                         <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-border rounded-xl shadow-lg overflow-hidden">
                             <div className="p-6 border-b border-border">
                                 <h3 className="text-lg font-bold text-foreground">Equity Curve</h3>
-                                <p className="text-sm text-muted-foreground">Account balance growth over time.</p>
+                                <p className="text-sm text-muted-foreground">Mathematical algorithmic growth over time.</p>
                             </div>
                             <div className="p-6">
                                 <div className="h-[300px] w-full">
                                     <ResponsiveContainer width="100%" height="100%">
-                                        <AreaChart data={MOCK_EQUITY_DATA} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                                        <AreaChart data={equityData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                                             <defs>
                                                 <linearGradient id="colorEquity" x1="0" y1="0" x2="0" y2="1">
                                                     <stop offset="5%" stopColor="#2563eb" stopOpacity={0.3} />
@@ -171,19 +258,19 @@ export default function StrategyPerformance() {
                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                             <div className="bg-white/30 dark:bg-black/20 p-4 rounded-xl border border-border flex flex-col items-center justify-center text-center">
                                 <span className="text-xs text-muted-foreground uppercase font-semibold tracking-wider mb-1">Avg Win</span>
-                                <span className="text-lg font-bold text-emerald-500">${MOCK_STATS.avgWin}</span>
+                                <span className="text-lg font-bold text-emerald-500">${stats.avgWin.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                             </div>
                             <div className="bg-white/30 dark:bg-black/20 p-4 rounded-xl border border-border flex flex-col items-center justify-center text-center">
                                 <span className="text-xs text-muted-foreground uppercase font-semibold tracking-wider mb-1">Avg Loss</span>
-                                <span className="text-lg font-bold text-rose-500">${Math.abs(MOCK_STATS.avgLoss)}</span>
+                                <span className="text-lg font-bold text-rose-500">${Math.abs(stats.avgLoss).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                             </div>
                             <div className="bg-white/30 dark:bg-black/20 p-4 rounded-xl border border-border flex flex-col items-center justify-center text-center">
                                 <span className="text-xs text-muted-foreground uppercase font-semibold tracking-wider mb-1">Best Trade</span>
-                                <span className="text-lg font-bold text-emerald-500">${MOCK_STATS.bestTrade}</span>
+                                <span className="text-lg font-bold text-emerald-500">${stats.bestTrade.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                             </div>
                             <div className="bg-white/30 dark:bg-black/20 p-4 rounded-xl border border-border flex flex-col items-center justify-center text-center">
                                 <span className="text-xs text-muted-foreground uppercase font-semibold tracking-wider mb-1">Worst Trade</span>
-                                <span className="text-lg font-bold text-rose-500">${Math.abs(MOCK_STATS.worstTrade)}</span>
+                                <span className="text-lg font-bold text-rose-500">${Math.abs(stats.worstTrade).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                             </div>
                         </div>
                     </div>
@@ -203,6 +290,7 @@ export default function StrategyPerformance() {
                                         <thead className="text-xs text-muted-foreground uppercase border-b border-border">
                                             <tr>
                                                 <th className="py-3 px-4 font-semibold">Date / Time</th>
+                                                <th className="py-3 px-4 font-semibold">Asset</th>
                                                 <th className="py-3 px-4 font-semibold">Side</th>
                                                 <th className="py-3 px-4 font-semibold text-right">Entry Price</th>
                                                 <th className="py-3 px-4 font-semibold text-right">Exit Price</th>
@@ -211,46 +299,57 @@ export default function StrategyPerformance() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {MOCK_TRADES.map((trade) => (
+                                            {reversedHistory.map((trade) => (
                                                 <tr key={trade.id} className="border-b border-border hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-                                                    <td className="py-4 px-4 font-medium text-foreground/80">{trade.date}</td>
+                                                    <td className="py-4 px-4 font-medium text-foreground/80 lowercase">{trade.closedAt ? format(new Date(trade.closedAt), 'MMM dd HH:mm') : ''}</td>
+                                                    <td className="py-4 px-4 font-bold text-foreground uppercase">{trade.symbol}</td>
                                                     <td className="py-4 px-4">
-                                                        <span className={`px-2 py-1 text-xs font-bold rounded-full ${trade.side === 'LONG' ? 'bg-blue-500/10 text-blue-500' : 'bg-rose-500/10 text-rose-500'}`}>
-                                                            {trade.side}
+                                                        <span className={`px-2 py-1 text-[10px] font-bold rounded-full ${trade.side === 'LONG' || trade.side === 'BUY' ? 'bg-blue-500/10 text-blue-500' : 'bg-rose-500/10 text-rose-500'}`}>
+                                                            {trade.side} {trade.leverage}x
                                                         </span>
                                                     </td>
-                                                    <td className="py-4 px-4 text-right tabular-nums text-foreground/80">${trade.entry.toLocaleString()}</td>
-                                                    <td className="py-4 px-4 text-right tabular-nums text-foreground/80">${trade.exit.toLocaleString()}</td>
-                                                    <td className="py-4 px-4 text-right tabular-nums text-foreground/80">{trade.size}</td>
-                                                    <td className={`py-4 px-4 text-right tabular-nums font-bold ${trade.pnl >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
-                                                        {trade.pnl >= 0 ? '+' : ''}${trade.pnl.toLocaleString()}
+                                                    <td className="py-4 px-4 text-right tabular-nums text-foreground/80">${trade.entryPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</td>
+                                                    <td className="py-4 px-4 text-right tabular-nums text-foreground/80">${trade.exitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 }) || '...'}</td>
+                                                    <td className="py-4 px-4 text-right tabular-nums text-foreground/80">{trade.filledAmount}</td>
+                                                    <td className={`py-4 px-4 text-right tabular-nums font-bold ${(trade.realizedPnl || 0) >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                                                        {(trade.realizedPnl || 0) >= 0 ? '+' : ''}${(trade.realizedPnl || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                     </td>
                                                 </tr>
                                             ))}
+                                            {reversedHistory.length === 0 && (
+                                                <tr>
+                                                    <td colSpan={7} className="py-8 text-center text-muted-foreground italic">No historical trades found. Waiting for engine to execute...</td>
+                                                </tr>
+                                            )}
                                         </tbody>
                                     </table>
                                 </div>
 
                                 {/* Mobile Stacked View */}
                                 <div className="md:hidden space-y-4 p-4 md:p-0">
-                                    {MOCK_TRADES.map((trade) => (
-                                        <div key={trade.id} className="flex justify-between items-center p-4 rounded-xl border border-border bg-black/5 dark:bg-white/5">
-                                            <div className="space-y-1 mt-1">
+                                    {reversedHistory.map((trade) => (
+                                        <div key={trade.id} className="flex flex-col gap-2 p-4 rounded-xl border border-border bg-black/5 dark:bg-white/5">
+                                            <div className="flex justify-between items-center">
                                                 <div className="flex items-center gap-2">
-                                                    <span className={`px-2 py-0.5 text-[10px] uppercase font-bold rounded ${trade.side === 'LONG' ? 'bg-blue-500/10 text-blue-500' : 'bg-rose-500/10 text-rose-500'}`}>
-                                                        {trade.side}
+                                                    <span className={`px-2 py-0.5 text-[10px] uppercase font-bold rounded ${trade.side === 'LONG' || trade.side === 'BUY' ? 'bg-blue-500/10 text-blue-500' : 'bg-rose-500/10 text-rose-500'}`}>
+                                                        {trade.symbol} {trade.side}
                                                     </span>
-                                                    <span className="text-xs text-muted-foreground">{trade.date}</span>
+                                                    <span className="text-xs text-muted-foreground">{trade.closedAt ? format(new Date(trade.closedAt), 'MMM dd') : ''}</span>
                                                 </div>
-                                                <div className="text-sm font-semibold text-foreground/80">
-                                                    ${trade.entry.toLocaleString()} → ${trade.exit.toLocaleString()}
+                                                <div className={`text-lg font-bold text-right ${(trade.realizedPnl || 0) >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                                                    {(trade.realizedPnl || 0) >= 0 ? '+' : ''}${(trade.realizedPnl || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                 </div>
                                             </div>
-                                            <div className={`text-lg font-bold text-right ${trade.pnl >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
-                                                {trade.pnl >= 0 ? '+' : ''}${trade.pnl.toLocaleString()}
+                                            <div className="text-xs font-mono text-foreground/80 border-t border-black/5 dark:border-white/5 pt-2">
+                                                Entry: ${trade.entryPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}  ·  Exit: ${trade.exitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 }) || '...'}
                                             </div>
                                         </div>
                                     ))}
+                                    {reversedHistory.length === 0 && (
+                                        <div className="p-8 text-center text-muted-foreground italic border bg-black/5 dark:bg-white/5 rounded-xl border-border">
+                                            No historical algorithmic executions found.
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>

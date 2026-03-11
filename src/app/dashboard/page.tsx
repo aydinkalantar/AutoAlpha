@@ -42,6 +42,11 @@ export default async function DashboardPage() {
     // Filter positions based on mode
     const modePositions = user.positions.filter((p: any) => p.isPaper === isPaperMode);
     const openPositions = modePositions.filter((p: any) => p.isOpen);
+    
+    // Sort closed positions chronologically oldest to newest for the Equity Curve builder
+    const closedPositions = modePositions
+        .filter((p: any) => !p.isOpen)
+        .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
 
     // Select appropriate balance
     const totalBalance = isPaperMode
@@ -92,7 +97,7 @@ export default async function DashboardPage() {
                 {/* Bottom Row: Strategy Performance & Trade History Tabs */}
                 {modeSubscriptions.length > 0 && (
                     <div className="col-span-1 lg:col-span-4 mt-4">
-                        <StrategyPerformance />
+                        <StrategyPerformance closedPositions={closedPositions as any} currentBalance={totalBalance} />
                     </div>
                 )}
             </div>
