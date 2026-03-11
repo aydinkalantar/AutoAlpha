@@ -24,7 +24,8 @@ export default async function MarketPage() {
         include: {
             subscriptions: {
                 include: { strategy: true }
-            }
+            },
+            exchangeKeys: true
         }
     });
 
@@ -36,6 +37,11 @@ export default async function MarketPage() {
     const usdtBalance = isPaperMode ? user.paperUsdtBalance : user.usdtBalance;
     const usdcBalance = isPaperMode ? user.paperUsdcBalance : user.usdcBalance;
     const modeSubscriptions = user.subscriptions.filter((s: any) => s.isPaper === isPaperMode);
+    
+    // Filter purely valid exchange keys matching the active sandbox mode environment
+    const connectedExchanges = user.exchangeKeys
+        .filter(key => key.isTestnet === isPaperMode && key.isValid)
+        .map(key => key.exchange);
 
     return (
         <div className="p-8 md:p-12 max-w-7xl mx-auto space-y-12">
@@ -58,6 +64,7 @@ export default async function MarketPage() {
                 usdtBalance={usdtBalance}
                 usdcBalance={usdcBalance}
                 isPaperMode={isPaperMode}
+                connectedExchanges={connectedExchanges}
             />
         </div>
     );

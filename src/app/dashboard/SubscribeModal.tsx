@@ -10,16 +10,17 @@ interface SubscribeModalProps {
     usdtBalance: number;
     usdcBalance: number;
     isPaperMode: boolean;
+    connectedExchanges: string[];
     isOpen?: boolean;
     onClose?: () => void;
 }
 
-export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBalance, isPaperMode, isOpen = false, onClose = () => { } }: SubscribeModalProps) {
+export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBalance, isPaperMode, connectedExchanges, isOpen = false, onClose = () => { } }: SubscribeModalProps) {
     const [isLocalOpen, setIsLocalOpen] = useState(isOpen);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [capitalStr, setCapitalStr] = useState('');
     const [compounding, setCompounding] = useState(false);
-    const [selectedExchange, setSelectedExchange] = useState('BINANCE');
+    const [selectedExchange, setSelectedExchange] = useState(connectedExchanges.length > 0 ? connectedExchanges[0] : 'BINANCE');
     const [error, setError] = useState('');
 
     const handleOpen = () => setIsLocalOpen(true);
@@ -113,14 +114,15 @@ export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBala
                                 onChange={(e) => setSelectedExchange(e.target.value)}
                                 className="w-full bg-[#F5F5F7] border-2 border-transparent hover:border-black/5 rounded-[1.5rem] px-6 py-5 text-xl font-bold text-[#1D1D1F] focus:outline-none focus:border-black/10 transition-all cursor-pointer"
                             >
-                                <option value="BINANCE">Binance</option>
-                                <option value="BYBIT">Bybit</option>
-                                <option value="OKX">OKX</option>
-                                <option value="MEXC">MEXC</option>
-                                <option value="GATEIO">Gate.io</option>
-                                <option value="COINBASE">Coinbase</option>
-                                <option value="KRAKEN">Kraken</option>
-                                <option value="HYPERLIQUID">Hyperliquid</option>
+                                {connectedExchanges.length > 0 ? (
+                                    connectedExchanges.map(ex => (
+                                        <option key={ex} value={ex}>
+                                            {ex.charAt(0) + ex.slice(1).toLowerCase()}
+                                        </option>
+                                    ))
+                                ) : (
+                                    <option value="" disabled>No API Keys Connected</option>
+                                )}
                             </select>
                         </div>
                     )}

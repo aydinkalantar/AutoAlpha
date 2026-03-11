@@ -11,12 +11,13 @@ interface wrapperProps {
     usdtBalance: number;
     usdcBalance: number;
     isPaperMode: boolean;
+    connectedExchanges: string[];
 }
 
-export default function DashboardClientWrapper({ strategies, subscriptions, userId, usdtBalance, usdcBalance, isPaperMode }: wrapperProps) {
+export default function DashboardClientWrapper({ strategies, subscriptions, userId, usdtBalance, usdcBalance, isPaperMode, connectedExchanges }: wrapperProps) {
     return (
         <div>
-            <StrategyMarketplace strategies={strategies} subscriptions={subscriptions} userId={userId} usdtBalance={usdtBalance} usdcBalance={usdcBalance} isPaperMode={isPaperMode} />
+            <StrategyMarketplace strategies={strategies} subscriptions={subscriptions} userId={userId} usdtBalance={usdtBalance} usdcBalance={usdcBalance} isPaperMode={isPaperMode} connectedExchanges={connectedExchanges} />
         </div>
     );
 }

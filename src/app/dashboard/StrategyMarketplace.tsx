@@ -15,9 +15,10 @@ interface StrategyMarketplaceProps {
     usdtBalance: number;
     usdcBalance: number;
     isPaperMode: boolean;
+    connectedExchanges: string[];
 }
 
-export default function StrategyMarketplace({ strategies, subscriptions, userId, usdtBalance, usdcBalance, isPaperMode }: StrategyMarketplaceProps) {
+export default function StrategyMarketplace({ strategies, subscriptions, userId, usdtBalance, usdcBalance, isPaperMode, connectedExchanges }: StrategyMarketplaceProps) {
     const [activeTab, setActiveTab] = useState<MarketType>('SPOT');
     const [selectedStrategy, setSelectedStrategy] = useState<Strategy | null>(null);
     const [editingAllocation, setEditingAllocation] = useState<{ sub: any; strategy: Strategy } | null>(null);
@@ -140,6 +141,7 @@ export default function StrategyMarketplace({ strategies, subscriptions, userId,
                     usdtBalance={usdtBalance}
                     usdcBalance={usdcBalance}
                     isPaperMode={isPaperMode}
+                    connectedExchanges={connectedExchanges}
                     isOpen={true}
                     onClose={() => setSelectedStrategy(null)}
                 />
