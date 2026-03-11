@@ -142,7 +142,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
                 </div>
                 <div className="flex-1 min-h-[160px] w-full relative">
                     {donutData.length > 0 ? (
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height="100%" minHeight={300}>
                             <PieChart>
                                 <Pie
                                     data={donutData}
