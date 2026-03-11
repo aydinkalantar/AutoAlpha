@@ -3,10 +3,11 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
-import { LayoutDashboard, Key, Users, Activity, FileText, Settings, ChevronLeft, ChevronRight, LogOut } from 'lucide-react';
+import { LayoutDashboard, Key, Users, Activity, FileText, Settings, ChevronLeft, ChevronRight, LogOut, Sun, Moon } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useTheme } from 'next-themes';
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -15,6 +16,12 @@ export function cn(...inputs: ClassValue[]) {
 export default function AdminSidebar({ children }: { children?: React.ReactNode }) {
     const pathname = usePathname();
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const { theme, setTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const navItems = [
         { name: 'Overview', href: '/admin', icon: LayoutDashboard },
@@ -88,6 +95,12 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
                         <LayoutDashboard className="w-5 h-5 flex-shrink-0" />
                         {!isCollapsed && <span className="whitespace-nowrap">Back to App</span>}
                     </Link>
+                    {mounted && (
+                        <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className={cn("flex items-center justify-center gap-2 py-2 text-sm font-bold text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all w-full", isCollapsed ? "px-0" : "px-3")}>
+                            {theme === 'dark' ? <Sun className="w-5 h-5 flex-shrink-0 text-amber-400" /> : <Moon className="w-5 h-5 flex-shrink-0 text-blue-500" />}
+                            {!isCollapsed && <span className="whitespace-nowrap">{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>}
+                        </button>
+                    )}
                     <button onClick={() => signOut({ callbackUrl: '/login' })} className={cn("flex items-center justify-center gap-2 py-2 text-sm font-bold text-red-500/80 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all w-full", isCollapsed ? "px-0" : "px-3")}>
                         <LogOut className="w-5 h-5 flex-shrink-0" />
                         {!isCollapsed && <span className="whitespace-nowrap">Log Out</span>}

@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
-import { LayoutDashboard, Store, FileText, Settings, User, ChevronLeft, ChevronRight, Gift, LogOut, Wallet, HelpCircle, Activity, Volume2, VolumeX } from 'lucide-react';
+import { LayoutDashboard, Store, FileText, Settings, User, ChevronLeft, ChevronRight, Gift, LogOut, Wallet, HelpCircle, Activity, Volume2, VolumeX, Sun, Moon } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { useState, useEffect } from 'react';
@@ -22,6 +23,12 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
     const [isDepositOpen, setIsDepositOpen] = useState(false);
     const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
     const { isSoundEnabled, toggleSound } = useRealtime();
+    const { theme, setTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     // Auto-collapse on small screens
     useEffect(() => {
@@ -138,6 +145,12 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                             {isSoundEnabled ? <Volume2 className="w-5 h-5 flex-shrink-0" /> : <VolumeX className="w-5 h-5 flex-shrink-0 opacity-50" />}
                             {!isCollapsed && <span className="whitespace-nowrap">{isSoundEnabled ? "Sound On" : "Sound Off"}</span>}
                         </button>
+                        {mounted && (
+                            <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className={cn("flex items-center gap-3 py-3 text-sm font-bold text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
+                                {theme === 'dark' ? <Sun className="w-5 h-5 flex-shrink-0 text-amber-400" /> : <Moon className="w-5 h-5 flex-shrink-0 text-blue-500" />}
+                                {!isCollapsed && <span className="whitespace-nowrap">{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>}
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>

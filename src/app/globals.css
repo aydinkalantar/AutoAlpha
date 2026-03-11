@@ -8,10 +8,10 @@
 }
 
 .dark {
-  --background: #000000;
-  --foreground: #F5F5F7;
-  --card-bg: #111111;
-  --border-subtle: rgba(255, 255, 255, 0.1);
+  --background: #0B0D14;
+  --foreground: #F8F9FA;
+  --card-bg: #14161F;
+  --border-subtle: rgba(255, 255, 255, 0.08);
 }
 
 @theme inline {
