@@ -7,10 +7,10 @@ import { toggleStrategyActive, generateWebhook, deleteStrategy, toggleStrategyPu
 
 export default function StrategyTable({ strategies }: { strategies: Strategy[] }) {
     return (
-        <div className="bg-white border border-black/5 rounded-[2rem] overflow-hidden shadow-2xl shadow-black-[0.03]">
+        <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-border rounded-[2rem] overflow-hidden shadow-2xl shadow-black-[0.03] dark:shadow-white/5">
             <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm text-[#1D1D1F]">
-                    <thead className="bg-[#F5F5F7] text-xs font-bold uppercase text-black/40 border-b border-black/5">
+                    <thead className="bg-black/5 dark:bg-white/5 text-xs font-bold uppercase text-muted-foreground border-b border-border">
                         <tr>
                             <th className="px-8 py-5">Name</th>
                             <th className="px-8 py-5">Pair / Lev</th>
@@ -98,7 +98,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                         disabled={isPending}
                         className={`px-3 py-1 font-bold rounded-full transition-colors disabled:opacity-50 border ${strategy.isPublic
                             ? 'bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100'
-                            : 'bg-[#F5F5F7] text-black/40 border-black/5 hover:bg-black/5'
+                            : 'bg-black/5 dark:bg-white/5 text-muted-foreground border-border hover:bg-black/10 dark:hover:bg-white/10'
                             }`}
                     >
                         {strategy.isPublic ? 'Public' : 'Private'}
@@ -179,7 +179,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
             {/* Instructions Modal Overlay (Portaled to body to fix hydration error) */}
             {showInstructions && typeof document !== 'undefined' && createPortal(
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-opacity">
-                    <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden w-full max-w-2xl transform transition-all border border-black/5">
+                    <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl rounded-[2rem] shadow-2xl overflow-hidden w-full max-w-2xl transform transition-all border border-border">
                         <div className="p-8 space-y-8">
                             <div className="flex justify-between items-start">
                                 <div>
@@ -217,7 +217,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                                     </div>
 
                                     {/* Method 1: Universal */}
-                                    <div className="space-y-2 p-4 bg-gray-50 rounded-[1.5rem] border border-black/[0.03]">
+                                    <div className="space-y-2 p-4 bg-black/5 dark:bg-white/5 rounded-[1.5rem] border border-border">
                                         <div className="flex items-center gap-2 mb-1">
                                             <span className="text-xs font-bold text-gray-600 bg-gray-200/50 px-2 py-1 rounded">Method A</span>
                                             <span className="text-sm font-semibold text-[#1D1D1F]">Universal TV Payload</span>
@@ -263,7 +263,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
             {/* Edit Modal Overlay */}
             {showEditModal && typeof document !== 'undefined' && createPortal(
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-opacity overflow-y-auto">
-                    <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden w-full max-w-2xl transform transition-all border border-black/5 mt-10 mb-10">
+                    <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl rounded-[2rem] shadow-2xl overflow-hidden w-full max-w-2xl transform transition-all border border-border mt-10 mb-10">
                         <form
                             action={async (formData) => {
                                 startTransition(async () => {

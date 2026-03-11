@@ -42,10 +42,10 @@ export default function RefundTable({ users }: { users: User[] }) {
     };
 
     return (
-        <div className="bg-white border border-black/5 rounded-[2rem] overflow-hidden shadow-2xl shadow-black-[0.03]">
+        <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-border rounded-[2rem] overflow-hidden shadow-2xl shadow-black-[0.03] dark:shadow-white/5">
             <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm text-[#1D1D1F]">
-                    <thead className="bg-[#F5F5F7] text-xs font-bold uppercase text-black/40 border-b border-black/5">
+                    <thead className="bg-black/5 dark:bg-white/5 text-xs font-bold uppercase text-muted-foreground border-b border-border">
                         <tr>
                             <th className="px-8 py-5">User Email</th>
                             <th className="px-8 py-5">Total Refund Amount</th>

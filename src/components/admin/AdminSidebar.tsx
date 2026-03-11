@@ -27,8 +27,8 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
 
     return (
         <>
-            <div className={cn("bg-white/50 dark:bg-black/40 backdrop-blur-2xl border-r border-black/5 dark:border-white/10 h-screen fixed top-0 left-0 flex flex-col z-50 transition-all duration-300", isCollapsed ? "w-20" : "w-64")}>
-                <div className="h-20 flex items-center justify-between px-4 border-b border-black/5 dark:border-white/10">
+            <div className={cn("bg-white/50 dark:bg-black/40 backdrop-blur-2xl border-r border-border h-screen fixed top-0 left-0 flex flex-col z-50 transition-all duration-300", isCollapsed ? "w-20" : "w-64")}>
+                <div className="h-20 flex items-center justify-between px-4 border-b border-border">
                     <div className={cn("flex items-center gap-3 overflow-hidden transition-all duration-300", isCollapsed ? "w-8 opacity-0 pointer-events-none absolute" : "w-auto opacity-100 relative")}>
                         <div className="w-8 h-8 rounded-lg outline-none flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
                             <div className="w-3 h-3 bg-white rounded-sm transform rotate-45" />
@@ -44,7 +44,7 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
                     )}
 
                     {/* Only show toggle button inside the header when expanded. When collapsed it looks better floating or we can keep it as a button */}
-                    <button onClick={() => setIsCollapsed(!isCollapsed)} className={cn("p-1.5 rounded-lg text-foreground/50 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 transition-all z-10", isCollapsed ? "absolute -right-3 top-6 bg-white dark:bg-black border border-black/10 dark:border-white/10 shadow-sm rounded-full" : "")}>
+                    <button onClick={() => setIsCollapsed(!isCollapsed)} className={cn("p-1.5 rounded-lg text-foreground/50 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 transition-all z-10", isCollapsed ? "absolute -right-3 top-6 bg-background border border-border shadow-sm rounded-full" : "")}>
                         {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-5 h-5" />}
                     </button>
                 </div>
@@ -83,7 +83,7 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
                     })}
                 </nav>
 
-                <div className="p-4 border-t border-black/5 dark:border-white/10 flex flex-col gap-2 overflow-hidden">
+                <div className="p-4 border-t border-border flex flex-col gap-2 overflow-hidden">
                     <Link href="/dashboard" className={cn("flex items-center justify-center gap-2 py-2 text-sm font-bold text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all w-full", isCollapsed ? "px-0" : "px-3")}>
                         <LayoutDashboard className="w-5 h-5 flex-shrink-0" />
                         {!isCollapsed && <span className="whitespace-nowrap">Back to App</span>}
