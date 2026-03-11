@@ -28,8 +28,7 @@ WORKDIR /app
 RUN apk add --no-cache openssl libc6-compat
 
 ENV NODE_ENV production
-ENV REDIS_HOST redis
-ENV REDIS_PORT 6379
+
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
