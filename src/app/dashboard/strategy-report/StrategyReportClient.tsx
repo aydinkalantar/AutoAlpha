@@ -9,7 +9,7 @@ export default function StrategyReportClient({ subscriptions, positions, totalBa
     // Fail-safe view for a zero-subscription user clicking through the sidebar
     if (subscriptions.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center p-12 py-24 text-center bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl">
+            <div className="flex flex-col items-center justify-center p-12 py-24 text-center bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-border rounded-2xl shadow-xl">
                 <Activity className="w-16 h-16 text-foreground/20 mb-4" />
                 <h2 className="text-2xl font-bold text-foreground tracking-tight">No Active Subscriptions</h2>
                 <p className="text-foreground/60 mt-2 max-w-lg mx-auto">You are not currently subscribed to any algorithmic vaults in this environment. Visit the Marketplace to allocate capital to a strategy and generate detailed performance reports.</p>
@@ -37,8 +37,8 @@ export default function StrategyReportClient({ subscriptions, positions, totalBa
                         onClick={() => setSelectedStrategyId(sub.strategyId)}
                         className={`shrink-0 px-6 py-3 rounded-xl font-bold transition-all text-sm border flex items-center gap-2 ${
                             selectedStrategyId === sub.strategyId
-                                ? "bg-foreground text-background border-foreground shadow-lg dark:shadow-white/5"
-                                : "bg-white/50 dark:bg-black/40 backdrop-blur-md text-foreground/70 border-black/5 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5"
+                                ? "bg-foreground text-background shadow-lg dark:shadow-white/5"
+                                : "bg-white/50 dark:bg-black/40 backdrop-blur-md text-foreground/70 border-border hover:bg-black/5 dark:hover:bg-white/5"
                         }`}
                     >
                         {sub.strategy?.name || "Algorithm Engine"}
@@ -46,7 +46,7 @@ export default function StrategyReportClient({ subscriptions, positions, totalBa
                 ))}
             </div>
 
-            <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-black/5 dark:border-white/10 rounded-2xl p-6 relative overflow-hidden">
+            <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-border rounded-2xl p-6 relative overflow-hidden">
                 <div className="relative z-10">
                     <h2 className="text-2xl font-black text-foreground tracking-tight">{activeSubscription?.strategy?.name || "Strategy"} Report</h2>
                     <p className="text-foreground/60 text-sm mt-1 max-w-2xl">{activeSubscription?.strategy?.description || "Performance metrics, drawdown mappings, and historical trade logs strictly isolated to this algorithmic vault."}</p>
