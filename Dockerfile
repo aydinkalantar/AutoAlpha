@@ -19,8 +19,8 @@ RUN npx prisma generate
 ARG DATABASE_URL="postgresql://mock:mock@localhost:5432/mock"
 ARG REDIS_HOST="localhost"
 RUN DATABASE_URL=${DATABASE_URL} REDIS_HOST=${REDIS_HOST} npm run build
-RUN npx tsc src/workers/tradeWorker.ts --outDir ./dist/workers --esModuleInterop
-RUN npx tsc src/workers/cronJobs.ts --outDir ./dist/workers --esModuleInterop
+RUN npx --yes esbuild src/workers/tradeWorker.ts --bundle --platform=node --target=node20 --outdir=dist/workers --packages=external
+RUN npx --yes esbuild src/workers/cronJobs.ts --bundle --platform=node --target=node20 --outdir=dist/workers --packages=external
 
 FROM node:20-alpine AS runner
 WORKDIR /app
