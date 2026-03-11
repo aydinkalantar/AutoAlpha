@@ -109,14 +109,14 @@ export default function LiveExecutionsClient() {
                         <span className="ml-2 px-2 py-0.5 rounded-md bg-black/5 text-[10px] font-bold uppercase tracking-widest text-black/40">ccxt Success</span>
                     </div>
 
-                    <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl rounded-[2rem] border border-border p-6 h-[600px] overflow-y-auto space-y-4 shadow-sm shadow-black-[0.03] dark:shadow-white/5">
+                    <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl rounded-[2rem] border border-black/5 dark:border-white/10 p-6 h-[600px] overflow-y-auto space-y-4 shadow-sm shadow-black-[0.03] dark:shadow-white/5">
                         {data.positions.length === 0 && !loading && (
                             <div className="h-full flex items-center justify-center text-black/30 font-medium text-sm">
                                 No exchange positions recorded recently.
                             </div>
                         )}
                         {data.positions.map((pos) => (
-                            <div key={pos.id} className="border border-border rounded-xl p-5 hover:bg-black/5 dark:hover:bg-white/5 transition-colors relative overflow-hidden">
+                            <div key={pos.id} className="border border-black/5 dark:border-white/10 rounded-xl p-5 hover:bg-black/5 dark:hover:bg-white/5 transition-colors relative overflow-hidden">
                                 {pos.isOpen && (
                                     <div className="absolute top-0 right-0 p-1">
                                         <span className="flex h-2 w-2">
@@ -133,7 +133,7 @@ export default function LiveExecutionsClient() {
                                 </div>
                                 <div className="text-sm font-medium text-black/60 mb-4">{pos.strategy?.name} &rarr; {pos.user?.email}</div>
 
-                                <div className="grid grid-cols-2 gap-4 text-sm mt-4 border-t border-border pt-4">
+                                <div className="grid grid-cols-2 gap-4 text-sm mt-4 border-t border-black/5 dark:border-white/10 pt-4">
                                     <div>
                                         <div className="text-black/40 text-xs mb-0.5 uppercase tracking-wider font-bold">Qty / Size</div>
                                         <div className="font-mono text-[#1D1D1F] font-semibold">{pos.filledAmount}</div>
@@ -143,7 +143,7 @@ export default function LiveExecutionsClient() {
                                         <div className="font-mono text-black/60 truncate" title={pos.exchangeOrderId}>{pos.exchangeOrderId}</div>
                                     </div>
                                     {(!pos.isOpen && pos.realizedPnl !== undefined) && (
-                                        <div className="col-span-2 mt-2 bg-black/5 dark:bg-white/5 p-3 rounded-xl border border-border flex justify-between items-center">
+                                        <div className="col-span-2 mt-2 bg-black/5 dark:bg-white/5 p-3 rounded-xl border border-black/5 dark:border-white/10 flex justify-between items-center">
                                             <div className="text-black/50 font-bold uppercase tracking-widest text-[10px]">Net PnL (After Fees)</div>
                                             <div className={`font-mono font-bold ${pos.realizedPnl > 0 ? 'text-green-600' : pos.realizedPnl < 0 ? 'text-red-500' : 'text-black/80'}`}>
                                                 {pos.realizedPnl > 0 ? '+' : ''}${pos.realizedPnl.toFixed(4)}

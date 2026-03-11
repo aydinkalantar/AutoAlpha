@@ -24,7 +24,7 @@ export default function SettingsForm({ config }: { config: SystemConfig }) {
     return (
         <div className="space-y-12">
             <form onSubmit={handleSubmit} className="space-y-8">
-            <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-border rounded-[2rem] shadow-2xl p-8 shadow-black-[0.03] dark:shadow-white/5 space-y-8 relative overflow-hidden">
+            <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-[2rem] shadow-2xl p-8 shadow-black-[0.03] dark:shadow-white/5 space-y-8 relative overflow-hidden">
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/20 to-transparent" />
                 <div className="relative z-10">
                     <h2 className="text-xl font-bold text-foreground">Stripe Integration</h2>
@@ -52,7 +52,7 @@ export default function SettingsForm({ config }: { config: SystemConfig }) {
                 </div>
 
                 {/* TEST KEYS */}
-                <div className={`space-y-6 pt-6 border-t border-border transition-opacity ${mode === 'TEST' ? 'opacity-100' : 'opacity-40'}`}>
+                <div className={`space-y-6 pt-6 border-t border-black/5 dark:border-white/10 transition-opacity ${mode === 'TEST' ? 'opacity-100' : 'opacity-40'}`}>
                     <h3 className="text-lg font-bold text-[#1D1D1F]">Test Mode Keys</h3>
                     <div className="space-y-3">
                         <label className="text-sm font-semibold text-black/60 px-2">Stripe Publishable Key (Test)</label>
@@ -87,7 +87,7 @@ export default function SettingsForm({ config }: { config: SystemConfig }) {
                 </div>
 
                 {/* LIVE KEYS */}
-                <div className={`space-y-6 pt-6 border-t border-border transition-opacity ${mode === 'LIVE' ? 'opacity-100' : 'opacity-40'}`}>
+                <div className={`space-y-6 pt-6 border-t border-black/5 dark:border-white/10 transition-opacity ${mode === 'LIVE' ? 'opacity-100' : 'opacity-40'}`}>
                     <h3 className="text-lg font-bold text-red-600 flex items-center gap-2">
                         Live Mode Keys
                         <span className="bg-red-100 text-red-600 text-[10px] px-2 py-0.5 rounded-full uppercase tracking-widest font-bold">Danger</span>

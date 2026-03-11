@@ -147,7 +147,7 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
 
           <div className="grid md:grid-cols-2 gap-8 relative items-stretch">
             {/* V.S. Badge */}
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 hidden md:flex w-16 h-16 rounded-full bg-background border border-border/10 items-center justify-center shadow-2xl font-black text-xl italic text-foreground/40 backdrop-blur-md">VS</div>
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 hidden md:flex w-16 h-16 rounded-full bg-background border border-black/5 dark:border-white/10/10 items-center justify-center shadow-2xl font-black text-xl italic text-foreground/40 backdrop-blur-md">VS</div>
 
             <GlassCard className="border-red-500/20 bg-gradient-to-br from-red-500/5 to-transparent flex flex-col">
               <h3 className="text-3xl font-bold mb-8 flex items-center gap-4">

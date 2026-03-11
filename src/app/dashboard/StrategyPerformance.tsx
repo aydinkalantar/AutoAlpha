@@ -26,7 +26,7 @@ interface StrategyPerformanceProps {
 const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
         return (
-            <div className="bg-background border border-border p-3 rounded-lg shadow-xl">
+            <div className="bg-background border border-black/5 dark:border-white/10 p-3 rounded-lg shadow-xl">
                 <p className="text-sm font-semibold text-foreground/70 mb-1">{label}</p>
                 <p className="text-base font-bold text-foreground">
                     Equity: <span className="text-primary">${payload[0].value.toLocaleString()}</span>
@@ -174,7 +174,7 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2">
                         {/* KPI Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                            <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-border rounded-xl p-6 shadow-lg">
+                            <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl p-6 shadow-lg">
                                 <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">Total Net P&L</h3>
                                 <div className="text-2xl font-bold flex items-baseline gap-2">
                                     <span className={stats.netPnl >= 0 ? "text-emerald-500" : "text-rose-500"}>
@@ -186,7 +186,7 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                                 </div>
                             </div>
 
-                            <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-border rounded-xl p-6 shadow-lg">
+                            <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl p-6 shadow-lg">
                                 <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">Win Rate</h3>
                                 <div className="text-2xl font-bold text-foreground">
                                     {stats.winRate.toFixed(1)}%
@@ -194,14 +194,14 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                                 <p className="text-xs text-muted-foreground mt-1">Over {stats.totalTrades} Trades</p>
                             </div>
 
-                            <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-border rounded-xl p-6 shadow-lg">
+                            <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl p-6 shadow-lg">
                                 <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">Max Drawdown</h3>
                                 <div className="text-2xl font-bold text-rose-500">
                                     {maxDrawdown}%
                                 </div>
                             </div>
 
-                            <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-border rounded-xl p-6 shadow-lg">
+                            <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl p-6 shadow-lg">
                                 <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">Profit Factor</h3>
                                 <div className="text-2xl font-bold text-foreground">
                                     {stats.profitFactor.toFixed(2)}
@@ -210,8 +210,8 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                         </div>
 
                         {/* Equity Curve */}
-                        <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-border rounded-xl shadow-lg overflow-hidden">
-                            <div className="p-6 border-b border-border">
+                        <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl shadow-lg overflow-hidden">
+                            <div className="p-6 border-b border-black/5 dark:border-white/10">
                                 <h3 className="text-lg font-bold text-foreground">Equity Curve</h3>
                                 <p className="text-sm text-muted-foreground">Mathematical algorithmic growth over time.</p>
                             </div>
@@ -256,19 +256,19 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
 
                         {/* Bottom Quick Stats */}
                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                            <div className="bg-white/30 dark:bg-black/20 p-4 rounded-xl border border-border flex flex-col items-center justify-center text-center">
+                            <div className="bg-white/30 dark:bg-black/20 p-4 rounded-xl border border-black/5 dark:border-white/10 flex flex-col items-center justify-center text-center">
                                 <span className="text-xs text-muted-foreground uppercase font-semibold tracking-wider mb-1">Avg Win</span>
                                 <span className="text-lg font-bold text-emerald-500">${stats.avgWin.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                             </div>
-                            <div className="bg-white/30 dark:bg-black/20 p-4 rounded-xl border border-border flex flex-col items-center justify-center text-center">
+                            <div className="bg-white/30 dark:bg-black/20 p-4 rounded-xl border border-black/5 dark:border-white/10 flex flex-col items-center justify-center text-center">
                                 <span className="text-xs text-muted-foreground uppercase font-semibold tracking-wider mb-1">Avg Loss</span>
                                 <span className="text-lg font-bold text-rose-500">${Math.abs(stats.avgLoss).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                             </div>
-                            <div className="bg-white/30 dark:bg-black/20 p-4 rounded-xl border border-border flex flex-col items-center justify-center text-center">
+                            <div className="bg-white/30 dark:bg-black/20 p-4 rounded-xl border border-black/5 dark:border-white/10 flex flex-col items-center justify-center text-center">
                                 <span className="text-xs text-muted-foreground uppercase font-semibold tracking-wider mb-1">Best Trade</span>
                                 <span className="text-lg font-bold text-emerald-500">${stats.bestTrade.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                             </div>
-                            <div className="bg-white/30 dark:bg-black/20 p-4 rounded-xl border border-border flex flex-col items-center justify-center text-center">
+                            <div className="bg-white/30 dark:bg-black/20 p-4 rounded-xl border border-black/5 dark:border-white/10 flex flex-col items-center justify-center text-center">
                                 <span className="text-xs text-muted-foreground uppercase font-semibold tracking-wider mb-1">Worst Trade</span>
                                 <span className="text-lg font-bold text-rose-500">${Math.abs(stats.worstTrade).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                             </div>
@@ -278,8 +278,8 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
 
                 {activeTab === 'trades' && (
                     <div className="animate-in fade-in slide-in-from-bottom-2">
-                        <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-border rounded-xl shadow-lg overflow-hidden">
-                            <div className="p-6 border-b border-border">
+                        <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl shadow-lg overflow-hidden">
+                            <div className="p-6 border-b border-black/5 dark:border-white/10">
                                 <h3 className="text-lg font-bold text-foreground">Trade History</h3>
                                 <p className="text-sm text-muted-foreground">Recent algorithmic executions.</p>
                             </div>
@@ -287,7 +287,7 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                                 {/* Desktop Table View */}
                                 <div className="hidden md:block overflow-x-auto">
                                     <table className="w-full text-sm text-left">
-                                        <thead className="text-xs text-muted-foreground uppercase border-b border-border">
+                                        <thead className="text-xs text-muted-foreground uppercase border-b border-black/5 dark:border-white/10">
                                             <tr>
                                                 <th className="py-3 px-4 font-semibold">Date / Time</th>
                                                 <th className="py-3 px-4 font-semibold">Asset</th>
@@ -300,7 +300,7 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                                         </thead>
                                         <tbody>
                                             {reversedHistory.map((trade) => (
-                                                <tr key={trade.id} className="border-b border-border hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                                                <tr key={trade.id} className="border-b border-black/5 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
                                                     <td className="py-4 px-4 font-medium text-foreground/80 lowercase">{format(new Date(trade.updatedAt || trade.createdAt), 'MMM dd HH:mm')}</td>
                                                     <td className="py-4 px-4 font-bold text-foreground uppercase">{trade.symbol}</td>
                                                     <td className="py-4 px-4">
@@ -328,7 +328,7 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                                 {/* Mobile Stacked View */}
                                 <div className="md:hidden space-y-4 p-4 md:p-0">
                                     {reversedHistory.map((trade) => (
-                                        <div key={trade.id} className="flex flex-col gap-2 p-4 rounded-xl border border-border bg-black/5 dark:bg-white/5">
+                                        <div key={trade.id} className="flex flex-col gap-2 p-4 rounded-xl border border-black/5 dark:border-white/10 bg-black/5 dark:bg-white/5">
                                             <div className="flex justify-between items-center">
                                                 <div className="flex items-center gap-2">
                                                     <span className={`px-2 py-0.5 text-[10px] uppercase font-bold rounded ${trade.side === 'LONG' || trade.side === 'BUY' ? 'bg-blue-500/10 text-blue-500' : 'bg-rose-500/10 text-rose-500'}`}>
@@ -340,13 +340,13 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                                                     {(trade.realizedPnl || 0) >= 0 ? '+' : ''}${(trade.realizedPnl || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                 </div>
                                             </div>
-                                            <div className="text-xs font-mono text-foreground/80 border-t border-border pt-2">
+                                            <div className="text-xs font-mono text-foreground/80 border-t border-black/5 dark:border-white/10 pt-2">
                                                 Entry: ${trade.entryPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}  ·  Exit: ${trade.exitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 }) || '...'}
                                             </div>
                                         </div>
                                     ))}
                                     {reversedHistory.length === 0 && (
-                                        <div className="p-8 text-center text-muted-foreground italic border bg-black/5 dark:bg-white/5 rounded-xl border-border">
+                                        <div className="p-8 text-center text-muted-foreground italic border bg-black/5 dark:bg-white/5 rounded-xl border-black/5 dark:border-white/10">
                                             No historical algorithmic executions found.
                                         </div>
                                     )}

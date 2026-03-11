@@ -135,7 +135,7 @@ export default async function AdminOverviewPage() {
             </div>
 
             {/* Chart Section */}
-            <div className="bg-white/50 dark:bg-black/40 backdrop-blur-2xl p-8 rounded-[2rem] shadow-xl border border-border relative overflow-hidden">
+            <div className="bg-white/50 dark:bg-black/40 backdrop-blur-2xl p-8 rounded-[2rem] shadow-xl border border-black/5 dark:border-white/10 relative overflow-hidden">
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/20 to-transparent" />
                 <div className="mb-6 relative z-10">
                     <h3 className="text-2xl font-bold text-foreground">30-Day Revenue Validation</h3>
@@ -151,11 +151,11 @@ export default async function AdminOverviewPage() {
 
 function KPICard({ title, value, subtitle, icon, alert }: { title: string, value: string, subtitle: string, icon: React.ReactNode, alert?: boolean }) {
     return (
-        <div className="bg-white/50 dark:bg-black/40 backdrop-blur-2xl p-6 rounded-3xl shadow-xl border border-border flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 transition-all">
+        <div className="bg-white/50 dark:bg-black/40 backdrop-blur-2xl p-6 rounded-3xl shadow-xl border border-black/5 dark:border-white/10 flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 transition-all">
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/20 to-transparent" />
             <div className="flex justify-between items-start mb-6 relative z-10">
                 <h3 className="text-sm font-bold tracking-wider uppercase text-foreground/50">{title}</h3>
-                <div className={`p-2 rounded-xl backdrop-blur-md border border-border shadow-sm ${alert ? 'bg-red-500/20 text-red-500 animate-pulse' : 'bg-white/40 dark:bg-white/10 text-foreground/70'}`}>
+                <div className={`p-2 rounded-xl backdrop-blur-md border border-black/5 dark:border-white/10 shadow-sm ${alert ? 'bg-red-500/20 text-red-500 animate-pulse' : 'bg-white/40 dark:bg-white/10 text-foreground/70'}`}>
                     {icon}
                 </div>
             </div>

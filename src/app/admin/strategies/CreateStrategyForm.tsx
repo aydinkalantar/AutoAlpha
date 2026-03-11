@@ -25,7 +25,7 @@ export default function CreateStrategyForm() {
     };
 
     return (
-        <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-border rounded-[2rem] p-8 mb-12 shadow-2xl shadow-black-[0.03] dark:shadow-white/5 relative overflow-hidden">
+        <div className="bg-white/50 dark:bg-black/40 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-[2rem] p-8 mb-12 shadow-2xl shadow-black-[0.03] dark:shadow-white/5 relative overflow-hidden">
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/20 to-transparent" />
             <h2 className="text-2xl font-bold text-foreground mb-8 tracking-tight relative z-10">Create New Strategy</h2>
 
@@ -38,7 +38,7 @@ export default function CreateStrategyForm() {
                             type="text"
                             name="name"
                             required
-                            className="w-full bg-black/5 dark:bg-white/5 border border-border rounded-[1.2rem] px-5 py-4 text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all font-medium"
+                            className="w-full bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-[1.2rem] px-5 py-4 text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                             placeholder="Alpha Trend v1"
                         />
                     </div>
@@ -48,7 +48,7 @@ export default function CreateStrategyForm() {
                         <select
                             name="pair"
                             required
-                            className="w-full bg-black/5 dark:bg-white/5 border border-border rounded-[1.2rem] px-5 py-4 text-foreground focus:outline-none focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all font-medium"
+                            className="w-full bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-[1.2rem] px-5 py-4 text-foreground focus:outline-none focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                         >
                             {marketType === 'SPOT' ? (
                                 <>
@@ -94,7 +94,7 @@ export default function CreateStrategyForm() {
                             name="marketType"
                             value={marketType}
                             onChange={(e) => setMarketType(e.target.value)}
-                            className="w-full bg-black/5 dark:bg-white/5 border border-border rounded-[1.2rem] px-5 py-4 text-foreground focus:outline-none focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all font-medium appearance-none"
+                            className="w-full bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-[1.2rem] px-5 py-4 text-foreground focus:outline-none focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all font-medium appearance-none"
                         >
                             <option value="FUTURES">Futures / Perps</option>
                             <option value="SPOT">Spot Market</option>
@@ -110,7 +110,7 @@ export default function CreateStrategyForm() {
                             min="1"
                             step="0.1"
                             defaultValue="1"
-                            className="w-full bg-black/5 dark:bg-white/5 border border-border rounded-[1.2rem] px-5 py-4 text-foreground focus:outline-none focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all font-medium"
+                            className="w-full bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-[1.2rem] px-5 py-4 text-foreground focus:outline-none focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                         />
                     </div>
 
@@ -123,7 +123,7 @@ export default function CreateStrategyForm() {
                             min="1"
                             step="0.1"
                             defaultValue="3"
-                            className="w-full bg-black/5 dark:bg-white/5 border border-border rounded-[1.2rem] px-5 py-4 text-foreground focus:outline-none focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all font-medium"
+                            className="w-full bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-[1.2rem] px-5 py-4 text-foreground focus:outline-none focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                         />
                     </div>
                 </div>
@@ -140,7 +140,7 @@ export default function CreateStrategyForm() {
                             max="100"
                             step="1"
                             defaultValue="95"
-                            className="w-full bg-black/5 dark:bg-white/5 border border-border rounded-[1.2rem] px-5 py-4 text-foreground focus:outline-none focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all font-medium"
+                            className="w-full bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-[1.2rem] px-5 py-4 text-foreground focus:outline-none focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                         />
                     </div>
 
@@ -149,7 +149,7 @@ export default function CreateStrategyForm() {
                         <input
                             type="text"
                             placeholder="Advanced automated trading"
-                            className="w-full bg-black/5 dark:bg-white/5 border border-border rounded-[1.2rem] px-5 py-4 text-foreground focus:outline-none focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all font-medium"
+                            className="w-full bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-[1.2rem] px-5 py-4 text-foreground focus:outline-none focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                         />
                     </div>
 
@@ -160,7 +160,7 @@ export default function CreateStrategyForm() {
                             name="expectedRoi"
                             step="0.1"
                             defaultValue="12.4"
-                            className="w-full bg-black/5 dark:bg-white/5 border border-border rounded-[1.2rem] px-5 py-4 text-foreground focus:outline-none focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all font-medium"
+                            className="w-full bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-[1.2rem] px-5 py-4 text-foreground focus:outline-none focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                         />
                     </div>
 
@@ -173,7 +173,7 @@ export default function CreateStrategyForm() {
                             defaultValue="68.5"
                             min="0"
                             max="100"
-                            className="w-full bg-black/5 dark:bg-white/5 border border-border rounded-[1.2rem] px-5 py-4 text-foreground focus:outline-none focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all font-medium"
+                            className="w-full bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-[1.2rem] px-5 py-4 text-foreground focus:outline-none focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                         />
                     </div>
 
@@ -186,7 +186,7 @@ export default function CreateStrategyForm() {
                             defaultValue="15.2"
                             min="0"
                             max="100"
-                            className="w-full bg-black/5 dark:bg-white/5 border border-border rounded-[1.2rem] px-5 py-4 text-foreground focus:outline-none focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all font-medium"
+                            className="w-full bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-[1.2rem] px-5 py-4 text-foreground focus:outline-none focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                         />
                     </div>
                 </div>
@@ -197,7 +197,7 @@ export default function CreateStrategyForm() {
                         type="checkbox"
                         name="isPublic"
                         id="isPublic"
-                        className="w-5 h-5 rounded-[0.4rem] border-border text-primary focus:ring-primary/20 bg-background"
+                        className="w-5 h-5 rounded-[0.4rem] border-black/5 dark:border-white/10 text-primary focus:ring-primary/20 bg-background"
                     />
                     <label htmlFor="isPublic" className="text-sm font-semibold text-black/60">
                         Show on Public Landing Page
