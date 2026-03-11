@@ -220,7 +220,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                                         <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">Universal Payload</span>
                                         <div className="relative group">
                                             <code className="block w-full bg-[#1D1D1F] text-white p-4 rounded-[1rem] text-[13px] overflow-x-auto whitespace-pre font-mono shadow-inner">
-                                                {JSON.stringify({ webhookToken: strategy.webhookToken, symbol: "{{ticker}}", action: "{{strategy.order.action}}" }, null, 2)}
+                                                {JSON.stringify({ webhookToken: strategy.webhookToken, symbol: "{{ticker}}", action: "{{strategy.order.action}}", price: "{{strategy.order.price}}", order_id: "{{strategy.order.id}}" }, null, 2)}
                                             </code>
                                         </div>
                                     </div>
