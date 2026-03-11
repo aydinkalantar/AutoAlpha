@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
-import { LayoutDashboard, Store, FileText, Settings, User, ChevronLeft, ChevronRight, Gift, LogOut, Wallet, HelpCircle } from 'lucide-react';
+import { LayoutDashboard, Store, FileText, Settings, User, ChevronLeft, ChevronRight, Gift, LogOut, Wallet, HelpCircle, Activity } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { useState, useEffect } from 'react';
@@ -38,6 +38,7 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
 
     const navItems = [
         { name: 'Overview', href: '/dashboard', icon: LayoutDashboard },
+        { name: 'Strategy Report', href: '/dashboard/strategy-report', icon: Activity },
         { name: 'Marketplace', href: '/dashboard/market', icon: Store },
         { name: 'Accounting', href: '/dashboard/accounting', icon: FileText },
         { name: 'Account Hub', href: '/dashboard/account', icon: User },
@@ -151,7 +152,7 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
 
             {/* Mobile Bottom Navigation (Thumb Zone) */}
             <nav className="md:hidden fixed bottom-0 left-0 right-0 h-20 bg-white/80 dark:bg-black/80 backdrop-blur-2xl border-t border-black/5 dark:border-white/10 z-50 flex items-center justify-around px-2 pb-2 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
-                {navItems.filter(item => ['Overview', 'Marketplace', 'Account Hub'].includes(item.name)).map((item) => {
+                {navItems.filter(item => ['Overview', 'Strategy Report', 'Marketplace'].includes(item.name)).map((item) => {
                     const isActive = item.href === '/dashboard'
                         ? pathname === '/dashboard'
                         : pathname === item.href || pathname.startsWith(item.href + '/');
@@ -169,7 +170,7 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                             )}
                         >
                             <Icon className={cn("w-6 h-6 mb-1", isActive ? "drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]" : "")} />
-                            <span className="text-[10px] font-bold truncate w-full text-center px-1">{item.name === 'Account Hub' ? 'Hub' : item.name}</span>
+                            <span className="text-[10px] font-bold truncate w-full text-center px-1">{item.name === 'Strategy Report' ? 'Report' : item.name}</span>
                         </Link>
                     );
                 })}
