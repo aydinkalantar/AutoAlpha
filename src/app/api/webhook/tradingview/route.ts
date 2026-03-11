@@ -15,7 +15,11 @@ export const tradeQueue = new Queue('qa-test-queue', {
     connection: redisConnection
 });
 
-const redisClient = new Redis(redisConnection);
+const redisClient = new Redis({
+    ...redisConnection,
+    lazyConnect: true,
+    maxRetriesPerRequest: null
+});
 
 export async function POST(req: Request) {
     try {
