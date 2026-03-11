@@ -1,19 +1,22 @@
 import { prisma } from '@/lib/prisma';
 import LandingPageClient from './LandingPageClient';
 
-export const dynamic = 'force-dynamic';
-
 export default async function Page() {
     // Fetch active strategies marked as public
-    const initialStrategies = await prisma.strategy.findMany({
-        where: {
-            isPublic: true,
-            isActive: true
-        },
-        orderBy: {
-            createdAt: 'desc'
-        }
-    });
+    // Circuit breaker: In the Railway Docker build, DATABASE_URL is set to a "mock" string.
+    // Next.js ignores `force-dynamic` on the index route and still aggressively evaluates this query, crashing the build.
+    let initialStrategies: any[] = [];
+    if (!process.env.DATABASE_URL?.includes('mock')) {
+        initialStrategies = await prisma.strategy.findMany({
+            where: {
+                isPublic: true,
+                isActive: true
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        });
+    }
     const softwareSchema = {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
