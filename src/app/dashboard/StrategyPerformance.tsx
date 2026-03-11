@@ -301,7 +301,7 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                                         <tbody>
                                             {reversedHistory.map((trade) => (
                                                 <tr key={trade.id} className="border-b border-border hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-                                                    <td className="py-4 px-4 font-medium text-foreground/80 lowercase">{trade.updatedAt ? format(new Date(trade.updatedAt), 'MMM dd HH:mm') : ''}</td>
+                                                    <td className="py-4 px-4 font-medium text-foreground/80 lowercase">{format(new Date(trade.updatedAt || trade.createdAt), 'MMM dd HH:mm')}</td>
                                                     <td className="py-4 px-4 font-bold text-foreground uppercase">{trade.symbol}</td>
                                                     <td className="py-4 px-4">
                                                         <span className={`px-2 py-1 text-[10px] font-bold rounded-full ${trade.side === 'LONG' || trade.side === 'BUY' ? 'bg-blue-500/10 text-blue-500' : 'bg-rose-500/10 text-rose-500'}`}>
@@ -334,7 +334,7 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                                                     <span className={`px-2 py-0.5 text-[10px] uppercase font-bold rounded ${trade.side === 'LONG' || trade.side === 'BUY' ? 'bg-blue-500/10 text-blue-500' : 'bg-rose-500/10 text-rose-500'}`}>
                                                         {trade.symbol} {trade.side}
                                                     </span>
-                                                    <span className="text-xs text-muted-foreground">{trade.updatedAt ? format(new Date(trade.updatedAt), 'MMM dd') : ''}</span>
+                                                    <span className="text-xs text-muted-foreground">{format(new Date(trade.updatedAt || trade.createdAt), 'MMM dd')}</span>
                                                 </div>
                                                 <div className={`text-lg font-bold text-right ${(trade.realizedPnl || 0) >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
                                                     {(trade.realizedPnl || 0) >= 0 ? '+' : ''}${(trade.realizedPnl || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
