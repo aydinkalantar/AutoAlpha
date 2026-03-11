@@ -1,6 +1,8 @@
 import { prisma } from '@/lib/prisma';
 import LandingPageClient from './LandingPageClient';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Page() {
     // Fetch active strategies marked as public
     const initialStrategies = await prisma.strategy.findMany({
