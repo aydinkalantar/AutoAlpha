@@ -1,0 +1,133 @@
+"use server";
+
+import { PrismaClient, SupportedExchange } from '@prisma/client';
+import { encryptKey } from '@/lib/encryption';
+import { revalidatePath } from 'next/cache';
+import { prisma } from '@/lib/prisma';
+
+
+export async function saveApiKey(formData: FormData) {
+    const userId = formData.get('userId') as string;
+    const exchange = formData.get('exchange') as SupportedExchange;
+    const apiKey = formData.get('apiKey') as string;
+    const apiSecret = formData.get('apiSecret') as string;
+    const isTestnet = formData.get('isTestnet') === 'on';
+
+    if (!userId || !exchange || !apiKey || !apiSecret) {
+        throw new Error('Missing required fields');
+    }
+
+    const encryptedKeyRaw = encryptKey(apiKey, process.env.MASTER_ENCRYPTION_KEY!);
+    const encryptedSecretRaw = encryptKey(apiSecret, process.env.MASTER_ENCRYPTION_KEY!);
+
+    // Deactivate any existing key for this exchange
+    await prisma.exchangeKey.updateMany({
+        where: { userId, exchange },
+        data: { isValid: false }
+    });
+
+    await prisma.exchangeKey.create({
+        data: {
+            userId,
+            exchange,
+            encryptedApiKey: encryptedKeyRaw,
+            encryptedSecret: encryptedSecretRaw,
+            iv: encryptedKeyRaw.split(':')[0],  // Store GCM IV strictly to satisfy Prisma schema
+            isValid: true,
+            isTestnet
+        }
+    });
+
+    revalidatePath('/dashboard');
+}
+
+export async function getActiveStrategies() {
+    return await prisma.strategy.findMany({
+        where: { isActive: true }
+    });
+}
+
+export async function deleteApiKey(keyId: string) {
+    if (!keyId) throw new Error("Key ID required");
+
+    await prisma.exchangeKey.update({
+        where: { id: keyId },
+        data: { isValid: false }
+    });
+
+    revalidatePath('/dashboard');
+}
+
+export async function mockDeposit(formData: FormData) {
+    const userId = formData.get('userId') as string;
+    const amountStr = formData.get('amount') as string;
+    const currency = formData.get('currency') as string;
+    const amount = parseFloat(amountStr);
+
+    if (!userId || amount <= 0 || !currency) {
+        throw new Error("Invalid deposit parameters");
+    }
+
+    await prisma.$transaction(async (tx: any) => {
+        if (currency === 'USDT') {
+            await tx.user.update({
+                where: { id: userId },
+                data: { usdtBalance: { increment: amount } }
+            });
+        } else if (currency === 'USDC') {
+            await tx.user.update({
+                where: { id: userId },
+                data: { usdcBalance: { increment: amount } }
+            });
+        }
+
+        await tx.ledger.create({
+            data: {
+                userId,
+                amount,
+                currency,
+                description: "Sandbox Mock Deposit"
+            }
+        });
+    });
+
+    revalidatePath('/dashboard');
+}
+
+export async function getUnreadNotifications(userId: string) {
+    return prisma.notification.findMany({
+        where: { userId, isRead: false },
+        orderBy: { createdAt: 'desc' },
+        take: 20
+    });
+}
+
+export async function markNotificationAsRead(id: string) {
+    await prisma.notification.update({
+        where: { id },
+        data: { isRead: true }
+    });
+    revalidatePath('/dashboard');
+    return true;
+}
+
+export async function markAllAsRead(userId: string) {
+    await prisma.notification.updateMany({
+        where: { userId, isRead: false },
+        data: { isRead: true }
+    });
+    revalidatePath('/dashboard');
+    return true;
+}
+
+export async function toggleTestnetMode(userId: string, isTestnetMode: boolean) {
+    if (!userId) throw new Error("Unauthorized");
+
+    await prisma.user.update({
+        where: { id: userId },
+        data: { isTestnetMode }
+    });
+
+    revalidatePath('/dashboard');
+    revalidatePath('/dashboard/settings');
+}

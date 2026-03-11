@@ -1,0 +1,193 @@
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { signOut } from 'next-auth/react';
+import { LayoutDashboard, Store, FileText, Settings, User, ChevronLeft, ChevronRight, Gift, LogOut, Wallet, HelpCircle } from 'lucide-react';
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+import { useState, useEffect } from 'react';
+import DepositModal from './DepositModal';
+import WithdrawModal from '@/app/dashboard/WithdrawModal';
+import { ArrowUpRight } from 'lucide-react';
+
+export function cn(...inputs: ClassValue[]) {
+    return twMerge(clsx(inputs));
+}
+
+export default function DashboardSidebar({ children, notificationBell, userId, balances }: { children?: React.ReactNode, notificationBell?: React.ReactNode, userId?: string, balances?: { usdtBalance: number; usdcBalance: number } }) {
+    const pathname = usePathname();
+    const [isCollapsed, setIsCollapsed] = useState(false);
+    const [isDepositOpen, setIsDepositOpen] = useState(false);
+    const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
+
+    // Auto-collapse on small screens
+    useEffect(() => {
+        const checkScreenSize = () => {
+            if (window.innerWidth < 1024) {
+                setIsCollapsed(true);
+            } else {
+                setIsCollapsed(false);
+            }
+        };
+
+        checkScreenSize();
+        window.addEventListener('resize', checkScreenSize);
+        return () => window.removeEventListener('resize', checkScreenSize);
+    }, []);
+
+    const navItems = [
+        { name: 'Overview', href: '/dashboard', icon: LayoutDashboard },
+        { name: 'Marketplace', href: '/dashboard/market', icon: Store },
+        { name: 'Accounting', href: '/dashboard/accounting', icon: FileText },
+        { name: 'Account Hub', href: '/dashboard/account', icon: User },
+        { name: 'Affiliates', href: '/dashboard/affiliate', icon: Gift },
+        { name: 'Settings', href: '/dashboard/settings', icon: Settings },
+    ];
+
+    return (
+        <>
+            {/* Desktop Sidebar */}
+            <div className={cn("hidden md:flex bg-white/50 dark:bg-black/40 backdrop-blur-2xl border-r border-black/5 dark:border-white/10 h-screen fixed top-0 left-0 flex-col z-50 transition-all duration-300", isCollapsed ? "w-20" : "w-64")}>
+                <div className="h-20 flex items-center justify-between px-4 border-b border-black/5 dark:border-white/10">
+                    <div className={cn("flex items-center gap-3 overflow-hidden transition-all duration-300", isCollapsed ? "w-8 opacity-0 pointer-events-none absolute" : "w-auto opacity-100 relative")}>
+                        <div className="w-8 h-8 rounded-lg outline-none flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
+                            <div className="w-3 h-3 bg-white rounded-sm transform rotate-45" />
+                        </div>
+                        <span className="font-bold text-lg text-foreground tracking-tight whitespace-nowrap">AutoAlpha</span>
+                    </div>
+
+                    {/* Always show the logo icon when collapsed */}
+                    {isCollapsed && (
+                        <div className="absolute left-6 w-8 h-8 rounded-lg flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
+                            <div className="w-3 h-3 bg-white rounded-sm transform rotate-45" />
+                        </div>
+                    )}
+
+                    {/* Only show toggle button inside the header when expanded. When collapsed it looks better floating or we can keep it as a button */}
+                    <button onClick={() => setIsCollapsed(!isCollapsed)} className={cn("hidden md:block p-1.5 rounded-lg text-foreground/50 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 transition-all z-10", isCollapsed ? "absolute -right-3 top-6 bg-white dark:bg-black border border-black/10 dark:border-white/10 shadow-sm rounded-full" : "")}>
+                        {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-5 h-5" />}
+                    </button>
+                </div>
+
+                <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto overflow-x-hidden">
+                    {navItems.map((item) => {
+                        const isActive = item.href === '/dashboard'
+                            ? pathname === '/dashboard'
+                            : pathname === item.href || pathname.startsWith(item.href + '/');
+
+                        const Icon = item.icon;
+                        return (
+                            <Link
+                                key={item.href}
+                                href={item.href}
+                                className={cn(
+                                    "flex items-center gap-3 py-3 rounded-xl text-sm font-bold transition-all relative group",
+                                    isCollapsed ? "px-0 justify-center" : "px-3",
+                                    isActive
+                                        ? "bg-foreground text-background shadow-lg shadow-black/10 dark:shadow-white/5"
+                                        : "text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5"
+                                )}
+                                title={isCollapsed ? item.name : undefined}
+                            >
+                                <Icon className={cn("w-5 h-5 flex-shrink-0", isActive ? "text-background" : "text-foreground/50")} />
+                                {!isCollapsed && <span className="whitespace-nowrap">{item.name}</span>}
+
+                                {/* Tooltip for collapsed mode */}
+                                {isCollapsed && (
+                                    <div className="absolute left-full ml-4 px-2 py-1 bg-foreground text-background text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 whitespace-nowrap pointer-events-none hidden md:block">
+                                        {item.name}
+                                    </div>
+                                )}
+                            </Link>
+                        )
+                    })}
+                </nav>
+
+                <div className="p-4 pb-8 border-t border-black/5 dark:border-white/10 flex flex-col items-center gap-2 overflow-hidden">
+                    <div className="w-full flex flex-col gap-2 mb-2">
+                        <button onClick={() => setIsDepositOpen(true)} className={cn("flex items-center justify-center gap-2 py-3 text-sm font-bold bg-gradient-to-br from-cyan-400 to-purple-600 text-white rounded-xl shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:opacity-90 transition-all w-full", isCollapsed ? "px-0" : "px-3")}>
+                            <Wallet className="w-5 h-5 flex-shrink-0" />
+                            {!isCollapsed && <span className="whitespace-nowrap">Deposit</span>}
+                        </button>
+                        <button onClick={() => setIsWithdrawOpen(true)} className={cn("flex items-center justify-center gap-2 py-3 text-sm font-bold bg-white/50 dark:bg-black/40 backdrop-blur-md text-foreground border border-black/5 dark:border-white/10 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-all w-full", isCollapsed ? "px-0" : "px-3")}>
+                            <ArrowUpRight className="w-5 h-5 flex-shrink-0 opacity-70" />
+                            {!isCollapsed && <span className="whitespace-nowrap">Withdraw</span>}
+                        </button>
+                    </div>
+
+                    <div className="w-full h-px bg-black/5 dark:bg-white/10" />
+
+                    <div className="w-full flex flex-col gap-1 mt-3">
+                        <Link href="/" className={cn("flex items-center gap-3 py-3 text-sm font-bold text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
+                            <ChevronLeft className="w-5 h-5 flex-shrink-0" />
+                            {!isCollapsed && <span className="whitespace-nowrap">Home</span>}
+                        </Link>
+                        <Link href="mailto:support@autoalpha.ai" className={cn("flex items-center gap-3 py-3 text-sm font-bold text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
+                            <HelpCircle className="w-5 h-5 flex-shrink-0" />
+                            {!isCollapsed && <span className="whitespace-nowrap">Support</span>}
+                        </Link>
+                        <button onClick={() => signOut({ callbackUrl: '/login' })} className={cn("flex items-center gap-3 py-3 text-sm font-bold text-red-500/80 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
+                            <LogOut className="w-5 h-5 flex-shrink-0" />
+                            {!isCollapsed && <span className="whitespace-nowrap">Log Out</span>}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <DepositModal isOpen={isDepositOpen} onClose={() => setIsDepositOpen(false)} />
+            {userId && balances && <WithdrawModal isOpen={isWithdrawOpen} onClose={() => setIsWithdrawOpen(false)} userId={userId} balances={balances} />}
+
+            <div className={cn("flex-1 flex flex-col min-h-screen relative z-10 transition-all duration-300 pb-20 md:pb-0", isCollapsed ? "md:ml-20" : "md:ml-64 lg:ml-64")}>
+                {notificationBell && (
+                    <div className="absolute top-6 right-8 z-50">
+                        {notificationBell}
+                    </div>
+                )}
+                <main className="flex-1 transition-all duration-300 w-full overflow-hidden">
+                    {children}
+                </main>
+            </div>
+
+            {/* Mobile Bottom Navigation (Thumb Zone) */}
+            <nav className="md:hidden fixed bottom-0 left-0 right-0 h-20 bg-white/80 dark:bg-black/80 backdrop-blur-2xl border-t border-black/5 dark:border-white/10 z-50 flex items-center justify-around px-2 pb-2 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+                {navItems.filter(item => ['Overview', 'Marketplace', 'Account Hub'].includes(item.name)).map((item) => {
+                    const isActive = item.href === '/dashboard'
+                        ? pathname === '/dashboard'
+                        : pathname === item.href || pathname.startsWith(item.href + '/');
+
+                    const Icon = item.icon;
+                    return (
+                        <Link
+                            key={item.href}
+                            href={item.href}
+                            className={cn(
+                                "flex flex-col items-center justify-center w-16 h-14 rounded-xl transition-all",
+                                isActive
+                                    ? "text-cyan-500"
+                                    : "text-foreground/50 hover:text-foreground active:bg-black/5 dark:active:bg-white/5"
+                            )}
+                        >
+                            <Icon className={cn("w-6 h-6 mb-1", isActive ? "drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]" : "")} />
+                            <span className="text-[10px] font-bold truncate w-full text-center px-1">{item.name === 'Account Hub' ? 'Hub' : item.name}</span>
+                        </Link>
+                    );
+                })}
+                <button
+                    onClick={() => setIsDepositOpen(true)}
+                    className="flex flex-col items-center justify-center w-16 h-14 rounded-xl text-foreground/50 hover:text-foreground active:bg-black/5 dark:active:bg-white/5 transition-all"
+                >
+                    <Wallet className="w-6 h-6 mb-1 text-purple-500 dark:text-purple-400" />
+                    <span className="text-[10px] font-bold">Deposit</span>
+                </button>
+                <button
+                    onClick={() => setIsWithdrawOpen(true)}
+                    className="flex flex-col items-center justify-center w-16 h-14 rounded-xl text-foreground/50 hover:text-foreground active:bg-black/5 dark:active:bg-white/5 transition-all"
+                >
+                    <ArrowUpRight className="w-6 h-6 mb-1 text-emerald-500 dark:text-emerald-400" />
+                    <span className="text-[10px] font-bold">Withdraw</span>
+                </button>
+            </nav>
+        </>
+    );
+}

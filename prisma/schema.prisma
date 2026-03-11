@@ -1,0 +1,248 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum MarketType {
+  SPOT
+  FUTURES
+}
+
+enum Currency {
+  USDT
+  USDC
+}
+
+enum SupportedExchange {
+  BINANCE
+  BYBIT
+  OKX
+  MEXC
+  GATEIO
+  COINBASE
+  KRAKEN
+  UNISWAP
+  HYPERLIQUID
+  UNIVERSAL
+}
+
+enum LedgerType {
+  DEPOSIT
+  FEE_DEDUCTION
+  AFFILIATE_COMMISSION
+}
+
+model User {
+  id                  String         @id @default(cuid())
+  email               String         @unique
+  passwordHash        String?
+  emailVerified       DateTime?
+  image               String?
+  role                String         @default("USER")
+  usdtBalance         Float          @default(0)
+  usdcBalance         Float          @default(0)
+  paperUsdtBalance    Float          @default(10000.0)
+  paperUsdcBalance    Float          @default(10000.0)
+  fiatRefundRequested Boolean        @default(false)
+  isTestnetMode       Boolean        @default(true)
+  referralCode        String?        @unique @default(cuid())
+  referredById        String?
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+
+  referredBy          User?          @relation("UserReferrals", fields: [referredById], references: [id])
+  referrals           User[]         @relation("UserReferrals")
+  
+  accounts            Account[]
+  sessions            Session[]
+  exchangeKeys        ExchangeKey[]
+  subscriptions       Subscription[]
+  positions           Position[]
+  ledgers             Ledger[]
+  notifications       Notification[]
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model ExchangeKey {
+  id                   String            @id @default(cuid())
+  exchange             SupportedExchange
+  encryptedApiKey      String?
+  encryptedSecret      String?
+  encryptedPrivateKey  String?
+  exchangePassphrase   String?
+  iv                   String
+  isTestnet            Boolean           @default(false)
+  isValid              Boolean           @default(true)
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+
+  userId               String
+  user                 User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Strategy {
+  id                        String         @id @default(cuid())
+  name                      String
+  targetExchange            SupportedExchange
+  marketType                MarketType
+  settlementCurrency        Currency
+  webhookToken              String         @unique
+  pair                      String?        // e.g. "BTC/USDT:USDT"
+  
+  // Risk and Configuration Parameters
+  leverage                  Float          @default(1.0)
+  maxLeverage               Float          @default(1.0)
+  defaultEquityPercentage   Float          @default(95.0)
+  
+  // Performance Metrics (Display Only)
+  expectedRoiPercentage     Float?         
+  winRatePercentage         Float?         
+  drawdownPercentage        Float?         
+
+  isActive                  Boolean        @default(true)
+  isPublic                  Boolean        @default(false)
+  performanceFeePercentage  Float          @default(30.0)
+  createdAt                 DateTime       @default(now())
+  updatedAt                 DateTime       @updatedAt
+
+  subscriptions             Subscription[]
+  positions                 Position[]
+}
+
+model Subscription {
+  id                     String   @id @default(cuid())
+  allocatedCapital       Float
+  currentVirtualBalance  Float
+  compoundingEnabled     Boolean  @default(false)
+  isActive               Boolean  @default(true)
+  isPaper                Boolean  @default(false)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  userId                 String
+  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  strategyId             String
+  strategy               Strategy @relation(fields: [strategyId], references: [id], onDelete: Cascade)
+  exchange               SupportedExchange? // Allow user to specify exchange for Universal strategies
+  positions              Position[]
+}
+
+model Position {
+  id               String   @id @default(cuid())
+  exchangeOrderId  String
+  symbol           String
+  side             String
+  isOpen           Boolean  @default(true)
+  isPaper          Boolean  @default(false)
+  entryPrice       Float    @default(0)
+  exitPrice        Float?
+  tvPrice          Float?   // The price suggested by TradingView
+  slippage         Float?   // The slippage percentage: (fillPrice - tvPrice) / tvPrice
+  leverage         Int      @default(1)
+  realizedPnl      Float    @default(0)
+  feeDeducted      Float    @default(0)
+  requestedAmount  Float
+  filledAmount     Float
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  strategyId       String
+  strategy         Strategy @relation(fields: [strategyId], references: [id], onDelete: Cascade)
+  subscriptionId   String?
+  subscription     Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+}
+
+model Ledger {
+  id          String     @id @default(cuid())
+  amount      Float
+  currency    String
+  description String
+  type        LedgerType @default(DEPOSIT)
+  isPaper     Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SystemConfig {
+  id                      String   @id @default("global")
+  stripeMode              String   @default("TEST") // "TEST" or "LIVE"
+  stripeTestPublicKey     String?
+  stripeTestSecretKey     String?
+  stripeTestWebhookSecret String?
+  stripeLivePublicKey     String?
+  stripeLiveSecretKey     String?
+  stripeLiveWebhookSecret String?
+  updatedAt               DateTime @updatedAt
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      String   // e.g. "TRADE", "ALERT", "SYSTEM"
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AdminVault {
+  id                   String   @id @default("singleton")
+  encryptedApiKey      String?  @db.Text
+  encryptedApiSecret   String?  @db.Text
+  encryptedWallet      String?  @db.Text
+  updatedAt            DateTime @updatedAt
+}
+
+model AuditLog {
+  id            String   @id @default(cuid())
+  adminUserId   String
+  actionType    String
+  ipAddress     String?
+  timestamp     DateTime @default(now())
+}

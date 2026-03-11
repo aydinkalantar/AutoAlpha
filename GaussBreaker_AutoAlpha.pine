@@ -1,0 +1,211 @@
+// ====================================================================
+// STRATEGY:      GaussBreaker v4.1 (AutoAlpha Protocol)
+// AUTHOR:        Aydin Kalantarov (Optimized by Gemini)
+// PLATFORM:      AutoAlpha Universal Trading SaaS
+// TIMEFRAME:     1D (Daily) - Use 1H/4H if you want intraday action
+// ====================================================================
+
+//@version=5
+strategy(title="GaussBreaker v4.1 (AutoAlpha Webhook)", 
+     overlay=true, 
+     commission_type=strategy.commission.percent, 
+     commission_value=0.055, 
+     slippage=3, 
+     initial_capital=850, 
+     currency=currency.USDT,
+     calc_on_every_tick=false)
+
+// ============================
+// 1. INPUTS
+// ============================
+group_live = "AutoAlpha Execution Settings"
+aa_webhook_token = input.string("PASTE_WEBHOOK_TOKEN_HERE", "AutoAlpha Webhook Token", group=group_live)
+capitalUsagePct   = input.float(95.0, "% of Equity to Use", minval=1.0, maxval=100.0, group=group_live)
+leverage          = input.int(1, "Leverage", minval=1, maxval=10, group=group_live) 
+qtyStep           = input.float(0.001, "Quantity Step (Min Lot)", minval=0.0000001, group=group_live)
+tradeDirection    = input.string("Both", "Trade Direction", options=["Long Only", "Short Only", "Both"], group=group_live)
+
+// --- LONG SETTINGS ---
+group_long = "🟢 LONG SETTINGS (Gauss, ATR, StochRSI)"
+src_L         = input(hl2, "Long Source", group=group_long)
+N_L           = input.int(4, "Long Poles", group=group_long)
+per_L         = input.int(146, "Long Sampling Period", group=group_long)
+mult_L        = input.float(2.3, "Long TR Multiplier", group=group_long)
+atrLen_L      = input.int(14, "Long ATR Length", group=group_long)
+atrMult_L     = input.float(2.0, "Long ATR Multiplier (SL)", step=0.1, group=group_long)
+useStoch_L    = input.bool(true, "Use Long StochRSI?", group=group_long)
+rsiLen_L      = input.int(11, "Long RSI Length", group=group_long)
+stochLen_L    = input.int(20, "Long Stoch Length", group=group_long)
+smoothK_L     = input.int(2, "Long K Smoothing", group=group_long)
+
+// --- SHORT SETTINGS ---
+group_short = "🔴 SHORT SETTINGS (Gauss, ATR, StochRSI)"
+src_S         = input(hl2, "Short Source", group=group_short)
+N_S           = input.int(4, "Short Poles", group=group_short)
+per_S         = input.int(146, "Short Sampling Period", group=group_short)
+mult_S        = input.float(2.3, "Short TR Multiplier", group=group_short)
+atrLen_S      = input.int(14, "Short ATR Length", group=group_short)
+atrMult_S     = input.float(2.0, "Short ATR Multiplier (SL)", step=0.1, group=group_short)
+useStoch_S    = input.bool(true, "Use Short StochRSI?", group=group_short)
+rsiLen_S      = input.int(11, "Short RSI Length", group=group_short)
+stochLen_S    = input.int(20, "Short Stoch Length", group=group_short)
+smoothK_S     = input.int(2, "Short K Smoothing", group=group_short)
+
+// Shared/Global Modifiers
+group_shared = "Shared Parameters"
+rsi_src       = input(hlcc4, "Global RSI Source", group=group_shared) 
+modeLag       = input.bool(false, "Reduced Lag Mode", group=group_shared)
+modeFast      = input.bool(false, "Fast Response Mode", group=group_shared)
+useShortTrail   = input.bool(true, "Use Trailing Stop for Shorts?", group=group_shared)
+trailActivation = input.float(3.0, "Activation % (Start Trailing)", group=group_shared)
+trailOffset     = input.float(1.5, "Trail Offset % (Distance)", group=group_shared)
+
+group_time = "Start Date"
+startDate = input.time(timestamp("01 Jan 2025 00:00 +0000"), "Start Date", group=group_time)
+endDate   = input.time(timestamp("31 Dec 2069 23:59 +0000"), "End Date", group=group_time)
+timeCondition = time >= startDate and time <= endDate
+
+// ============================
+// 2. CORE MATH & FUNCTIONS
+// ============================
+
+f_filt9x(_a, _s, _i) =>
+    int _m2 = 0, int _m3 = 0, int _m4 = 0, int _m5 = 0, int _m6 = 0, int _m7 = 0, int _m8 = 0, int _m9 = 0
+    float _f = .0, _x = (1 - _a)
+    _m2 := _i == 9 ? 36  : _i == 8 ? 28 : _i == 7 ? 21 : _i == 6 ? 15 : _i == 5 ? 10 : _i == 4 ? 6 : _i == 3 ? 3 : _i == 2 ? 1 : 0
+    _m3 := _i == 9 ? 84  : _i == 8 ? 56 : _i == 7 ? 35 : _i == 6 ? 20 : _i == 5 ? 10 : _i == 4 ? 4 : _i == 3 ? 1 : 0
+    _m4 := _i == 9 ? 126 : _i == 8 ? 70 : _i == 7 ? 35 : _i == 6 ? 15 : _i == 5 ? 5  : _i == 4 ? 1 : 0
+    _m5 := _i == 9 ? 126 : _i == 8 ? 56 : _i == 7 ? 21 : _i == 6 ? 6  : _i == 5 ? 1  : 0
+    _m6 := _i == 9 ? 84  : _i == 8 ? 28 : _i == 7 ? 7  : _i == 6 ? 1  : 0
+    _m7 := _i == 9 ? 36  : _i == 8 ? 8  : _i == 7 ? 1  : 0
+    _m8 := _i == 9 ? 9   : _i == 8 ? 1  : 0
+    _m9 := _i == 9 ? 1   : 0
+    _f := math.pow(_a, _i) * nz(_s) + _i * _x * nz(_f[1]) - (_i >= 2 ? _m2 * math.pow(_x, 2) * nz(_f[2]) : 0) + (_i >= 3 ? _m3 * math.pow(_x, 3) * nz(_f[3]) : 0) - (_i >= 4 ? _m4 * math.pow(_x, 4) * nz(_f[4]) : 0) + (_i >= 5 ? _m5 * math.pow(_x, 5) * nz(_f[5]) : 0) - (_i >= 6 ? _m6 * math.pow(_x, 6) * nz(_f[6]) : 0) + (_i >= 7 ? _m7 * math.pow(_x, 7) * nz(_f[7]) : 0) - (_i >= 8 ? _m8 * math.pow(_x, 8) * nz(_f[8]) : 0) + (_i == 9 ? _m9 * math.pow(_x, 9) * nz(_f[9]) : 0)
+
+f_pole(_a, _s, _i) =>
+    _f1 = f_filt9x(_a, _s, 1), _f2 = (_i >= 2 ? f_filt9x(_a, _s, 2) : 0), _f3 = (_i >= 3 ? f_filt9x(_a, _s, 3) : 0), _f4 = (_i >= 4 ? f_filt9x(_a, _s, 4) : 0), _f5 = (_i >= 5 ? f_filt9x(_a, _s, 5) : 0), _f6 = (_i >= 6 ? f_filt9x(_a, _s, 6) : 0), _f7 = (_i >= 7 ? f_filt9x(_a, _s, 7) : 0), _f8 = (_i >= 8 ? f_filt9x(_a, _s, 8) : 0), _f9 = (_i == 9 ? f_filt9x(_a, _s, 9) : 0)
+    _fn = switch _i
+        1 => _f1
+        2 => _f2
+        3 => _f3
+        4 => _f4
+        5 => _f5
+        6 => _f6
+        7 => _f7
+        8 => _f8
+        9 => _f9
+        => na
+    [_fn, _f1]
+
+get_gauss(_src, _N, _per, _mult, _modeLag, _modeFast) =>
+    _beta  = (1 - math.cos(4 * math.asin(1) / _per)) / (math.pow(1.414, 2 / _N) - 1)
+    _alpha = -_beta + math.sqrt(math.pow(_beta, 2) + 2 * _beta)
+    _lag   = (_per - 1) / (2 * _N)
+    _srcdata = _modeLag ? _src + (_src - _src[_lag]) : _src
+    _trdata  = _modeLag ? ta.tr(true) + (ta.tr(true) - ta.tr(true)[_lag]) : ta.tr(true)
+    
+    [_filtn, _filt1]     = f_pole(_alpha, _srcdata, _N)
+    [_filtntr, _filt1tr] = f_pole(_alpha, _trdata, _N)
+    
+    _filt   = _modeFast ? (_filtn + _filt1) / 2 : _filtn
+    _filttr = _modeFast ? (_filtntr + _filt1tr) / 2 : _filtntr
+    
+    _hband = _filt + _filttr * _mult
+    _lband = _filt - _filttr * _mult
+    [_filt, _hband, _lband]
+
+get_stoch(_use, _src, _rsiLen, _stochLen, _smoothK) =>
+    _rsi = ta.rsi(_src, _rsiLen)
+    _k = ta.sma(ta.stoch(_rsi, _rsi, _rsi, _stochLen), _smoothK)
+    _cond = _use ? ((_k > 80) or (_k < 20)) : true
+    _cond
+
+// ============================
+// 3. INDICATOR CALCULATIONS
+// ============================
+
+[filt_L, hband_L, lband_L] = get_gauss(src_L, N_L, per_L, mult_L, modeLag, modeFast)
+stochCond_L = get_stoch(useStoch_L, rsi_src, rsiLen_L, stochLen_L, smoothK_L)
+atrValue_L  = ta.atr(atrLen_L)
+
+[filt_S, hband_S, lband_S] = get_gauss(src_S, N_S, per_S, mult_S, modeLag, modeFast)
+stochCond_S = get_stoch(useStoch_S, rsi_src, rsiLen_S, stochLen_S, smoothK_S)
+atrValue_S  = ta.atr(atrLen_S)
+
+// ============================
+// 4. PLOTTING
+// ============================
+
+plot(filt_L, title="Long Filter", color=color.new(#0aff68, 0), linewidth=2)
+plot(hband_L, title="Long High Band", color=color.new(#0aff68, 50))
+
+plot(filt_S, title="Short Filter", color=color.new(#ff0a5a, 0), linewidth=2)
+plot(lband_S, title="Short Low Band", color=color.new(#ff0a5a, 50))
+
+// ============================
+// 5. TRADING LOGIC
+// ============================
+
+longEntry = (filt_L > filt_L[1]) and (close > hband_L) and stochCond_L and timeCondition and barstate.isconfirmed
+longExit  = ta.crossunder(close, hband_L) and timeCondition and barstate.isconfirmed 
+
+shortEntry = (filt_S < filt_S[1]) and (close < lband_S) and stochCond_S and timeCondition and barstate.isconfirmed
+// Prevent same-bar conflicting entry queues
+if longEntry
+    shortEntry := false
+
+shortExit  = ta.crossover(close, lband_S) and timeCondition and barstate.isconfirmed
+
+// ============================
+// 6. EXECUTION & AUTOALPHA WEBHOOKS
+// ============================
+
+f_round_qty(_qty) =>
+    math.floor(_qty / qtyStep) * qtyStep
+
+safe_equity = strategy.equity * (capitalUsagePct / 100)
+price_calc = close > 0 ? close : syminfo.mintick
+raw_qty = (safe_equity * leverage) / price_calc
+real_entry_qty = f_round_qty(raw_qty)
+
+// AutoAlpha expects: {"webhookToken": "YOUR_TOKEN", "symbol": "BTCUSD", "action": "long" | "short" | "exit"}
+msg_long_entry = '{"webhookToken": "' + aa_webhook_token + '", "symbol": "{{ticker}}", "action": "long"}'
+msg_long_exit  = '{"webhookToken": "' + aa_webhook_token + '", "symbol": "{{ticker}}", "action": "exit"}'
+
+msg_short_entry = '{"webhookToken": "' + aa_webhook_token + '", "symbol": "{{ticker}}", "action": "short"}'
+msg_short_exit  = '{"webhookToken": "' + aa_webhook_token + '", "symbol": "{{ticker}}", "action": "exit"}'
+
+isFlat = strategy.position_size == 0
+
+// Variables to permanently lock the Stop Loss price at entry
+var float locked_sl_long = na
+var float locked_sl_short = na
+
+if (tradeDirection == "Both" or tradeDirection == "Long Only")
+    if longEntry and isFlat
+        strategy.entry("Long", strategy.long, qty=real_entry_qty, comment="Enter Long", alert_message=msg_long_entry)
+        locked_sl_long := close - (atrValue_L * atrMult_L) // Lock SL precisely when signal triggers
+    
+    if longExit and strategy.position_size > 0
+        strategy.close("Long", comment="Close Long", alert_message=msg_long_exit)
+        locked_sl_long := na // Reset
+    
+    if strategy.position_size > 0 and not na(locked_sl_long)
+        strategy.exit("SL Long", "Long", stop=locked_sl_long, alert_message=msg_long_exit)
+
+if (tradeDirection == "Both" or tradeDirection == "Short Only")
+    if shortEntry and isFlat
+        strategy.entry("Short", strategy.short, qty=real_entry_qty, comment="Enter Short", alert_message=msg_short_entry)
+        locked_sl_short := close + (atrValue_S * atrMult_S) // Lock SL precisely when signal triggers
+    
+    if shortExit and strategy.position_size < 0
+        strategy.close("Short", comment="Close Short", alert_message=msg_short_exit)
+        locked_sl_short := na // Reset
+    
+    if strategy.position_size < 0 and not na(locked_sl_short)
+        float trailActPrice = na
+        float trailOffsetTicks = na
+        if useShortTrail
+            trailActPrice := strategy.position_avg_price * (1 - trailActivation / 100)
+            trailOffsetTicks := (strategy.position_avg_price * (trailOffset / 100)) / syminfo.mintick
+        strategy.exit("Smart Exit Short", "Short", stop=locked_sl_short, trail_price=trailActPrice, trail_offset=trailOffsetTicks, alert_message=msg_short_exit)
