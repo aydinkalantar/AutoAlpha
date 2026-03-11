@@ -1,9 +1,9 @@
-FROM node:18-alpine AS deps
+FROM node:20-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci --legacy-peer-deps
 
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -17,7 +17,7 @@ RUN npm run build
 RUN npx tsc src/workers/tradeWorker.ts --outDir ./dist/workers --esModuleInterop
 RUN npx tsc src/workers/cronJobs.ts --outDir ./dist/workers --esModuleInterop
 
-FROM node:18-alpine AS runner
+FROM node:20-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
