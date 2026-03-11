@@ -47,12 +47,13 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} antialiased bg-background text-foreground min-h-screen relative`}>
         {/* Global Ambient Glassmorphism Orbs */}
-        <div className="fixed inset-0 overflow-hidden pointer-events-none z-[-1] transition-opacity duration-1000 dark:opacity-100 opacity-50">
-           <div className="absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] max-w-[800px] max-h-[800px] bg-blue-500/10 dark:bg-blue-500/20 rounded-full blur-[120px] mix-blend-screen" />
-           <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] max-w-[800px] max-h-[800px] bg-cyan-500/10 dark:bg-cyan-500/20 rounded-full blur-[120px] mix-blend-screen" />
-           <div className="absolute top-[20%] right-[10%] w-[40vw] h-[40vw] max-w-[600px] max-h-[600px] bg-purple-500/10 dark:bg-purple-500/20 rounded-full blur-[120px] mix-blend-screen" />
+        <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 transition-opacity duration-1000 dark:opacity-100 opacity-50">
+           <div className="absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] max-w-[800px] max-h-[800px] bg-blue-500/20 dark:bg-blue-600/20 rounded-full blur-[120px] mix-blend-screen" />
+           <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] max-w-[800px] max-h-[800px] bg-cyan-500/20 dark:bg-cyan-600/20 rounded-full blur-[120px] mix-blend-screen" />
+           <div className="absolute top-[20%] right-[10%] w-[40vw] h-[40vw] max-w-[600px] max-h-[600px] bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-[120px] mix-blend-screen" />
         </div>
-        <ThemeProvider
+        <div className="relative z-10">
+          <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           disableTransitionOnChange
@@ -61,6 +62,7 @@ export default function RootLayout({
             {children}
           </SessionProvider>
         </ThemeProvider>
+        </div>
       </body>
     </html>
   );
