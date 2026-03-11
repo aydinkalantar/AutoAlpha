@@ -91,17 +91,17 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
                 </nav>
 
                 <div className="p-4 border-t border-black/5 dark:border-white/10 flex flex-col gap-2 overflow-hidden">
-                    <Link href="/dashboard" className={cn("flex items-center justify-center gap-2 py-2 text-sm font-bold text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all w-full", isCollapsed ? "px-0" : "px-3")}>
+                    <Link href="/dashboard" className={cn("flex items-center gap-3 py-3 text-sm font-bold text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
                         <LayoutDashboard className="w-5 h-5 flex-shrink-0" />
                         {!isCollapsed && <span className="whitespace-nowrap">Back to App</span>}
                     </Link>
                     {mounted && (
-                        <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className={cn("flex items-center justify-center gap-2 py-2 text-sm font-bold text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all w-full", isCollapsed ? "px-0" : "px-3")}>
+                        <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className={cn("flex items-center gap-3 py-3 text-sm font-bold text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
                             {theme === 'dark' ? <Sun className="w-5 h-5 flex-shrink-0 text-amber-400" /> : <Moon className="w-5 h-5 flex-shrink-0 text-blue-500" />}
                             {!isCollapsed && <span className="whitespace-nowrap">{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>}
                         </button>
                     )}
-                    <button onClick={() => signOut({ callbackUrl: '/login' })} className={cn("flex items-center justify-center gap-2 py-2 text-sm font-bold text-red-500/80 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all w-full", isCollapsed ? "px-0" : "px-3")}>
+                    <button onClick={() => signOut({ callbackUrl: '/login' })} className={cn("flex items-center gap-3 py-3 text-sm font-bold text-red-500/80 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
                         <LogOut className="w-5 h-5 flex-shrink-0" />
                         {!isCollapsed && <span className="whitespace-nowrap">Log Out</span>}
                     </button>
