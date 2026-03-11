@@ -6,7 +6,7 @@ RUN npm ci --legacy-peer-deps
 FROM node:20-alpine AS builder
 WORKDIR /app
 # Install openssl compatibility for Prisma Client on Alpine
-RUN apk add --no-cache openssl
+RUN apk add --no-cache openssl libc6-compat
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
@@ -25,7 +25,7 @@ RUN npx tsc src/workers/cronJobs.ts --outDir ./dist/workers --esModuleInterop
 FROM node:20-alpine AS runner
 WORKDIR /app
 # Also install OpenSSL in the runner image so the runtime can execute Prisma queries
-RUN apk add --no-cache openssl
+RUN apk add --no-cache openssl libc6-compat
 
 ENV NODE_ENV production
 ENV REDIS_HOST redis
