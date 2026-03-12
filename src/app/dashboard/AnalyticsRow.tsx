@@ -30,8 +30,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
         yesterday.setDate(yesterday.getDate() - 1);
 
         for (const pos of closedPositions) {
-            const isLong = pos.side === 'LONG' || pos.side === 'BUY';
-            const exitPnl = pos.exitPrice ? (isLong ? pos.exitPrice - pos.entryPrice : pos.entryPrice - pos.exitPrice) * pos.filledAmount : 0;
+            const exitPnl = pos.realizedPnl || 0;
 
             if (exitPnl > 0) {
                 wins++;

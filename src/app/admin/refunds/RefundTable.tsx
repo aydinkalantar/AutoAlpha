@@ -76,7 +76,7 @@ export default function RefundTable({ users }: { users: User[] }) {
                                         <button
                                             onClick={() => handleExecuteRefund(user.id)}
                                             disabled={isPending}
-                                            className="text-foreground bg-[#F5F5F7] px-4 py-2 rounded-full hover:bg-black/5 transition-colors flex items-center gap-2 font-bold text-xs uppercase tracking-tight disabled:opacity-50"
+                                            className="text-foreground bg-black/5 dark:bg-white/5 px-4 py-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors flex items-center gap-2 font-bold text-xs uppercase tracking-tight disabled:opacity-50"
                                             title="Execute Gateway Refund"
                                         >
                                             <span>

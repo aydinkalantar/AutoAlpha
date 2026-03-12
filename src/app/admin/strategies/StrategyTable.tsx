@@ -116,7 +116,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                     <div className="flex justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
                         <Link
                             href={`/admin/strategies/${strategy.id}`}
-                            className="w-10 h-10 bg-[#F5F5F7] dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 rounded-full flex items-center justify-center text-black/60 dark:text-white/60 hover:text-foreground transition-colors"
+                            className="w-10 h-10 bg-black/5 dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 rounded-full flex items-center justify-center text-black/60 dark:text-white/60 hover:text-foreground transition-colors"
                             title="Edit Settings"
                         >
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -125,7 +125,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                         </Link>
                         <button
                             onClick={() => setShowInstructions(true)}
-                            className="w-10 h-10 bg-[#F5F5F7] dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 rounded-full flex items-center justify-center text-black/60 dark:text-white/60 hover:text-foreground transition-colors"
+                            className="w-10 h-10 bg-black/5 dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 rounded-full flex items-center justify-center text-black/60 dark:text-white/60 hover:text-foreground transition-colors"
                             title="Webhook Instructions"
                         >
                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -135,7 +135,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                         <button
                             onClick={handleWebhook}
                             disabled={isPending}
-                            className="w-10 h-10 bg-[#F5F5F7] dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 rounded-full flex items-center justify-center text-black/60 dark:text-white/60 hover:text-foreground transition-colors disabled:opacity-50"
+                            className="w-10 h-10 bg-black/5 dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 rounded-full flex items-center justify-center text-black/60 dark:text-white/60 hover:text-foreground transition-colors disabled:opacity-50"
                             title="Regenerate Webhook"
                         >
                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -189,7 +189,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                                 <button
                                     onClick={() => setShowInstructions(false)}
                                     title="Close"
-                                    className="p-2 bg-[#F5F5F7] hover:bg-black/5 rounded-full text-foreground/50 hover:text-black transition-colors"
+                                    className="p-2 bg-black/5 hover:bg-black/5 rounded-full text-foreground/50 hover:text-black transition-colors"
                                 >
                                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />

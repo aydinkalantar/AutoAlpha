@@ -46,7 +46,7 @@ export default function LedgerTable({ ledgers }: { ledgers: LedgerWithUser[] }) 
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <div className="flex bg-[#F5F5F7] dark:bg-white/5 p-1 rounded-xl">
+                <div className="flex bg-black/5 dark:bg-white/5 p-1 rounded-xl">
                     <button
                         onClick={() => setFilter('ALL')}
                         className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${filter === 'ALL' ? 'bg-white dark:bg-white/10 shadow-sm text-foreground' : 'text-foreground/50 hover:text-foreground'}`}

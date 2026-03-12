@@ -40,7 +40,7 @@ export default function AccountingSection({ ledgers, positions, usdtBalance, usd
             const isLong = pos.side === 'LONG' || pos.side === 'BUY';
             let grossPnl = 0;
             if (!pos.isOpen && pos.exitPrice) {
-                grossPnl = (isLong ? pos.exitPrice - pos.entryPrice : pos.entryPrice - pos.exitPrice) * pos.filledAmount;
+                grossPnl = (isLong ? pos.exitPrice - pos.entryPrice : pos.entryPrice - pos.exitPrice) * pos.filledAmount * (pos.leverage || 1);
             }
             const dateStr = new Date(pos.createdAt).toISOString();
 
@@ -150,7 +150,7 @@ export default function AccountingSection({ ledgers, positions, usdtBalance, usd
                     <div className="flex justify-between items-center bg-black/5 dark:bg-white/5 p-4 rounded-xl">
                         <div>
                             <p className="text-sm font-semibold">Consolidated Ledger</p>
-                            <p className="text-xs text-foreground/50">Trades, Fees, Deposits, Withdrawals</p>
+                            <p className="text-xs text-foreground/50">Trades, Fees, Deposits</p>
                         </div>
                         <span className="text-xs font-bold text-foreground/40">{ledgers.length + positions.length} Records</span>
                     </div>

@@ -62,7 +62,7 @@ export default function InvestorTable({ users }: InvestorTableProps) {
                                                     Connected
                                                 </span>
                                             ) : (
-                                                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#F5F5F7] dark:bg-white/5 text-foreground/40">
+                                                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-black/5 dark:bg-white/5 text-foreground/40">
                                                     None
                                                 </span>
                                             )}
@@ -86,7 +86,7 @@ export default function InvestorTable({ users }: InvestorTableProps) {
                                             )}
                                             <button
                                                 onClick={() => openAdjustModal(user.id, user.email)}
-                                                className="text-foreground bg-[#F5F5F7] dark:bg-white/5 px-4 py-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors flex items-center gap-2 font-bold text-xs uppercase tracking-tight"
+                                                className="text-foreground bg-black/5 dark:bg-white/5 px-4 py-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors flex items-center gap-2 font-bold text-xs uppercase tracking-tight"
                                                 title="Adjust Balance"
                                             >
                                                 <span>

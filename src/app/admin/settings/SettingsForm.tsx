@@ -53,7 +53,7 @@ export default function SettingsForm({ config }: { config: SystemConfig | null }
                         name="stripeMode"
                         value={mode}
                         onChange={(e) => setMode(e.target.value)}
-                        className="w-full bg-[#F5F5F7] dark:bg-white/5 border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground focus:outline-none focus:border-black/10 dark:focus:border-white/10 focus:bg-white dark:focus:bg-[#1C1C1E] focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 transition-all font-bold appearance-none"
+                        className="w-full bg-black/5 dark:bg-white/5 border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground focus:outline-none focus:border-black/10 dark:focus:border-white/10 focus:bg-white dark:focus:bg-[#1C1C1E] focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 transition-all font-bold appearance-none"
                     >
                         <option value="TEST">TEST MODE (Sandbox)</option>
                         <option value="LIVE">LIVE MODE (Production)</option>
@@ -70,7 +70,7 @@ export default function SettingsForm({ config }: { config: SystemConfig | null }
                             name="stripeTestPublicKey"
                             defaultValue={config.stripeTestPublicKey || ''}
                             placeholder="pk_test_..."
-                            className="w-full bg-[#F5F5F7] dark:bg-white/5 border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground placeholder-foreground/30 focus:outline-none focus:border-black/10 dark:focus:border-white/10 focus:bg-white dark:focus:bg-[#1C1C1E] focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 transition-all font-mono text-sm"
+                            className="w-full bg-black/5 dark:bg-white/5 border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground placeholder-foreground/30 focus:outline-none focus:border-black/10 dark:focus:border-white/10 focus:bg-white dark:focus:bg-[#1C1C1E] focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 transition-all font-mono text-sm"
                         />
                     </div>
                     <div className="space-y-3">
@@ -80,7 +80,7 @@ export default function SettingsForm({ config }: { config: SystemConfig | null }
                             name="stripeTestSecretKey"
                             defaultValue={config.stripeTestSecretKey || ''}
                             placeholder="sk_test_..."
-                            className="w-full bg-[#F5F5F7] dark:bg-white/5 border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground placeholder-foreground/30 focus:outline-none focus:border-black/10 dark:focus:border-white/10 focus:bg-white dark:focus:bg-[#1C1C1E] focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 transition-all font-mono text-sm"
+                            className="w-full bg-black/5 dark:bg-white/5 border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground placeholder-foreground/30 focus:outline-none focus:border-black/10 dark:focus:border-white/10 focus:bg-white dark:focus:bg-[#1C1C1E] focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 transition-all font-mono text-sm"
                         />
                     </div>
                     <div className="space-y-3">
@@ -90,7 +90,7 @@ export default function SettingsForm({ config }: { config: SystemConfig | null }
                             name="stripeTestWebhookSecret"
                             defaultValue={config.stripeTestWebhookSecret || ''}
                             placeholder="whsec_..."
-                            className="w-full bg-[#F5F5F7] dark:bg-white/5 border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground placeholder-foreground/30 focus:outline-none focus:border-black/10 dark:focus:border-white/10 focus:bg-white dark:focus:bg-[#1C1C1E] focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 transition-all font-mono text-sm"
+                            className="w-full bg-black/5 dark:bg-white/5 border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground placeholder-foreground/30 focus:outline-none focus:border-black/10 dark:focus:border-white/10 focus:bg-white dark:focus:bg-[#1C1C1E] focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 transition-all font-mono text-sm"
                         />
                     </div>
                 </div>
@@ -108,7 +108,7 @@ export default function SettingsForm({ config }: { config: SystemConfig | null }
                             name="stripeLivePublicKey"
                             defaultValue={config.stripeLivePublicKey || ''}
                             placeholder="pk_live_..."
-                            className="w-full bg-[#F5F5F7] dark:bg-white/5 border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground placeholder-foreground/30 focus:outline-none focus:border-black/10 dark:focus:border-white/10 focus:bg-white dark:focus:bg-[#1C1C1E] focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 transition-all font-mono text-sm"
+                            className="w-full bg-black/5 dark:bg-white/5 border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground placeholder-foreground/30 focus:outline-none focus:border-black/10 dark:focus:border-white/10 focus:bg-white dark:focus:bg-[#1C1C1E] focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 transition-all font-mono text-sm"
                         />
                     </div>
                     <div className="space-y-3">
@@ -118,7 +118,7 @@ export default function SettingsForm({ config }: { config: SystemConfig | null }
                             name="stripeLiveSecretKey"
                             defaultValue={config.stripeLiveSecretKey || ''}
                             placeholder="sk_live_..."
-                            className="w-full bg-[#F5F5F7] dark:bg-white/5 border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground placeholder-foreground/30 focus:outline-none focus:border-black/10 dark:focus:border-white/10 focus:bg-white dark:focus:bg-[#1C1C1E] focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 transition-all font-mono text-sm"
+                            className="w-full bg-black/5 dark:bg-white/5 border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground placeholder-foreground/30 focus:outline-none focus:border-black/10 dark:focus:border-white/10 focus:bg-white dark:focus:bg-[#1C1C1E] focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 transition-all font-mono text-sm"
                         />
                     </div>
                     <div className="space-y-3">
@@ -128,7 +128,7 @@ export default function SettingsForm({ config }: { config: SystemConfig | null }
                             name="stripeLiveWebhookSecret"
                             defaultValue={config.stripeLiveWebhookSecret || ''}
                             placeholder="whsec_..."
-                            className="w-full bg-[#F5F5F7] dark:bg-white/5 border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground placeholder-foreground/30 focus:outline-none focus:border-black/10 dark:focus:border-white/10 focus:bg-white dark:focus:bg-[#1C1C1E] focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 transition-all font-mono text-sm"
+                            className="w-full bg-black/5 dark:bg-white/5 border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground placeholder-foreground/30 focus:outline-none focus:border-black/10 dark:focus:border-white/10 focus:bg-white dark:focus:bg-[#1C1C1E] focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 transition-all font-mono text-sm"
                         />
                     </div>
                 </div>

@@ -118,10 +118,6 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                             <Wallet className="w-5 h-5 flex-shrink-0" />
                             {!isCollapsed && <span className="whitespace-nowrap">Deposit</span>}
                         </Link>
-                        <Link href="/dashboard/withdraw" className={cn("flex items-center justify-center gap-2 py-3 text-sm font-bold bg-white/50 dark:bg-white/5 backdrop-blur-md text-foreground border border-black/5 dark:border-white/10 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-all w-full", isCollapsed ? "px-0" : "px-3")}>
-                            <ArrowUpRight className="w-5 h-5 flex-shrink-0 opacity-70" />
-                            {!isCollapsed && <span className="whitespace-nowrap">Withdraw</span>}
-                        </Link>
                     </div>
 
                     <div className="w-full h-px bg-black/5 dark:bg-white/10" />
@@ -214,25 +210,6 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                 >
                     <Wallet className={cn("w-5.5 h-5.5 transition-transform duration-300", pathname === '/dashboard/deposit' ? "scale-110 drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]" : "group-hover:text-purple-500 transition-colors")} />
                     {pathname === '/dashboard/deposit' && (
-                        <motion.div
-                            layoutId="mobileNavIndicator"
-                            className="absolute -bottom-1 w-1 h-1 rounded-full bg-cyan-400"
-                        />
-                    )}
-                </Link>
-                <Link
-                    href="/dashboard/withdraw"
-                    className={cn(
-                        "relative flex flex-col items-center justify-center w-14 h-12 rounded-2xl transition-all duration-300 group",
-                        pathname === '/dashboard/withdraw'
-                            ? "text-cyan-500 bg-cyan-500/10 dark:bg-cyan-500/20"
-                            : "text-foreground/40 hover:text-foreground/70 active:scale-95"
-                    )}
-                    aria-label="Withdraw"
-                    title="Withdraw"
-                >
-                    <ArrowUpRight className={cn("w-5.5 h-5.5 transition-transform duration-300", pathname === '/dashboard/withdraw' ? "scale-110 drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]" : "group-hover:text-emerald-500 transition-colors")} />
-                    {pathname === '/dashboard/withdraw' && (
                         <motion.div
                             layoutId="mobileNavIndicator"
                             className="absolute -bottom-1 w-1 h-1 rounded-full bg-cyan-400"
