@@ -60,29 +60,29 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
           <div className="flex items-center gap-4">
             {status === "loading" ? (
               <>
-                <ThemeToggle />
                 <div className="w-24 h-10 animate-pulse bg-black/5 dark:bg-white/10 rounded-full" />
+                <ThemeToggle />
               </>
             ) : session ? (
               <>
-                <ThemeToggle />
                 <Link
                   href={(session.user as any)?.role === 'ADMIN' ? '/admin' : '/dashboard'}
                   className="px-6 py-2.5 text-sm font-semibold bg-gradient-to-r from-cyan-500 to-purple-600 text-white rounded-full hover:opacity-90 transition-opacity shadow-lg shadow-purple-500/25"
                 >
                   Go to Dashboard
                 </Link>
+                <ThemeToggle />
               </>
             ) : (
               <>
                 <Link href="/api/auth/signin" className="hidden sm:block text-sm font-semibold text-foreground/70 hover:text-foreground transition-colors px-4 py-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5">
                   Log In
                 </Link>
-                <ThemeToggle />
                 <Link href="/api/auth/signin" className="px-4 py-2 sm:px-6 sm:py-2.5 text-xs sm:text-sm font-semibold bg-gradient-to-r from-cyan-500 to-purple-600 text-white rounded-full hover:opacity-90 transition-opacity shadow-lg shadow-purple-500/25 whitespace-nowrap">
                   <span className="sm:hidden">Sign Up</span>
                   <span className="hidden sm:inline">Create Free Account</span>
                 </Link>
+                <ThemeToggle />
               </>
             )}
           </div>
