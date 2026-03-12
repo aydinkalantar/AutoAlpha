@@ -108,7 +108,7 @@ cron.schedule('*/5 * * * *', async () => {
                                     where: { id: user.referredById },
                                     data: { [updateField]: { increment: commission } }
                                 });
-                                
+
                                 await tx.ledger.create({
                                     data: {
                                         userId: user.referredById,
@@ -197,7 +197,7 @@ cron.schedule('0 0 * * *', async () => {
 });
 
 // Task 3: Hourly Auto-Deposit Processing
-cron.schedule('0 * * * *', async () => {
+cron.schedule('* * * * *', async () => {
     console.log('[Cron] Running Hourly Auto-Deposit Processing...');
 
     try {
@@ -304,7 +304,7 @@ cron.schedule('0 * * * *', async () => {
 
                 } catch (stripeErr: any) {
                     console.error(`[Cron] Stripe charge failed for user ${user.id}:`, stripeErr.message);
-                    
+
                     // Specific handling for declined off-session cards
                     if (stripeErr.code === 'authentication_required') {
                         // User's bank demands 3D Secure, which we can't do off-session.
