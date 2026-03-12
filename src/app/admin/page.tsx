@@ -53,7 +53,8 @@ export default async function AdminOverviewPage() {
             where: {
                 description: {
                     contains: 'Performance Fee Deducted'
-                }
+                },
+                isPaper: false
             }
         });
         // The amount is negative in the ledger (subtracting from user). So we take absolute value.
@@ -65,7 +66,8 @@ export default async function AdminOverviewPage() {
                 currentVirtualBalance: true
             },
             where: {
-                isActive: true
+                isActive: true,
+                isPaper: false
             }
         });
         platformAUM = activeSubAUM._sum.currentVirtualBalance || 0;
@@ -80,7 +82,8 @@ export default async function AdminOverviewPage() {
         recentLedgers = await prisma.ledger.findMany({
             where: {
                 description: { contains: 'Performance Fee Deducted' },
-                createdAt: { gte: thirtyDaysAgo }
+                createdAt: { gte: thirtyDaysAgo },
+                isPaper: false
             },
             select: {
                 amount: true,
