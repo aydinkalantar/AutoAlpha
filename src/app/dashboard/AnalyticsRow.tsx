@@ -296,7 +296,13 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
                                 </Pie>
                                 <RechartsTooltip
                                     formatter={(value: any) => [`$${value.toLocaleString()}`, 'Capital']}
-                                    contentStyle={{ borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', backgroundColor: 'rgba(0,0,0,0.8)' }}
+                                    contentStyle={{ borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', backgroundColor: 'rgba(0,0,0,0.8)', color: '#fff' }}
+                                />
+                                <Legend 
+                                    verticalAlign="bottom" 
+                                    height={36} 
+                                    iconType="circle" 
+                                    wrapperStyle={{ fontSize: '12px', fontWeight: '600', paddingTop: '20px' }} 
                                 />
                             </PieChart>
                         </ResponsiveContainer>
