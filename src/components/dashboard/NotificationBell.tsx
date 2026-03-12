@@ -9,8 +9,16 @@ export default function NotificationBell({ userId }: { userId?: string }) {
 
     const fetchNotifs = async () => {
         if (!userId) return;
-        const notifs = await getUnreadNotifications(userId);
-        setNotifications(notifs);
+        try {
+            const notifs = await getUnreadNotifications(userId);
+            setNotifications(notifs);
+        } catch (error: any) {
+            // If the server action ID changes due to a new deployment, Next.js throws an error.
+            // When polling, this causes endless error logs. We catch it and silently reload the client to get the new JS chunk.
+            if (error?.message?.includes('Server Action') || error?.message?.includes('fetch')) {
+                window.location.reload();
+            }
+        }
     };
 
     useEffect(() => {
