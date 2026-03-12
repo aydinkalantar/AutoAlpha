@@ -72,17 +72,17 @@ export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBala
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-lg">
-            <div className="w-full max-w-md bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-[1.5rem] shadow-2xl relative overflow-hidden flex flex-col">
-                <div className="px-6 py-4 flex justify-between items-center border-b border-black/5 dark:border-white/5">
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 md:pl-64 bg-black/50 backdrop-blur-sm transition-all duration-300">
+            <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-black/5 dark:border-white/10 relative transform transition-all duration-300">
+                <div className="px-6 py-5 border-b border-black/5 dark:border-white/10 flex justify-between items-center bg-gray-50/50 dark:bg-white/5">
                     <h2 className="text-xl font-bold text-foreground tracking-tight">Subscribe</h2>
                     <button
                         onClick={handleClose}
                         title="Close Modal"
                         aria-label="Close Modal"
-                        className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center text-foreground/50 hover:bg-black/10 dark:hover:bg-white/10 hover:text-foreground transition-colors font-medium text-lg"
+                        className="text-foreground/50 hover:text-foreground transition-colors p-1.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-full"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
                     </button>
                 </div>
 
@@ -93,8 +93,8 @@ export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBala
                         </div>
                     )}
 
-                    <div className="bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 rounded-xl p-4 space-y-3">
-                        <div className="flex justify-between items-center text-sm border-b border-black/5 dark:border-white/5 pb-3">
+                    <div className="bg-gray-100/80 dark:bg-white/5 rounded-xl border border-black/5 dark:border-white/10 p-4 space-y-3">
+                        <div className="flex justify-between items-center text-sm border-b border-black/5 dark:border-white/10 pb-3">
                             <span className="font-semibold text-foreground/60">Strategy</span>
                             <span className="font-bold text-foreground">{strategy.name}</span>
                         </div>
@@ -112,7 +112,7 @@ export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBala
                             <select
                                 value={selectedExchange}
                                 onChange={(e) => setSelectedExchange(e.target.value)}
-                                className="w-full bg-white/40 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-[1.5rem] px-6 py-5 text-xl font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all cursor-pointer backdrop-blur-md"
+                                className="w-full bg-white dark:bg-black/50 border border-gray-300 dark:border-white/20 rounded-xl px-4 py-3 text-lg font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all cursor-pointer shadow-sm"
                             >
                                 {connectedExchanges.length > 0 ? (
                                     connectedExchanges.map(ex => (
@@ -149,12 +149,12 @@ export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBala
                                 value={capitalStr}
                                 onChange={(e) => setCapitalStr(e.target.value)}
                                 autoFocus
-                                className="w-full bg-white/40 dark:bg-white/5 border border-black/5 dark:border-white/10 group-hover:border-black/10 dark:group-hover:border-white/20 rounded-[1.5rem] pl-12 pr-6 py-5 text-3xl font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:bg-white/60 dark:focus:bg-white/10 transition-all tracking-tight backdrop-blur-md"
+                                className="w-full bg-white dark:bg-black/50 border border-gray-300 dark:border-white/20 rounded-xl pl-10 pr-4 py-3 text-3xl text-right font-black text-foreground focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all tracking-tight shadow-sm"
                             />
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-between p-6 border border-black/5 dark:border-white/10 rounded-[1.5rem] bg-white/40 dark:bg-white/5 backdrop-blur-md shadow-sm">
+                    <div className="flex items-center justify-between p-5 border border-black/5 dark:border-white/10 rounded-xl bg-gray-50/50 dark:bg-white/5 shadow-sm">
                         <div className="flex flex-col">
                             <span className="text-sm font-bold text-foreground">Auto-Compound</span>
                             <span className="text-xs font-semibold text-foreground/40">Reinvest profits automatically</span>
@@ -176,7 +176,7 @@ export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBala
                         <button
                             type="submit"
                             disabled={isSubmitting || parseFloat(capitalStr) > currentBalance}
-                            className="w-full py-5 px-6 bg-gradient-to-br from-cyan-400 to-purple-600 shadow-lg shadow-purple-500/20 hover:opacity-90 disabled:opacity-30 text-white rounded-[1.5rem] text-lg font-bold transition-all"
+                            className="w-full py-3.5 px-6 bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 disabled:from-gray-300 disabled:to-gray-200 dark:disabled:from-white/10 dark:disabled:to-white/5 disabled:text-foreground/40 text-white rounded-xl text-lg font-bold transition-all shadow-lg shadow-cyan-500/20 disabled:shadow-none"
                         >
                             {isSubmitting ? 'Processing...' : 'Confirm Allocation'}
                         </button>
