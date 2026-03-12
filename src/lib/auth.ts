@@ -17,7 +17,7 @@ export const authOptions: AuthOptions = {
         CredentialsProvider({
             name: "Credentials",
             credentials: {
-                username: { label: "Email", type: "email", placeholder: "investor@autoalpha.ai" },
+                username: { label: "Email", type: "text", placeholder: "investor@autoalpha.ai" },
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials) {
