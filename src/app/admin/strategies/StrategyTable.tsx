@@ -4,6 +4,7 @@ import { useTransition, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Strategy } from '@prisma/client';
 import { toggleStrategyActive, generateWebhook, deleteStrategy, toggleStrategyPublic, updateStrategySafeSettings } from './actions';
+import Link from 'next/link';
 
 export default function StrategyTable({ strategies }: { strategies: Strategy[] }) {
     return (
@@ -39,7 +40,6 @@ export default function StrategyTable({ strategies }: { strategies: Strategy[] }
 function StrategyRow({ strategy }: { strategy: Strategy }) {
     const [isPending, startTransition] = useTransition();
     const [showInstructions, setShowInstructions] = useState(false);
-    const [showEditModal, setShowEditModal] = useState(false);
 
     const handleToggle = () => {
         if (!strategy.isActive || window.confirm(`EMERGENCY PAUSE: Are you sure you want to pause ${strategy.name}? All future TradingView webhooks will be permanently ignored until Reactivated.`)) {
@@ -114,15 +114,15 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                 </td>
                 <td className="px-8 py-5 text-right w-48">
                     <div className="flex justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
-                        <button
-                            onClick={() => setShowEditModal(true)}
+                        <Link
+                            href={`/admin/strategies/${strategy.id}`}
                             className="w-10 h-10 bg-[#F5F5F7] dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 rounded-full flex items-center justify-center text-black/60 dark:text-white/60 hover:text-foreground transition-colors"
                             title="Edit Settings"
                         >
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                             </svg>
-                        </button>
+                        </Link>
                         <button
                             onClick={() => setShowInstructions(true)}
                             className="w-10 h-10 bg-[#F5F5F7] dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 rounded-full flex items-center justify-center text-black/60 dark:text-white/60 hover:text-foreground transition-colors"
@@ -255,75 +255,6 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                             </div>
 
                         </div>
-                    </div>
-                </div>,
-                document.body
-            )}
-
-            {/* Edit Modal Overlay */}
-            {showEditModal && typeof document !== 'undefined' && createPortal(
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-opacity overflow-y-auto">
-                    <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl rounded-[2rem] shadow-2xl overflow-hidden w-full max-w-2xl transform transition-all border border-black/5 dark:border-white/10 mt-10 mb-10">
-                        <form
-                            action={async (formData) => {
-                                startTransition(async () => {
-                                    await updateStrategySafeSettings(strategy.id, formData);
-                                    setShowEditModal(false);
-                                });
-                            }}
-                            className="p-8 space-y-6"
-                        >
-                            <div className="flex justify-between items-start">
-                                <div>
-                                    <h3 className="text-2xl font-bold text-foreground tracking-tight">Edit Strategy</h3>
-                                    <p className="text-foreground/50 mt-1 font-medium">Safely modify {strategy.name}</p>
-                                </div>
-                                <button
-                                    type="button"
-                                    onClick={() => setShowEditModal(false)}
-                                    title="Close"
-                                    className="p-2 bg-[#F5F5F7] dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 rounded-full text-foreground/50 hover:text-black dark:hover:text-white transition-colors"
-                                >
-                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-xs font-bold text-black/60 dark:text-white/60 uppercase tracking-wide">Strategy Name</label>
-                                    <input required name="name" defaultValue={strategy.name} className="w-full bg-[#F5F5F7] dark:bg-[#1D1D1F] text-foreground px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-xs font-bold text-black/60 dark:text-white/60 uppercase tracking-wide">Perf. Fee %</label>
-                                    <input required type="number" step="0.1" name="performanceFee" defaultValue={strategy.performanceFeePercentage} className="w-full bg-[#F5F5F7] dark:bg-[#1D1D1F] text-foreground px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-xs font-bold text-black/60 dark:text-white/60 uppercase tracking-wide">Default Equity %</label>
-                                    <input required type="number" step="0.1" name="defaultEquity" defaultValue={strategy.defaultEquityPercentage} className="w-full bg-[#F5F5F7] dark:bg-[#1D1D1F] text-foreground px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-xs font-bold text-black/60 dark:text-white/60 uppercase tracking-wide">Expected ROI %</label>
-                                    <input type="number" step="0.1" name="expectedRoi" defaultValue={strategy.expectedRoiPercentage || ''} placeholder="Optional" className="w-full bg-[#F5F5F7] dark:bg-[#1D1D1F] text-foreground px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-xs font-bold text-black/60 dark:text-white/60 uppercase tracking-wide">Win Rate %</label>
-                                    <input type="number" step="0.1" name="winRate" defaultValue={strategy.winRatePercentage || ''} placeholder="Optional" className="w-full bg-[#F5F5F7] dark:bg-[#1D1D1F] text-foreground px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-xs font-bold text-black/60 dark:text-white/60 uppercase tracking-wide">Max Drawdown %</label>
-                                    <input type="number" step="0.1" name="drawdown" defaultValue={strategy.drawdownPercentage || ''} placeholder="Optional" className="w-full bg-[#F5F5F7] dark:bg-[#1D1D1F] text-foreground px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
-                                </div>
-                            </div>
-
-                            <div className="pt-4 flex justify-end gap-3">
-                                <button type="button" onClick={() => setShowEditModal(false)} className="px-6 py-3 rounded-full font-bold text-black/60 dark:text-white/60 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Cancel</button>
-                                <button type="submit" disabled={isPending} className="px-8 py-3 rounded-full font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors disabled:opacity-50 shadow-lg shadow-blue-500/20">
-                                    {isPending ? 'Saving...' : 'Save Strategy'}
-                                </button>
-                            </div>
-                        </form>
                     </div>
                 </div>,
                 document.body

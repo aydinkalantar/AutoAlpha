@@ -142,3 +142,45 @@ export async function deleteStrategy(id: string) {
     });
     revalidatePath('/admin/strategies');
 }
+
+export async function updateStrategyDetails(id: string, data: {
+    description?: string;
+    riskParameters?: any[];
+    winRatePercentage?: number | null;
+    drawdownPercentage?: number | null;
+    profitFactor?: number | null;
+}) {
+    await verifyAdmin();
+
+    try {
+        await prisma.strategy.update({
+            where: { id },
+            data: {
+                description: data.description,
+                riskParameters: data.riskParameters ?? undefined,
+                winRatePercentage: data.winRatePercentage ?? undefined,
+                drawdownPercentage: data.drawdownPercentage ?? undefined,
+                profitFactor: data.profitFactor ?? undefined
+            }
+        });
+        return { success: true };
+    } catch (e: any) {
+        console.error("Failed to update strategy details", e);
+        return { success: false, error: e.message };
+    }
+}
+
+export async function uploadStrategyBacktestData(id: string, backtestData: any[]) {
+    await verifyAdmin();
+
+    try {
+        await prisma.strategy.update({
+            where: { id },
+            data: { backtestData: backtestData as any }
+        });
+        return { success: true };
+    } catch (e: any) {
+        console.error("Failed to upload backtest data", e);
+        return { success: false, error: e.message };
+    }
+}

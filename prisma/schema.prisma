@@ -143,10 +143,16 @@ model Strategy {
   maxLeverage               Float          @default(1.0)
   defaultEquityPercentage   Float          @default(95.0)
   
-  // Performance Metrics (Display Only)
+  // Strategy Details & Backtest
+  description               String?        @db.Text
+  riskParameters            Json?
+  backtestData              Json?
+  
+  // Performance Metrics (Static/Calculated)
   expectedRoiPercentage     Float?         
   winRatePercentage         Float?         
   drawdownPercentage        Float?         
+  profitFactor              Float?
 
   isActive                  Boolean        @default(true)
   isPublic                  Boolean        @default(false)
