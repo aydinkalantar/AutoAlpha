@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import type { UTCTimestamp } from 'lightweight-charts';
 import { Activity, XCircle, TrendingUp, TrendingDown, RefreshCw, Search } from "lucide-react";
+import Link from 'next/link';
 
 type Position = {
     id: string;
@@ -117,15 +118,13 @@ export default function LiveRadar({ openPositions: initialPositions, isPaperMode
                     You aren't tracking any active trades yet. Allocate capital to a strategy to watch the live execution engine go to work.
                 </p>
 
-                <button 
-                    onClick={() => {
-                        document.getElementById('strategy-marketplace')?.scrollIntoView({ behavior: 'smooth' });
-                    }}
+                <Link 
+                    href="/dashboard/market"
                     className="relative z-10 inline-flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black font-semibold text-sm px-6 py-2.5 rounded-full hover:scale-105 active:scale-95 transition-all shadow-xl shadow-black/10 dark:shadow-white/10"
                 >
                     <Search className="w-4 h-4" />
                     Find a Strategy
-                </button>
+                </Link>
             </div>
         );
     }
