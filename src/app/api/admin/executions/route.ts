@@ -28,19 +28,24 @@ export async function GET() {
         // Fetch last 50 jobs from BullMQ (completed, failed, active, waiting)
         const jobs = await tradeQueue.getJobs(['completed', 'failed', 'active', 'waiting'], 0, 50, true);
 
-        const serializedJobs = jobs.map(j => ({
-            id: j.id,
-            name: j.name,
-            data: j.data,
-            state: j.finishedOn ? (j.failedReason ? 'failed' : 'completed') : 'pending',
-            failedReason: j.failedReason,
-            timestamp: j.timestamp,
-            finishedOn: j.finishedOn,
-        }));
+        const serializedJobs = jobs
+            .filter(j => j.data?.isPaper !== true)
+            .map(j => ({
+                id: j.id,
+                name: j.name,
+                data: j.data,
+                state: j.finishedOn ? (j.failedReason ? 'failed' : 'completed') : 'pending',
+                failedReason: j.failedReason,
+                timestamp: j.timestamp,
+                finishedOn: j.finishedOn,
+            }));
 
         // Fetch last 50 Position updates from Prisma
         const positions = await prisma.position.findMany({
             take: 50,
+            where: {
+                isPaper: false
+            },
             orderBy: {
                 updatedAt: 'desc'
             },

@@ -277,14 +277,14 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
                 </div>
                 <div className="flex-1 min-h-[160px] w-full relative">
                     {donutData.length > 0 ? (
-                        <ResponsiveContainer width="100%" height="100%" minHeight={300}>
-                            <PieChart>
+                        <ResponsiveContainer width="100%" height="100%" minHeight={200}>
+                            <PieChart margin={{ top: 0, right: 0, bottom: 10, left: 0 }}>
                                 <Pie
                                     data={donutData}
                                     cx="50%"
-                                    cy="50%"
-                                    innerRadius={40}
-                                    outerRadius={60}
+                                    cy="45%"
+                                    innerRadius={50}
+                                    outerRadius={70}
                                     paddingAngle={2}
                                     dataKey="value"
                                     stroke="none"
@@ -299,9 +299,9 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
                                 />
                                 <Legend 
                                     verticalAlign="bottom" 
-                                    height={36} 
+                                    height={40} 
                                     iconType="circle" 
-                                    wrapperStyle={{ fontSize: '12px', fontWeight: '600', paddingTop: '20px' }} 
+                                    wrapperStyle={{ fontSize: '11px', fontWeight: '600', paddingTop: '0px', bottom: '0px' }} 
                                 />
                             </PieChart>
                         </ResponsiveContainer>

@@ -10,6 +10,7 @@ export default async function AdminLedgerPage() {
     let ledgers: any[] = [];
     try {
         ledgers = await prisma.ledger.findMany({
+            where: { isPaper: false },
             orderBy: { createdAt: 'desc' },
             include: { user: { select: { email: true } } }
         });
