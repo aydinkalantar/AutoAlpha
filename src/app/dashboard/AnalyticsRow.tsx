@@ -150,6 +150,25 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
                     </div>
                 </div>
 
+                {/* Total Return (ROI) KPI */}
+                <div className="min-w-[85vw] sm:min-w-0 flex-shrink-0 snap-center bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-4 md:p-6 flex flex-col justify-between relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="flex justify-between items-start mb-4">
+                        <div className="p-2 bg-indigo-500/10 rounded-xl">
+                            <PieChartIcon className="w-5 h-5 text-indigo-500" />
+                        </div>
+                    </div>
+                    <div>
+                        <h4 className="text-sm font-medium text-foreground/50 mb-1">Total Return (ROI)</h4>
+                        <div className="flex items-baseline gap-2">
+                            <span className={`text-3xl font-bold tracking-tight ${roiPercentage >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                                {roiPercentage >= 0 ? '+' : ''}{roiPercentage.toFixed(2)}%
+                            </span>
+                            <span className="text-xs text-foreground/40 font-medium">On Active Capital</span>
+                        </div>
+                    </div>
+                </div>
+
                 {/* Total Revenue KPI */}
                 <div className="min-w-[85vw] sm:min-w-0 flex-shrink-0 snap-center bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-4 md:p-6 flex flex-col justify-between relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -157,9 +176,6 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
                         <div className="p-2 bg-purple-500/10 rounded-xl">
                             <TrendingUp className="w-5 h-5 text-purple-500" />
                         </div>
-                        <span className={`text-sm font-bold ${roiPercentage >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
-                            {roiPercentage >= 0 ? '+' : ''}{roiPercentage.toFixed(2)}% ROI
-                        </span>
                     </div>
                     <div>
                         <h4 className="text-sm font-medium text-foreground/50 mb-1">Total Revenue</h4>
@@ -167,6 +183,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
                             <span className={`text-3xl font-bold tracking-tight ${totalRevenue >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
                                 {totalRevenue >= 0 ? '+' : '-'}${Math.abs(totalRevenue).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </span>
+                            <span className="text-xs text-foreground/40 font-medium">Realized PnL</span>
                         </div>
                     </div>
                 </div>
