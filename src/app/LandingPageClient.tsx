@@ -130,18 +130,24 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
           <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-background to-transparent z-10" />
           <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-background to-transparent z-10" />
           <div className="w-full flex justify-center overflow-hidden">
-            <p className="text-center text-sm font-bold uppercase tracking-[0.2em] text-foreground/40 mb-8 whitespace-nowrap px-4">Natively Integrated With Your Preferred Exchange</p>
+            <p className="text-center text-xs sm:text-sm font-bold uppercase tracking-widest sm:tracking-[0.2em] text-foreground/40 mb-8 px-4 max-w-full">
+              Natively Integrated With Your Preferred Exchange
+            </p>
           </div>
-          <div className="flex w-[200%] animate-[marquee_20s_linear_infinite]">
-            <div className="flex w-1/2 justify-around items-center opacity-40 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
-              {exchanges.map((ex, i) => (
-                <span key={i} className="text-2xl md:text-4xl font-black tracking-tight">{ex}</span>
-              ))}
+          <div className="flex w-max">
+            <div className="flex w-max animate-[marquee_20s_linear_infinite] items-center">
+              <div className="flex items-center gap-12 sm:gap-24 opacity-40 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500 pr-12 sm:pr-24">
+                {exchanges.map((ex, i) => (
+                  <span key={i} className="text-2xl md:text-4xl font-black tracking-tight">{ex}</span>
+                ))}
+              </div>
             </div>
-            <div className="flex w-1/2 justify-around items-center opacity-40 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
-              {exchanges.map((ex, i) => (
-                <span key={`dup-${i}`} className="text-2xl md:text-4xl font-black tracking-tight">{ex}</span>
-              ))}
+            <div className="flex w-max animate-[marquee_20s_linear_infinite] items-center" aria-hidden="true">
+              <div className="flex items-center gap-12 sm:gap-24 opacity-40 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500 pr-12 sm:pr-24">
+                {exchanges.map((ex, i) => (
+                  <span key={`dup-${i}`} className="text-2xl md:text-4xl font-black tracking-tight">{ex}</span>
+                ))}
+              </div>
             </div>
           </div>
         </section>
