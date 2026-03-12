@@ -78,18 +78,34 @@ export async function updateSystemConfig(formData: FormData) {
         throw new Error("Invalid Stripe Mode");
     }
 
-    await prisma.systemConfig.update({
-        where: { id: "global" },
-        data: {
-            stripeMode,
-            stripeTestPublicKey: stripeTestPublicKey || null,
-            stripeTestSecretKey: stripeTestSecretKey || null,
-            stripeTestWebhookSecret: stripeTestWebhookSecret || null,
-            stripeLivePublicKey: stripeLivePublicKey || null,
-            stripeLiveSecretKey: stripeLiveSecretKey || null,
-            stripeLiveWebhookSecret: stripeLiveWebhookSecret || null,
-        }
-    });
+    try {
+        await prisma.systemConfig.upsert({
+            where: { id: "global" },
+            update: {
+                stripeMode,
+                stripeTestPublicKey: stripeTestPublicKey || null,
+                stripeTestSecretKey: stripeTestSecretKey || null,
+                stripeTestWebhookSecret: stripeTestWebhookSecret || null,
+                stripeLivePublicKey: stripeLivePublicKey || null,
+                stripeLiveSecretKey: stripeLiveSecretKey || null,
+                stripeLiveWebhookSecret: stripeLiveWebhookSecret || null,
+            },
+            create: {
+                id: "global",
+                stripeMode,
+                stripeTestPublicKey: stripeTestPublicKey || null,
+                stripeTestSecretKey: stripeTestSecretKey || null,
+                stripeTestWebhookSecret: stripeTestWebhookSecret || null,
+                stripeLivePublicKey: stripeLivePublicKey || null,
+                stripeLiveSecretKey: stripeLiveSecretKey || null,
+                stripeLiveWebhookSecret: stripeLiveWebhookSecret || null,
+            }
+        });
 
-    revalidatePath('/admin/settings');
+        revalidatePath('/admin/settings');
+        return { success: true };
+    } catch (e: any) {
+        console.error("Failed to update system config", e);
+        return { success: false, error: e.message };
+    }
 }

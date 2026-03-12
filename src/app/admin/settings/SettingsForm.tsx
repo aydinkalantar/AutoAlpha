@@ -16,9 +16,17 @@ export default function SettingsForm({ config }: { config: SystemConfig | null }
         const formData = new FormData(e.currentTarget);
 
         startTransition(async () => {
-            await updateSystemConfig(formData);
-            setSaved(true);
-            setTimeout(() => setSaved(false), 3000);
+            try {
+                const result = await updateSystemConfig(formData);
+                if (result?.error) {
+                    alert("Failed to save settings: " + result.error);
+                    return;
+                }
+                setSaved(true);
+                setTimeout(() => setSaved(false), 3000);
+            } catch (err: any) {
+                alert("An unexpected error occurred while saving: " + err.message);
+            }
         });
     };
 
