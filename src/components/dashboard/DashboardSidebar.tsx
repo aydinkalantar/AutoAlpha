@@ -49,6 +49,7 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
         { name: 'Accounting', href: '/dashboard/accounting', icon: FileText },
         { name: 'Account Hub', href: '/dashboard/account', icon: User },
         { name: 'Affiliates', href: '/dashboard/affiliate', icon: Gift },
+        { name: 'Academy', href: '/dashboard/academy', icon: HelpCircle },
         { name: 'Settings', href: '/dashboard/settings', icon: Settings },
     ];
 
