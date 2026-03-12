@@ -190,3 +190,24 @@ export async function uploadStrategyBacktestData(id: string, backtestData: any[]
         return { success: false, error: e.message };
     }
 }
+
+export async function deleteStrategyBacktestData(id: string) {
+    await verifyAdmin();
+
+    try {
+        await prisma.strategy.update({
+            where: { id },
+            data: { 
+                backtestData: [],
+                expectedRoiPercentage: null,
+                winRatePercentage: null,
+                drawdownPercentage: null,
+                profitFactor: null
+            }
+        });
+        return { success: true };
+    } catch (e: any) {
+        console.error("Failed to delete backtest data", e);
+        return { success: false, error: e.message };
+    }
+}

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { updateStrategyDetails, uploadStrategyBacktestData } from "../actions";
+import { updateStrategyDetails, uploadStrategyBacktestData, deleteStrategyBacktestData } from "../actions";
 import Papa from "papaparse";
-import { Save, UploadCloud, Plus, Trash2, ArrowLeft } from "lucide-react";
+import { Save, UploadCloud, Plus, Trash2, ArrowLeft, FileCheck } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
@@ -21,8 +21,9 @@ export default function StrategyEditClient({ initialStrategy }: { initialStrateg
             : []
     );
 
+    const [hasBacktestData, setHasBacktestData] = useState<boolean>(!!(initialStrategy.backtestData && initialStrategy.backtestData.length > 0));
     const [isSaving, setIsSaving] = useState(false);
-    const [uploadStatus, setUploadStatus] = useState<"idle" | "parsing" | "uploading" | "success" | "error">("idle");
+    const [uploadStatus, setUploadStatus] = useState<"idle" | "parsing" | "uploading" | "success" | "error" | "deleting">("idle");
     const [saveStatus, setSaveStatus] = useState<"idle" | "success" | "error">("idle");
 
     const addRiskParam = () => setRiskParams([...riskParams, { id: Date.now(), text: "" }]);
@@ -181,6 +182,7 @@ export default function StrategyEditClient({ initialStrategy }: { initialStrateg
                 const uploadRes = await uploadStrategyBacktestData(initialStrategy.id, parsedData);
                 if (uploadRes.success) {
                     setUploadStatus("success");
+                    setHasBacktestData(true);
                     setTimeout(() => setUploadStatus("idle"), 3000);
                 } else {
                     setUploadStatus("error");
@@ -192,6 +194,25 @@ export default function StrategyEditClient({ initialStrategy }: { initialStrateg
                 setUploadStatus("error");
             }
         });
+    };
+
+    const handleDeleteBacktest = async () => {
+        const confirmed = window.confirm("Are you sure you want to delete the uploaded backtest data? This will clear the equity curve and static KPIs.");
+        if (!confirmed) return;
+
+        setUploadStatus("deleting");
+        const res = await deleteStrategyBacktestData(initialStrategy.id);
+        if (res.success) {
+            setHasBacktestData(false);
+            setExpectedRoi("");
+            setWinRate("");
+            setDrawdown("");
+            setProfitFactor("");
+            setUploadStatus("idle");
+        } else {
+            setUploadStatus("error");
+            alert("Failed to delete backtest data.");
+        }
     };
 
     return (
@@ -289,16 +310,35 @@ export default function StrategyEditClient({ initialStrategy }: { initialStrateg
                         Upload a TradingView 'List of Trades' CSV export here. We will parse the equity curve and override the live chart for users inspecting this strategy before they subscribe.
                     </p>
 
-                    <label className="relative flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-black/10 dark:border-white/20 rounded-2xl bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-colors cursor-pointer group">
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center px-4">
-                            <div className="w-16 h-16 rounded-full bg-purple-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                                <UploadCloud className="w-8 h-8 text-purple-600 dark:text-purple-400" />
+                    {hasBacktestData ? (
+                        <div className="flex flex-col items-center justify-center w-full h-64 border-2 border-emerald-500/20 rounded-2xl bg-emerald-500/5 transition-colors group">
+                            <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mb-4">
+                                <FileCheck className="w-8 h-8 text-emerald-500" />
                             </div>
-                            <p className="mb-2 text-lg font-bold text-foreground">Click to upload Strategy CSV</p>
-                            <p className="text-sm text-foreground/50">TradingView Exports Only (Time & Equity columns)</p>
+                            <p className="mb-2 text-lg font-bold text-foreground">Active CSV Data Uploaded</p>
+                            <p className="text-sm text-foreground/50 mb-6">Users can see the beautifully parsed equity curve.</p>
+                            
+                            <button 
+                                onClick={handleDeleteBacktest} 
+                                disabled={uploadStatus === "deleting"}
+                                className="flex items-center gap-2 px-6 py-2.5 bg-rose-500/10 text-rose-500 font-bold rounded-xl hover:bg-rose-500/20 transition-colors"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                                {uploadStatus === "deleting" ? "Deleting..." : "Delete & Upload New"}
+                            </button>
                         </div>
-                        <input type="file" accept=".csv" className="hidden" onChange={handleFileUpload} />
-                    </label>
+                    ) : (
+                        <label className="relative flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-black/10 dark:border-white/20 rounded-2xl bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-colors cursor-pointer group">
+                            <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center px-4">
+                                <div className="w-16 h-16 rounded-full bg-purple-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                    <UploadCloud className="w-8 h-8 text-purple-600 dark:text-purple-400" />
+                                </div>
+                                <p className="mb-2 text-lg font-bold text-foreground">Click to upload Strategy CSV</p>
+                                <p className="text-sm text-foreground/50">TradingView Exports Only (Time & Equity columns)</p>
+                            </div>
+                            <input type="file" accept=".csv" className="hidden" onChange={handleFileUpload} />
+                        </label>
+                    )}
 
                     {uploadStatus === "parsing" && <p className="mt-6 text-center font-bold animate-pulse text-cyan-600">Parsing CSV rows...</p>}
                     {uploadStatus === "uploading" && <p className="mt-6 text-center font-bold animate-pulse text-purple-600">Saving sequence to secure blob storage...</p>}
