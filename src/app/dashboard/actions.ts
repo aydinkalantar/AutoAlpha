@@ -169,10 +169,14 @@ export async function resetPaperCapital(userId: string) {
 export async function completeOnboarding(userId: string) {
     if (!userId) throw new Error("Unauthorized");
 
-    await prisma.user.update({
-        where: { id: userId },
-        data: { hasCompletedOnboarding: true }
-    });
+    try {
+        await prisma.user.update({
+            where: { id: userId },
+            data: { hasCompletedOnboarding: true }
+        });
+    } catch (e) {
+        console.warn("Could not update onboarding status in database.");
+    }
 
     revalidatePath('/dashboard');
 }
