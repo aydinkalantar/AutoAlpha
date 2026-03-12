@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, ResponsiveContainer, Tooltip as RechartsTooltip, XAxis, YAxis } from "recharts";
 import { format } from "date-fns";
+import { Info } from "lucide-react";
+import { Tooltip as ShadcnTooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 type PositionRecord = {
     id: string;
@@ -187,7 +189,19 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                             </div>
 
                             <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl p-6 shadow-lg">
-                                <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">Win Rate</h3>
+                                <div className="flex items-center gap-1.5 mb-2">
+                                    <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Win Rate</h3>
+                                    <ShadcnTooltip>
+                                        <TooltipTrigger asChild>
+                                            <button aria-label="Info about Win Rate" className="cursor-help focus:outline-none">
+                                                <Info className="w-3.5 h-3.5 text-muted-foreground/50 hover:text-cyan-500 transition-colors" />
+                                            </button>
+                                        </TooltipTrigger>
+                                        <TooltipContent className="max-w-[250px] bg-white dark:bg-[#1C1C1E] border border-black/10 dark:border-white/10 text-foreground p-3 rounded-xl shadow-2xl backdrop-blur-xl font-medium leading-relaxed">
+                                            <p>The historical percentage of trades closed with a profit.</p>
+                                        </TooltipContent>
+                                    </ShadcnTooltip>
+                                </div>
                                 <div className="text-2xl font-bold text-foreground">
                                     {stats.winRate.toFixed(1)}%
                                 </div>
@@ -195,14 +209,38 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                             </div>
 
                             <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl p-6 shadow-lg">
-                                <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">Max Drawdown</h3>
+                                <div className="flex items-center gap-1.5 mb-2">
+                                    <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Max Drawdown</h3>
+                                    <ShadcnTooltip>
+                                        <TooltipTrigger asChild>
+                                            <button aria-label="Info about Max Drawdown" className="cursor-help focus:outline-none">
+                                                <Info className="w-3.5 h-3.5 text-muted-foreground/50 hover:text-cyan-500 transition-colors" />
+                                            </button>
+                                        </TooltipTrigger>
+                                        <TooltipContent className="max-w-[250px] bg-white dark:bg-[#1C1C1E] border border-black/10 dark:border-white/10 text-foreground p-3 rounded-xl shadow-2xl backdrop-blur-xl font-medium leading-relaxed">
+                                            <p>Maximum Drawdown. The largest observed historical peak-to-trough drop in equity.</p>
+                                        </TooltipContent>
+                                    </ShadcnTooltip>
+                                </div>
                                 <div className="text-2xl font-bold text-rose-500">
                                     {maxDrawdown}%
                                 </div>
                             </div>
 
                             <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl p-6 shadow-lg">
-                                <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">Profit Factor</h3>
+                                <div className="flex items-center gap-1.5 mb-2">
+                                    <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Profit Factor</h3>
+                                    <ShadcnTooltip>
+                                        <TooltipTrigger asChild>
+                                            <button aria-label="Info about Profit Factor" className="cursor-help focus:outline-none">
+                                                <Info className="w-3.5 h-3.5 text-muted-foreground/50 hover:text-cyan-500 transition-colors" />
+                                            </button>
+                                        </TooltipTrigger>
+                                        <TooltipContent className="max-w-[250px] bg-white dark:bg-[#1C1C1E] border border-black/10 dark:border-white/10 text-foreground p-3 rounded-xl shadow-2xl backdrop-blur-xl font-medium leading-relaxed">
+                                            <p>Ratio of gross profit to gross loss. Values above 1.0 indicate profitability.</p>
+                                        </TooltipContent>
+                                    </ShadcnTooltip>
+                                </div>
                                 <div className="text-2xl font-bold text-foreground">
                                     {stats.profitFactor.toFixed(2)}
                                 </div>
@@ -217,7 +255,7 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                             </div>
                             <div className="p-6">
                                 <div className="h-[300px] w-full">
-                                    <ResponsiveContainer width="100%" height="100%">
+                                    <ResponsiveContainer width="100%" height="100%" minHeight={300}>
                                         <AreaChart data={equityData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                                             <defs>
                                                 <linearGradient id="colorEquity" x1="0" y1="0" x2="0" y2="1">
@@ -239,7 +277,11 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                                                 tickFormatter={(value) => `$${value}`}
                                                 domain={['dataMin - 100', 'dataMax + 100']}
                                             />
-                                            <Tooltip content={<CustomTooltip />} />
+                                            <RechartsTooltip
+                                    formatter={(value: any) => [`$${Number(value).toLocaleString()}`, 'Equity']}
+                                    labelFormatter={(label: any) => `Date: ${label}`}
+                                    contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff' }}
+                                />
                                             <Area 
                                                 type="monotone" 
                                                 dataKey="equity" 
