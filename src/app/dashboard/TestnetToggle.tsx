@@ -15,7 +15,7 @@ export default function TestnetToggle({ initialMode, userId }: { initialMode: bo
     };
 
     const handleReset = () => {
-        if (!confirm("Are you sure you want to reset your paper balance to $100k? This will forcefully pause open paper trades.")) return;
+        if (!confirm("Are you sure you want to reset your paper balance to default ($10k USDT / $10k USDC)? This will forcefully pause open paper trades.")) return;
         startReset(async () => {
             await resetPaperCapital(userId);
         });
@@ -55,7 +55,7 @@ export default function TestnetToggle({ initialMode, userId }: { initialMode: bo
                         onClick={handleReset}
                         disabled={isResetting || isPending}
                         className="flex items-center gap-1.5 text-xs font-bold text-foreground/50 hover:text-cyan-500 transition-colors disabled:opacity-50"
-                        title="Reset Paper Capital to $100k"
+                        title="Reset Paper Capital to default ($20k)"
                     >
                         <RotateCw className={`w-3.5 h-3.5 ${isResetting ? 'animate-spin' : ''}`} />
                         <span>Reset Funds</span>

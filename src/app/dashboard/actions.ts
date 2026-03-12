@@ -140,8 +140,8 @@ export async function resetPaperCapital(userId: string) {
         await tx.user.update({
             where: { id: userId },
             data: {
-                paperUsdtBalance: 100000,
-                paperUsdcBalance: 0
+                paperUsdtBalance: 10000.0,
+                paperUsdcBalance: 10000.0
             }
         });
 
@@ -155,7 +155,7 @@ export async function resetPaperCapital(userId: string) {
         await tx.ledger.create({
             data: {
                 userId,
-                amount: 100000,
+                amount: 20000.0,
                 currency: 'USDT',
                 type: 'DEPOSIT',
                 description: 'Paper Capital Manual Reset'
