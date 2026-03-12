@@ -24,10 +24,16 @@ export default async function DashboardLayout({
         redirect("/login");
     }
 
-    const user = await prisma.user.findUnique({
-        where: { id: userId },
-        select: { id: true, usdtBalance: true, usdcBalance: true }
-    });
+    let user: any = null;
+    try {
+        user = await prisma.user.findUnique({
+            where: { id: userId },
+            select: { id: true, usdtBalance: true, usdcBalance: true }
+        });
+    } catch (e) {
+        console.warn("Could not fetch user balances from database. Using default 0 balances.");
+        user = { id: userId, usdtBalance: 0, usdcBalance: 0 };
+    }
 
     if (!user) {
         redirect("/login");

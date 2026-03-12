@@ -53,26 +53,30 @@ export async function createStrategy(formData: FormData) {
         throw new Error('Missing required fields');
     }
 
-    await prisma.strategy.create({
-        data: {
-            name,
-            targetExchange,
-            marketType,
-            settlementCurrency,
-            description,
-            performanceFeePercentage,
-            webhookToken,
-            pair,
-            leverage,
-            maxLeverage,
-            defaultEquityPercentage,
-            expectedRoiPercentage,
-            winRatePercentage,
-            drawdownPercentage,
-            isActive: true,
-            isPublic,
-        }
-    });
+    try {
+        await prisma.strategy.create({
+            data: {
+                name,
+                targetExchange,
+                marketType,
+                settlementCurrency,
+                description,
+                performanceFeePercentage,
+                webhookToken,
+                pair,
+                leverage,
+                maxLeverage,
+                defaultEquityPercentage,
+                expectedRoiPercentage,
+                winRatePercentage,
+                drawdownPercentage,
+                isActive: true,
+                isPublic,
+            }
+        });
+    } catch (e) {
+        throw new Error("Could not connect to database to create strategy.");
+    }
 
     revalidatePath('/admin/strategies');
 }

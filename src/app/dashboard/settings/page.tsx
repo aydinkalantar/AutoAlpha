@@ -17,12 +17,21 @@ export default async function SettingsPage() {
 
     const userId = (session.user as any).id;
 
-    const user = await prisma.user.findUnique({
-        where: { id: userId },
-        include: {
-            exchangeKeys: true
-        }
-    });
+    let user: any = null;
+    try {
+        user = await prisma.user.findUnique({
+            where: { id: userId },
+            include: {
+                exchangeKeys: true
+            }
+        });
+    } catch (e) {
+        console.warn("Could not fetch user exchange keys from database. Returning empty keys.");
+        user = {
+            id: userId,
+            exchangeKeys: []
+        };
+    }
 
     if (!user) {
         redirect("/api/auth/signin");

@@ -45,9 +45,21 @@ export default async function AccountHubPage() {
 
     const userId = (session.user as any).id;
 
-    const user = await prisma.user.findUnique({
-        where: { id: userId }
-    });
+    let user: any = null;
+    try {
+        user = await prisma.user.findUnique({
+            where: { id: userId }
+        });
+    } catch (e) {
+        console.warn("Could not fetch user profile from database. Returning empty user.");
+        user = {
+            id: userId,
+            name: session.user.name || "Offline User",
+            email: session.user.email || "",
+            createdAt: new Date(),
+            tradeEmailNotifications: false
+        };
+    }
 
     if (!user) {
         redirect("/api/auth/signin");

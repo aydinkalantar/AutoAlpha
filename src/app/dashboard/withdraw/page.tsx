@@ -11,10 +11,16 @@ export default async function WithdrawPage() {
     if (!session?.user) redirect("/api/auth/signin");
     
     const userId = (session.user as any).id;
-    const user = await prisma.user.findUnique({
-        where: { id: userId },
-        select: { id: true, usdtBalance: true, usdcBalance: true }
-    });
+    let user: any = null;
+    try {
+        user = await prisma.user.findUnique({
+            where: { id: userId },
+            select: { id: true, usdtBalance: true, usdcBalance: true }
+        });
+    } catch (e) {
+        console.warn("Could not fetch user balances from database. Returning default 0.");
+        user = { id: userId, usdtBalance: 0, usdcBalance: 0 };
+    }
     
     if (!user) redirect("/api/auth/signin");
 

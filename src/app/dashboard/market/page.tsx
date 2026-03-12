@@ -17,17 +17,33 @@ export default async function MarketPage() {
     }
 
     const userId = (session.user as any).id;
-    const strategies = await getActiveStrategies();
+    let strategies: any[] = [];
+    let user: any = null;
 
-    const user = await prisma.user.findUnique({
-        where: { id: userId },
-        include: {
-            subscriptions: {
-                include: { strategy: true }
-            },
-            exchangeKeys: true
-        }
-    });
+    try {
+        strategies = await getActiveStrategies();
+        user = await prisma.user.findUnique({
+            where: { id: userId },
+            include: {
+                subscriptions: {
+                    include: { strategy: true }
+                },
+                exchangeKeys: true
+            }
+        });
+    } catch (e) {
+        console.warn("Could not fetch strategies or user from database. Returning empty array.");
+        user = {
+            id: userId,
+            isTestnetMode: false,
+            usdtBalance: 0,
+            usdcBalance: 0,
+            paperUsdtBalance: 0,
+            paperUsdcBalance: 0,
+            subscriptions: [],
+            exchangeKeys: []
+        };
+    }
 
     if (!user) {
         redirect("/api/auth/signin");

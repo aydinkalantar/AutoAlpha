@@ -22,17 +22,33 @@ export default async function DashboardPage() {
 
     const userId = (session.user as any).id;
 
-    const user = await prisma.user.findUnique({
-        where: { id: userId },
-        include: {
-            subscriptions: {
-                include: { strategy: true }
-            },
-            positions: {
-                orderBy: { createdAt: 'desc' }
+    let user: any = null;
+    try {
+        user = await prisma.user.findUnique({
+            where: { id: userId },
+            include: {
+                subscriptions: {
+                    include: { strategy: true }
+                },
+                positions: {
+                    orderBy: { createdAt: 'desc' }
+                }
             }
-        }
-    });
+        });
+    } catch (e) {
+        console.warn("Could not fetch user from database. Returning default empty user object.");
+        user = {
+            id: userId,
+            isTestnetMode: false,
+            hasCompletedOnboarding: false,
+            usdtBalance: 0,
+            usdcBalance: 0,
+            paperUsdtBalance: 0,
+            paperUsdcBalance: 0,
+            subscriptions: [],
+            positions: []
+        };
+    }
 
     if (!user) {
         redirect("/api/auth/signin");

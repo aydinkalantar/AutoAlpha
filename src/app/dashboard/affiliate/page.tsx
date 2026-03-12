@@ -35,15 +35,25 @@ export default async function AffiliateHubPage() {
 
     const userId = (session.user as any).id;
 
-    const user = await prisma.user.findUnique({
-        where: { id: userId },
-        include: {
-            referrals: true,
-            ledgers: {
-                where: { type: 'AFFILIATE_COMMISSION' }
+    let user: any = null;
+    try {
+        user = await prisma.user.findUnique({
+            where: { id: userId },
+            include: {
+                referrals: true,
+                ledgers: {
+                    where: { type: 'AFFILIATE_COMMISSION' }
+                }
             }
-        }
-    });
+        });
+    } catch (e) {
+        console.warn("Could not fetch user affiliates from database. Returning empty data.");
+        user = {
+            id: userId,
+            referrals: [],
+            ledgers: []
+        };
+    }
 
     if (!user) {
         redirect("/api/auth/signin");

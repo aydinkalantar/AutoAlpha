@@ -14,24 +14,27 @@ export default async function StrategyProfilePage({ params }: { params: Promise<
 
     const userId = (session.user as any).id;
 
-    // Fetch user and strategy side by side
-    const user = await prisma.user.findUnique({
-        where: { id: userId },
-        include: {
-            subscriptions: {
-                where: { strategyId: id }
-            },
-            exchangeKeys: true
-        }
-    });
+    let user: any = null;
+    let strategy: any = null;
 
-    if (!user) {
-        redirect("/login");
+    try {
+        user = await prisma.user.findUnique({
+            where: { id: userId },
+            include: {
+                subscriptions: {
+                    where: { strategyId: id }
+                },
+                exchangeKeys: true
+            }
+        });
+
+        strategy = await prisma.strategy.findUnique({
+            where: { id },
+        });
+    } catch (e) {
+        console.warn("Could not fetch strategy or user from database. Redirecting to market.");
+        redirect("/dashboard/market");
     }
-
-    const strategy = await prisma.strategy.findUnique({
-        where: { id },
-    });
 
     if (!strategy) {
         notFound();

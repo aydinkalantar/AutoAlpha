@@ -18,18 +18,34 @@ export default async function AccountingPage() {
 
     const userId = (session.user as any).id;
 
-    const user = await prisma.user.findUnique({
-        where: { id: userId },
-        include: {
-            positions: {
-                orderBy: { createdAt: 'desc' }
-            },
-            ledgers: {
-                orderBy: { createdAt: 'desc' },
-                take: 1000
+    let user: any = null;
+    try {
+        user = await prisma.user.findUnique({
+            where: { id: userId },
+            include: {
+                positions: {
+                    orderBy: { createdAt: 'desc' }
+                },
+                ledgers: {
+                    orderBy: { createdAt: 'desc' },
+                    take: 1000
+                }
             }
-        }
-    });
+        });
+    } catch (e) {
+        console.warn("Could not fetch user ledgers from database. Returning empty records.");
+        user = {
+            id: userId,
+            usdtBalance: 0,
+            usdcBalance: 0,
+            autoDepositEnabled: false,
+            autoDepositThreshold: 0,
+            autoDepositAmount: 0,
+            stripeCustomerId: null,
+            positions: [],
+            ledgers: []
+        };
+    }
 
     if (!user) {
         redirect("/api/auth/signin");
