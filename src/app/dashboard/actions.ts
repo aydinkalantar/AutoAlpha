@@ -123,10 +123,14 @@ export async function markAllAsRead(userId: string) {
 export async function toggleTestnetMode(userId: string, isTestnetMode: boolean) {
     if (!userId) throw new Error("Unauthorized");
 
-    await prisma.user.update({
-        where: { id: userId },
-        data: { isTestnetMode }
-    });
+    try {
+        await prisma.user.update({
+            where: { id: userId },
+            data: { isTestnetMode }
+        });
+    } catch (error) {
+        console.warn("Database offline: Could not toggle testnet mode permanently.");
+    }
 
     revalidatePath('/dashboard');
     revalidatePath('/dashboard/settings');
@@ -135,15 +139,16 @@ export async function toggleTestnetMode(userId: string, isTestnetMode: boolean) 
 export async function resetPaperCapital(userId: string) {
     if (!userId) throw new Error("Unauthorized");
 
-    await prisma.$transaction(async (tx) => {
-        // Reset balances
-        await tx.user.update({
-            where: { id: userId },
-            data: {
-                paperUsdtBalance: 10000.0,
-                paperUsdcBalance: 10000.0
-            }
-        });
+    try {
+        await prisma.$transaction(async (tx) => {
+            // Reset balances
+            await tx.user.update({
+                where: { id: userId },
+                data: {
+                    paperUsdtBalance: 10000.0,
+                    paperUsdcBalance: 10000.0
+                }
+            });
 
         // Close all open paper positions
         await tx.position.updateMany({
@@ -162,7 +167,9 @@ export async function resetPaperCapital(userId: string) {
             }
         });
     });
-
+    } catch (error) {
+        console.warn("Database offline: Could not reset paper capital.");
+    }
     revalidatePath('/dashboard');
 }
 
