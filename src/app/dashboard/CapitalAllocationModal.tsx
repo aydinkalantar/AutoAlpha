@@ -63,7 +63,7 @@ export default function CapitalAllocationModal({
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/50 backdrop-blur-sm transition-all duration-300">
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 md:pl-64 bg-black/50 backdrop-blur-sm transition-all duration-300">
             <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden border border-black/5 dark:border-white/10 relative transform transition-all duration-300 scale-100 opacity-100">
 
                 {/* Header */}
@@ -99,7 +99,7 @@ export default function CapitalAllocationModal({
                                 ${allocationAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </p>
                         </div>
-                        <div className="bg-gray-100/80 dark:bg-white/5 rounded-xl p-5 border border-black/5 dark:border-white/10 flex flex-col justify-center">
+                        <div className="bg-gray-100/80 dark:bg-white/5 rounded-xl p-5 border border-black/5 dark:border-white/10 flex flex-col justify-center shadow-sm">
                             <p className="text-xs font-bold tracking-wider uppercase text-foreground/50 mb-2">
                                 Remaining Idle Cash
                             </p>
@@ -124,7 +124,7 @@ export default function CapitalAllocationModal({
                                     value={allocationAmount === 0 ? "" : allocationAmount} // Better UX for typing 0
                                     onChange={handleInputChange}
                                     disabled={isSaving}
-                                    className="w-40 bg-white dark:bg-black/50 border border-gray-300 dark:border-white/20 rounded-xl py-2.5 pl-8 pr-4 text-right font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all shadow-sm"
+                                    className="w-40 bg-white dark:bg-black/50 border border-gray-300 dark:border-white/20 rounded-xl py-3 pl-8 pr-4 text-right font-black text-foreground focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all shadow-sm"
                                     placeholder="0"
                                 />
                             </div>
@@ -163,7 +163,7 @@ export default function CapitalAllocationModal({
                     <button
                         onClick={handleSave}
                         disabled={!hasChanged || isSaving}
-                        className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 disabled:from-gray-300 disabled:to-gray-200 dark:disabled:from-white/10 dark:disabled:to-white/5 disabled:text-foreground/40 text-white text-sm font-bold tracking-wide rounded-xl shadow-lg shadow-cyan-500/20 disabled:shadow-none transition-all"
+                        className="flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 disabled:from-gray-300 disabled:to-gray-200 dark:disabled:from-white/10 dark:disabled:to-white/5 disabled:text-foreground/40 text-white text-md font-bold tracking-wide rounded-xl shadow-lg shadow-cyan-500/20 disabled:shadow-none transition-all w-full sm:w-auto"
                     >
                         {isSaving ? (
                             <>
