@@ -25,7 +25,7 @@ export async function POST(req: Request) {
             apiVersion: '2023-10-16' as any,
         });
 
-        const { userId, desiredAmount, currency } = await req.json();
+        const { userId, desiredAmount, currency, saveCard } = await req.json();
 
         if (!userId || !desiredAmount || !currency) {
             return new Response('Missing required fields', { status: 400 });
@@ -76,17 +76,25 @@ export async function POST(req: Request) {
         // Stripe requires amount in minimum currency unit (cents)
         const amountInCents = Math.round(grossAmount * 100);
 
-        const paymentIntent = await stripe.paymentIntents.create({
+        const intentPayload: any = {
             amount: amountInCents,
             currency: 'usd',
             customer: customerId,
-            setup_future_usage: 'off_session', // Save the card for Auto-Refill
+            automatic_payment_methods: {
+                enabled: true,
+            },
             metadata: {
                 userId,
                 currency,
                 netDesiredAmount: requestedAmount.toString(),
             }
-        });
+        };
+
+        if (saveCard) {
+            intentPayload.setup_future_usage = 'off_session'; // Save the card for Auto-Refill (disables crypto)
+        }
+
+        const paymentIntent = await stripe.paymentIntents.create(intentPayload);
 
         return NextResponse.json({
             clientSecret: paymentIntent.client_secret,

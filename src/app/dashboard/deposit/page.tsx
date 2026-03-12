@@ -14,6 +14,7 @@ export default function DepositPage() {
     const [currency, setCurrency] = useState<'USDT' | 'USDC'>('USDT');
     const [method, setMethod] = useState<'web3' | 'card'>('web3');
     const [network, setNetwork] = useState<'ethereum' | 'arbitrum' | 'optimism' | 'base' | 'polygon'>('ethereum');
+    const [saveCard, setSaveCard] = useState(false);
     const [amount, setAmount] = useState<string>('100');
     const [txHash, setTxHash] = useState<string>('');
     const [isProcessing, setIsProcessing] = useState(false);
@@ -104,7 +105,7 @@ export default function DepositPage() {
             const res = await fetch('/api/payments/card-intent', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ userId, desiredAmount: numAmount, currency })
+                body: JSON.stringify({ userId, desiredAmount: numAmount, currency, saveCard })
             });
 
             if (!res.ok) {
@@ -279,6 +280,21 @@ export default function DepositPage() {
                             <p className="text-sm text-foreground/60 leading-relaxed font-medium">
                                 By proceeding, you agree to our <a href="/terms" target="_blank" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Gas Policy</a>. Deposited funds are prepaid performance fees and are strictly non-refundable once your first trade is executed.
                             </p>
+                        </div>
+
+                        <div className="flex items-start gap-3 mt-4 bg-black/5 dark:bg-white/5 p-4 rounded-2xl border border-black/5 dark:border-white/5">
+                            <label className="flex items-center gap-3 cursor-pointer">
+                                <input 
+                                    type="checkbox" 
+                                    checked={saveCard}
+                                    onChange={(e) => setSaveCard(e.target.checked)}
+                                    className="w-5 h-5 rounded border-black/20 dark:border-white/20 text-purple-600 focus:ring-purple-500/50 bg-white dark:bg-black/50"
+                                />
+                                <div className="space-y-0.5">
+                                    <span className="text-sm font-bold text-foreground block">Save configuration for Auto-Refills</span>
+                                    <span className="text-xs font-medium text-foreground/50 block">Requires Credit/Debit card. Unchecking this option unlocks Stripe Crypto/Stablecoin payment methods.</span>
+                                </div>
+                            </label>
                         </div>
 
                         {clientSecret && stripePromise ? (
