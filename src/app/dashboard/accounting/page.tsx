@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { prisma } from "@/lib/prisma";
 import AccountingSection from '../AccountingSection';
+import AutoDepositSettings from './AutoDepositSettings';
 
 export const dynamic = 'force-dynamic';
 
@@ -50,6 +51,13 @@ export default async function AccountingPage() {
                 positions={user.positions}
                 usdtBalance={user.usdtBalance}
                 usdcBalance={user.usdcBalance}
+            />
+
+            <AutoDepositSettings 
+                autoDepositEnabled={user.autoDepositEnabled}
+                autoDepositThreshold={user.autoDepositThreshold}
+                autoDepositAmount={user.autoDepositAmount}
+                hasStripeCustomer={!!user.stripeCustomerId}
             />
         </div>
     );

@@ -4,7 +4,6 @@ import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import LiveRadar from './LiveRadar';
 import AnalyticsRow from './AnalyticsRow';
-import DashboardChart from './DashboardChart';
 import { prisma } from "@/lib/prisma";
 import TestnetToggle from './TestnetToggle';
 
@@ -88,9 +87,9 @@ export default async function DashboardPage() {
                     />
                 </div>
 
-                {/* Middle Row: Live Radar (with integrated chart) */}
+                {/* Middle Row: Live Radar */}
                 <div className="col-span-1 lg:col-span-4 mt-2">
-                    <LiveRadar openPositions={openPositions as any} />
+                    <LiveRadar openPositions={openPositions as any} isPaperMode={isPaperMode} />
                 </div>
             </div>
         </div>

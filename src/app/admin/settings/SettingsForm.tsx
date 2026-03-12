@@ -31,20 +31,20 @@ export default function SettingsForm({ config }: { config: SystemConfig }) {
                     <p className="text-foreground/50 text-sm mt-1 font-medium">Connect your billing API keys to process fiat subscriptions.</p>
                 </div>
 
-                <div className="p-4 bg-orange-50 border border-orange-200 rounded-2xl flex items-start gap-3">
+                <div className="p-4 bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/20 rounded-2xl flex items-start gap-3">
                     <AlertTriangle className="w-5 h-5 text-orange-500 shrink-0 mt-0.5" />
-                    <div className="text-sm font-medium text-orange-800">
+                    <div className="text-sm font-medium text-orange-800 dark:text-orange-300">
                         These Database keys will override your `.env` file. If they are left empty, the system will attempt to fallback to the existing `.env` string.
                     </div>
                 </div>
 
                 <div className="space-y-3">
-                    <label className="text-sm font-semibold text-black/60 px-2 uppercase tracking-wider">Execution Environment</label>
+                    <label className="text-sm font-semibold text-foreground/60 px-2 uppercase tracking-wider">Execution Environment</label>
                     <select
                         name="stripeMode"
                         value={mode}
                         onChange={(e) => setMode(e.target.value)}
-                        className="w-full bg-[#F5F5F7] border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground focus:outline-none focus:border-black/10 focus:bg-white focus:ring-2 focus:ring-black/5 transition-all font-bold appearance-none"
+                        className="w-full bg-[#F5F5F7] dark:bg-white/5 border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground focus:outline-none focus:border-black/10 dark:focus:border-white/10 focus:bg-white dark:focus:bg-[#1C1C1E] focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 transition-all font-bold appearance-none"
                     >
                         <option value="TEST">TEST MODE (Sandbox)</option>
                         <option value="LIVE">LIVE MODE (Production)</option>
@@ -55,33 +55,33 @@ export default function SettingsForm({ config }: { config: SystemConfig }) {
                 <div className={`space-y-6 pt-6 border-t border-black/5 dark:border-white/10 transition-opacity ${mode === 'TEST' ? 'opacity-100' : 'opacity-40'}`}>
                     <h3 className="text-lg font-bold text-foreground">Test Mode Keys</h3>
                     <div className="space-y-3">
-                        <label className="text-sm font-semibold text-black/60 px-2">Stripe Publishable Key (Test)</label>
+                        <label className="text-sm font-semibold text-foreground/60 px-2">Stripe Publishable Key (Test)</label>
                         <input
                             type="text"
                             name="stripeTestPublicKey"
                             defaultValue={config.stripeTestPublicKey || ''}
                             placeholder="pk_test_..."
-                            className="w-full bg-[#F5F5F7] border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground placeholder-black/30 focus:outline-none focus:border-black/10 focus:bg-white focus:ring-2 focus:ring-black/5 transition-all font-mono text-sm"
+                            className="w-full bg-[#F5F5F7] dark:bg-white/5 border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground placeholder-foreground/30 focus:outline-none focus:border-black/10 dark:focus:border-white/10 focus:bg-white dark:focus:bg-[#1C1C1E] focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 transition-all font-mono text-sm"
                         />
                     </div>
                     <div className="space-y-3">
-                        <label className="text-sm font-semibold text-black/60 px-2">Stripe Secret Key (Test)</label>
+                        <label className="text-sm font-semibold text-foreground/60 px-2">Stripe Secret Key (Test)</label>
                         <input
                             type="password"
                             name="stripeTestSecretKey"
                             defaultValue={config.stripeTestSecretKey || ''}
                             placeholder="sk_test_..."
-                            className="w-full bg-[#F5F5F7] border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground placeholder-black/30 focus:outline-none focus:border-black/10 focus:bg-white focus:ring-2 focus:ring-black/5 transition-all font-mono text-sm"
+                            className="w-full bg-[#F5F5F7] dark:bg-white/5 border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground placeholder-foreground/30 focus:outline-none focus:border-black/10 dark:focus:border-white/10 focus:bg-white dark:focus:bg-[#1C1C1E] focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 transition-all font-mono text-sm"
                         />
                     </div>
                     <div className="space-y-3">
-                        <label className="text-sm font-semibold text-black/60 px-2">Stripe Webhook Secret (Test)</label>
+                        <label className="text-sm font-semibold text-foreground/60 px-2">Stripe Webhook Secret (Test)</label>
                         <input
                             type="password"
                             name="stripeTestWebhookSecret"
                             defaultValue={config.stripeTestWebhookSecret || ''}
                             placeholder="whsec_..."
-                            className="w-full bg-[#F5F5F7] border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground placeholder-black/30 focus:outline-none focus:border-black/10 focus:bg-white focus:ring-2 focus:ring-black/5 transition-all font-mono text-sm"
+                            className="w-full bg-[#F5F5F7] dark:bg-white/5 border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground placeholder-foreground/30 focus:outline-none focus:border-black/10 dark:focus:border-white/10 focus:bg-white dark:focus:bg-[#1C1C1E] focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 transition-all font-mono text-sm"
                         />
                     </div>
                 </div>
@@ -90,36 +90,36 @@ export default function SettingsForm({ config }: { config: SystemConfig }) {
                 <div className={`space-y-6 pt-6 border-t border-black/5 dark:border-white/10 transition-opacity ${mode === 'LIVE' ? 'opacity-100' : 'opacity-40'}`}>
                     <h3 className="text-lg font-bold text-red-600 flex items-center gap-2">
                         Live Mode Keys
-                        <span className="bg-red-100 text-red-600 text-[10px] px-2 py-0.5 rounded-full uppercase tracking-widest font-bold">Danger</span>
+                        <span className="bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-400 text-[10px] px-2 py-0.5 rounded-full uppercase tracking-widest font-bold">Danger</span>
                     </h3>
                     <div className="space-y-3">
-                        <label className="text-sm font-semibold text-black/60 px-2">Stripe Publishable Key (Live)</label>
+                        <label className="text-sm font-semibold text-foreground/60 px-2">Stripe Publishable Key (Live)</label>
                         <input
                             type="text"
                             name="stripeLivePublicKey"
                             defaultValue={config.stripeLivePublicKey || ''}
                             placeholder="pk_live_..."
-                            className="w-full bg-[#F5F5F7] border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground placeholder-black/30 focus:outline-none focus:border-black/10 focus:bg-white focus:ring-2 focus:ring-black/5 transition-all font-mono text-sm"
+                            className="w-full bg-[#F5F5F7] dark:bg-white/5 border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground placeholder-foreground/30 focus:outline-none focus:border-black/10 dark:focus:border-white/10 focus:bg-white dark:focus:bg-[#1C1C1E] focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 transition-all font-mono text-sm"
                         />
                     </div>
                     <div className="space-y-3">
-                        <label className="text-sm font-semibold text-black/60 px-2">Stripe Secret Key (Live)</label>
+                        <label className="text-sm font-semibold text-foreground/60 px-2">Stripe Secret Key (Live)</label>
                         <input
                             type="password"
                             name="stripeLiveSecretKey"
                             defaultValue={config.stripeLiveSecretKey || ''}
                             placeholder="sk_live_..."
-                            className="w-full bg-[#F5F5F7] border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground placeholder-black/30 focus:outline-none focus:border-black/10 focus:bg-white focus:ring-2 focus:ring-black/5 transition-all font-mono text-sm"
+                            className="w-full bg-[#F5F5F7] dark:bg-white/5 border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground placeholder-foreground/30 focus:outline-none focus:border-black/10 dark:focus:border-white/10 focus:bg-white dark:focus:bg-[#1C1C1E] focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 transition-all font-mono text-sm"
                         />
                     </div>
                     <div className="space-y-3">
-                        <label className="text-sm font-semibold text-black/60 px-2">Stripe Webhook Secret (Live)</label>
+                        <label className="text-sm font-semibold text-foreground/60 px-2">Stripe Webhook Secret (Live)</label>
                         <input
                             type="password"
                             name="stripeLiveWebhookSecret"
                             defaultValue={config.stripeLiveWebhookSecret || ''}
                             placeholder="whsec_..."
-                            className="w-full bg-[#F5F5F7] border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground placeholder-black/30 focus:outline-none focus:border-black/10 focus:bg-white focus:ring-2 focus:ring-black/5 transition-all font-mono text-sm"
+                            className="w-full bg-[#F5F5F7] dark:bg-white/5 border border-transparent rounded-[1.2rem] px-5 py-4 text-foreground placeholder-foreground/30 focus:outline-none focus:border-black/10 dark:focus:border-white/10 focus:bg-white dark:focus:bg-[#1C1C1E] focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 transition-all font-mono text-sm"
                         />
                     </div>
                 </div>
@@ -134,7 +134,7 @@ export default function SettingsForm({ config }: { config: SystemConfig }) {
                 <button
                     type="submit"
                     disabled={isPending}
-                    className="flex items-center gap-2 px-8 py-3 bg-[#1D1D1F] text-white rounded-full hover:bg-black/80 transition-all font-bold disabled:opacity-50 shadow-xl shadow-black-[0.05]"
+                    className="flex items-center gap-2 px-8 py-3 bg-foreground text-background rounded-full hover:bg-foreground/80 transition-all font-bold disabled:opacity-50 shadow-xl shadow-black-[0.05] dark:shadow-white/5"
                 >
                     <Save className="w-5 h-5" />
                     <span>{isPending ? 'Saving...' : 'Save Configuration'}</span>

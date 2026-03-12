@@ -54,7 +54,10 @@ export default function StrategyReportClient({ subscriptions, positions, totalBa
                 <div className="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-white/20 dark:from-white/5 to-transparent skew-x-12 translate-x-10 pointer-events-none" />
             </div>
 
-            <StrategyPerformance closedPositions={strategyPositions} currentBalance={totalBalance} />
+            <StrategyPerformance 
+                closedPositions={strategyPositions} 
+                currentBalance={activeSubscription ? activeSubscription.currentVirtualBalance : 0} 
+            />
         </div>
     );
 }

@@ -163,7 +163,7 @@ export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBala
                                 aria-label="Toggle auto-compounding"
                                 title="Toggle auto-compounding"
                             />
-                            <div className="w-12 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#1D1D1F]"></div>
+                            <div className="w-12 h-7 bg-black/10 dark:bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-black dark:peer-checked:bg-[#1D1D1F]"></div>
                         </label>
                     </div>
 
@@ -171,7 +171,7 @@ export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBala
                         <button
                             type="submit"
                             disabled={isSubmitting || parseFloat(capitalStr) > currentBalance}
-                            className="w-full py-5 px-6 bg-[#1D1D1F] hover:bg-black disabled:opacity-30 disabled:hover:bg-[#1D1D1F] text-white rounded-[1.5rem] text-lg font-bold transition-all"
+                            className="w-full py-5 px-6 bg-black dark:bg-[#1D1D1F] hover:bg-black/80 dark:hover:bg-black disabled:opacity-30 disabled:hover:bg-black dark:disabled:hover:bg-[#1D1D1F] text-white rounded-[1.5rem] text-lg font-bold transition-all"
                         >
                             {isSubmitting ? 'Processing...' : 'Confirm Allocation'}
                         </button>

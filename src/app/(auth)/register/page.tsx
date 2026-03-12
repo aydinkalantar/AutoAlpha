@@ -14,13 +14,19 @@ export default function RegisterPage() {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
-        referralCode: ''
+        referralCode: '',
+        acceptedTerms: false
     });
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
         setError(null);
+        if (!formData.acceptedTerms) {
+            setError("You must agree to the Terms of Service and Risk Disclaimers to proceed.");
+            setIsLoading(false);
+            return;
+        }
 
         try {
             const res = await fetch('/api/auth/register', {
@@ -62,7 +68,7 @@ export default function RegisterPage() {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-cyan-500/20 to-purple-600/20 blur-[100px] rounded-full pointer-events-none" />
 
             {/* Back to Home */}
-            <Link href="/" className="absolute top-8 left-8 lg:top-12 lg:left-12 flex items-center gap-2 text-foreground/60 hover:text-foreground transition-colors font-medium text-sm z-50 bg-white/5 dark:bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-black/5 dark:border-white/10">
+            <Link href="/" className="absolute top-8 left-8 lg:top-12 lg:left-12 flex items-center gap-2 text-foreground/60 hover:text-foreground transition-colors font-medium text-sm z-50 bg-black/5 dark:bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-black/5 dark:border-white/10">
                 <ChevronLeft className="w-4 h-4" />
                 Back to Home
             </Link>
@@ -138,6 +144,20 @@ export default function RegisterPage() {
                                     onChange={(e) => setFormData({ ...formData, referralCode: e.target.value })}
                                 />
                             </div>
+                        </div>
+
+                        <div className="flex items-start gap-3 mt-4 pt-2">
+                            <input
+                                type="checkbox"
+                                id="termsCheckbox"
+                                className="mt-1 w-4 h-4 rounded border-black/10 dark:border-white/10 text-purple-600 focus:ring-purple-500/50"
+                                checked={formData.acceptedTerms}
+                                onChange={(e) => setFormData({ ...formData, acceptedTerms: e.target.checked })}
+                                required
+                            />
+                            <label htmlFor="termsCheckbox" className="text-xs text-foreground/70 leading-relaxed">
+                                I confirm that I have read and agree to AutoAlpha's <Link href="/terms" target="_blank" className="text-purple-500 hover:text-purple-400 font-medium whitespace-nowrap">Terms of Service</Link>, <Link href="/privacy" target="_blank" className="text-purple-500 hover:text-purple-400 font-medium whitespace-nowrap">Privacy Policy</Link>, and the <Link href="/risk" target="_blank" className="text-purple-500 hover:text-purple-400 font-medium whitespace-nowrap">Mandatory Risk Disclaimers</Link>. I understand that algorithmic trading involves extreme risk.
+                            </label>
                         </div>
 
                         <button

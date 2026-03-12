@@ -20,7 +20,7 @@ export default function AccountingSection({ ledgers, positions, usdtBalance, usd
 
         const recentFees = ledgers.filter(l =>
             l.type === 'FEE_DEDUCTION' &&
-            new Date(l.timestamp) > thirtyDaysAgo
+            new Date(l.createdAt) > thirtyDaysAgo
         );
 
         const totalFees30d = recentFees.reduce((acc, curr) => acc + curr.amount, 0);
@@ -42,7 +42,7 @@ export default function AccountingSection({ ledgers, positions, usdtBalance, usd
             if (!pos.isOpen && pos.exitPrice) {
                 grossPnl = (isLong ? pos.exitPrice - pos.entryPrice : pos.entryPrice - pos.exitPrice) * pos.filledAmount;
             }
-            const dateStr = new Date(pos.timestamp || pos.createdAt).toISOString();
+            const dateStr = new Date(pos.createdAt).toISOString();
 
             const row = [
                 "TRADE",

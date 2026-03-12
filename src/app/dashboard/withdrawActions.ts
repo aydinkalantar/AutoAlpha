@@ -4,15 +4,23 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from 'next/cache';
 
 
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export async function processCryptoWithdrawal(formData: FormData) {
-    const userId = formData.get('userId') as string;
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.email) {
+        throw new Error("Unauthorized to perform this action.");
+    }
+    const userId = (session.user as any).id;
+    if (!userId) throw new Error("Unauthorized.");
+
     const currency = formData.get('currency') as string;
     const amountStr = formData.get('amount') as string;
     const address = formData.get('address') as string;
 
     const amount = parseFloat(amountStr);
-    if (!userId || !currency || amount <= 0 || !address) {
+    if (!currency || amount <= 0 || !address) {
         throw new Error('Invalid withdrawal parameters');
     }
 
@@ -57,7 +65,14 @@ export async function processCryptoWithdrawal(formData: FormData) {
     revalidatePath('/dashboard');
 }
 
-export async function requestFiatRefund(userId: string) {
+export async function requestFiatRefund() {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.email) {
+        throw new Error("Unauthorized to perform this action.");
+    }
+    const userId = (session.user as any).id;
+    if (!userId) throw new Error("Unauthorized.");
+
     await prisma.user.update({
         where: { id: userId },
         data: { fiatRefundRequested: true }

@@ -3,10 +3,11 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { prisma } from "@/lib/prisma";
-import { User, Shield, Mail, Calendar, Key, Copy, CheckCircle2, Settings, Gift, FileText, ChevronRight } from 'lucide-react';
+import { User, Shield, Mail, Calendar, Key, Copy, CheckCircle2, Settings, Gift, FileText, ChevronRight, HelpCircle } from 'lucide-react';
 import Link from 'next/link';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import SecurityActions from './SecurityActions';
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -131,6 +132,16 @@ export default async function AccountHubPage() {
                         <ChevronRight className="w-5 h-5 text-foreground/40 group-hover:text-foreground transition-colors" />
                     </Link>
 
+                    <Link href="mailto:support@autoalpha.ai" className="bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl p-6 flex items-center justify-between group hover:bg-black/5 dark:hover:bg-white/5 transition-all">
+                        <div className="flex items-center gap-4">
+                            <div className="p-3 bg-blue-500/10 rounded-xl text-blue-500">
+                                <HelpCircle className="w-6 h-6" />
+                            </div>
+                            <span className="font-bold text-lg">Support</span>
+                        </div>
+                        <ChevronRight className="w-5 h-5 text-foreground/40 group-hover:text-foreground transition-colors" />
+                    </Link>
+
                     {/* Accounting is typically in bottom nav, but good to have here just in case users expect it in the Hub */}
                     <Link href="/dashboard/accounting" className="bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl p-6 flex items-center justify-between group hover:bg-black/5 dark:hover:bg-white/5 transition-all md:hidden">
                         <div className="flex items-center gap-4">
@@ -146,14 +157,35 @@ export default async function AccountHubPage() {
 
             <div className="relative z-10 space-y-6">
                 <h3 className="text-xl font-bold text-foreground">Security Actions</h3>
-                <div className="bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl p-6">
-                    <p className="text-foreground/60 mb-6">Security actions such as password resets and 2FA configuration are handled via your NextAuth provider. If you signed in via Google, manage your security there. If using credentials, contact support.</p>
-                    <button disabled className="px-6 py-3 rounded-xl bg-foreground/5 text-foreground/50 border border-foreground/10 font-bold cursor-not-allowed">
-                        Change Password
-                    </button>
-                    <button disabled className="px-6 py-3 ml-4 rounded-xl bg-red-500/5 text-red-500/50 border border-red-500/10 font-bold cursor-not-allowed">
-                        Delete Account
-                    </button>
+                <SecurityActions hasPassword={!!user.passwordHash} />
+            </div>
+
+            <div className="relative z-10 space-y-6">
+                <h3 className="text-xl font-bold text-foreground">Legal & Compliance</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Link href="/terms" target="_blank" className="bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl p-6 flex items-center justify-between group hover:bg-black/5 dark:hover:bg-white/5 transition-all">
+                        <div className="flex flex-col">
+                            <span className="font-bold text-lg">Terms of Service</span>
+                            <span className="text-xs text-foreground/40 mt-1">Platform Rules & Gas Policy</span>
+                        </div>
+                        <ChevronRight className="w-5 h-5 text-foreground/40 group-hover:text-foreground transition-colors" />
+                    </Link>
+
+                    <Link href="/privacy" target="_blank" className="bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl p-6 flex items-center justify-between group hover:bg-black/5 dark:hover:bg-white/5 transition-all">
+                        <div className="flex flex-col">
+                            <span className="font-bold text-lg">Privacy Policy</span>
+                            <span className="text-xs text-foreground/40 mt-1">Data & API Key Security</span>
+                        </div>
+                        <ChevronRight className="w-5 h-5 text-foreground/40 group-hover:text-foreground transition-colors" />
+                    </Link>
+
+                    <Link href="/risk" target="_blank" className="bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl p-6 flex items-center justify-between group hover:bg-black/5 dark:hover:bg-white/5 transition-all">
+                        <div className="flex flex-col">
+                            <span className="font-bold text-lg text-red-500/80 group-hover:text-red-500 transition-colors">Risk Disclaimer</span>
+                            <span className="text-xs text-foreground/40 mt-1">Mandatory Disclosures</span>
+                        </div>
+                        <ChevronRight className="w-5 h-5 text-foreground/40 group-hover:text-foreground transition-colors" />
+                    </Link>
                 </div>
             </div>
         </div>

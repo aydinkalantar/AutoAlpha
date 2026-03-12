@@ -38,7 +38,7 @@ export default function NotificationBell({ userId }: { userId?: string }) {
         <div className="relative z-50">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="relative p-2 rounded-full bg-white/5 dark:bg-black/20 hover:bg-white/10 dark:hover:bg-black/40 transition-all border border-black/5 dark:border-white/10"
+                className="relative p-2 rounded-full bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-all border border-black/5 dark:border-white/10"
             >
                 <Bell className="w-5 h-5 text-foreground/70 group-hover:text-foreground" />
                 {notifications.length > 0 && (

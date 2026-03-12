@@ -27,18 +27,16 @@ export async function POST(req: Request) {
         return NextResponse.json({ message: `Webhook Error: ${err.message}` }, { status: 400 });
     }
 
-    // Handle checkout session completion
-    if (event.type === 'checkout.session.completed') {
-        const session = event.data.object as Stripe.Checkout.Session;
+    // Handle Payment Intent completion from the React Elements
+    if (event.type === 'payment_intent.succeeded') {
+        const intent = event.data.object as Stripe.PaymentIntent;
 
-        const userId = session.metadata?.userId;
-        const currencyChoice = session.metadata?.currency; // 'USDT' | 'USDC'
-        // Stripe stores amount in cents. The base amount is what we credit. 
-        // Note: The total charge includes fee, so calculate base amount if you encoded it in metadata
-        const baseAmountStr = session.metadata?.baseAmount;
+        const userId = intent.metadata?.userId;
+        const currencyChoice = intent.metadata?.currency; // 'USDT' | 'USDC'
+        const baseAmountStr = intent.metadata?.netDesiredAmount;
 
         if (!userId || !currencyChoice || !baseAmountStr) {
-            console.error("Missing critical metadata in stripe session.");
+            console.error("Missing critical metadata in stripe payment intent.");
             return NextResponse.json({ message: "Missing metadata" }, { status: 400 });
         }
 
@@ -47,7 +45,7 @@ export async function POST(req: Request) {
         try {
             // Check for previous process to prevent double crediting
             const existingLedger = await prisma.ledger.findFirst({
-                where: { description: { contains: session.id } }
+                where: { description: { contains: intent.id } }
             });
 
             if (!existingLedger) {
@@ -65,9 +63,9 @@ export async function POST(req: Request) {
                         data: {
                             userId,
                             type: 'DEPOSIT',
-                            amount: exactDepositAmount, // Assuming totalNum was a typo and exactDepositAmount is intended
+                            amount: exactDepositAmount,
                             currency: currencyChoice as 'USDT' | 'USDC',
-                            description: `Stripe Card Deposit (Session: ${session.id}) - ${JSON.stringify({ sessionId: session.id, customerEmail: session.customer_details?.email, stripeSessionId: session.id, method: 'card', verifiedAt: new Date().toISOString() })}`
+                            description: `Stripe Card Deposit (Intent: ${intent.id})`
                         }
                     });
                 });

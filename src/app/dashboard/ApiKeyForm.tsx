@@ -11,12 +11,19 @@ interface ApiKeyFormProps {
 
 export default function ApiKeyForm({ userId, existingKeys }: ApiKeyFormProps) {
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [acceptedTerms, setAcceptedTerms] = useState(false);
     const [isPending, startTransition] = useTransition();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsSubmitting(true);
         const form = e.currentTarget;
+        if (!acceptedTerms) {
+            alert('You must acknowledge the API Security & Strategy Terms before connecting.');
+            setIsSubmitting(false);
+            return;
+        }
+
         try {
             const formData = new FormData(form);
             await saveApiKey(formData);
@@ -92,15 +99,54 @@ export default function ApiKeyForm({ userId, existingKeys }: ApiKeyFormProps) {
                     />
                 </div>
 
-
-
                 <div className="md:col-span-4 mt-6">
+                    <div className="flex items-center gap-3 mb-6 p-4 rounded-xl bg-blue-500/10 border border-blue-500/20">
+                        <input
+                            type="checkbox"
+                            name="isTestnet"
+                            id="isTestnetCheckbox"
+                            className="w-5 h-5 rounded border-black/10 dark:border-white/10 text-blue-600 focus:ring-blue-500/50"
+                        />
+                        <div className="flex flex-col">
+                            <label htmlFor="isTestnetCheckbox" className="text-sm font-bold text-blue-700 dark:text-blue-400 cursor-pointer">
+                                Connect to Testnet (Simulated Trading)
+                            </label>
+                            <span className="text-xs text-blue-600/70 dark:text-blue-400/70 mt-0.5">Check this if these API keys belong to a testnet/sandbox exchange account.</span>
+                        </div>
+                    </div>
+
+                    <div className="bg-orange-500/10 border border-orange-500/20 rounded-[1rem] p-5 mb-6">
+                        <h4 className="flex items-center gap-2 text-sm font-bold text-orange-600 dark:text-orange-400 mb-2">
+                            <span className="w-2 h-2 rounded-full bg-orange-500"></span>
+                            Crucial API Key Requirements
+                        </h4>
+                        <ul className="text-xs text-foreground/70 space-y-1 ml-4 list-disc marker:text-orange-500/50">
+                            <li>Ensure your API keys have <strong>Trade/Execution Permissions</strong> enabled.</li>
+                            <li>Ensure <strong>Withdrawal Permissions</strong> are strictly <strong>DISABLED</strong>. AutoAlpha will never ask for withdrawal access.</li>
+                            <li>You are 100% responsible for the safekeeping of these keys on your end. AutoAlpha encrypts them securely on our end.</li>
+                        </ul>
+                    </div>
+
+                    <div className="flex items-start gap-3 mb-6">
+                        <input
+                            type="checkbox"
+                            id="apiTermsCheckbox"
+                            className="mt-1 w-4 h-4 rounded border-black/10 dark:border-white/10 text-cyan-600 focus:ring-cyan-500/50"
+                            checked={acceptedTerms}
+                            onChange={(e) => setAcceptedTerms(e.target.checked)}
+                            required
+                        />
+                        <label htmlFor="apiTermsCheckbox" className="text-xs text-foreground/70 leading-relaxed">
+                            I confirm that my API keys DO NOT possess withdrawal capabilities. I understand that I am linking my exchange to automated third-party strategies, which involves extreme risk and potential loss of my entire portfolio balance.
+                        </label>
+                    </div>
+
                     <button
                         type="submit"
                         title="Save and Encrypt Key"
                         aria-label="Save and Encrypt Key"
                         disabled={isSubmitting}
-                        className="w-full py-4 px-6 bg-[#1D1D1F] hover:bg-black disabled:opacity-50 text-white rounded-[1rem] text-lg font-semibold transition-all shadow-xl shadow-black/10"
+                        className="w-full py-4 px-6 bg-black dark:bg-[#1D1D1F] hover:opacity-90 disabled:opacity-50 text-white rounded-[1rem] text-lg font-semibold transition-all shadow-xl shadow-black/10"
                     >
                         {isSubmitting ? 'Securing Key...' : 'Save & Encrypt Key'}
                     </button>

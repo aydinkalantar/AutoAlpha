@@ -2,10 +2,19 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from 'next/cache';
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
-
+async function verifyAdmin() {
+    const session = await getServerSession(authOptions);
+    if (!session?.user || (session.user as any).role !== "ADMIN") {
+        throw new Error("Unauthorized: Admin access required.");
+    }
+    return session;
+}
 
 export async function getUsers() {
+    await verifyAdmin();
     return await prisma.user.findMany({
         include: {
             exchangeKeys: true,
@@ -19,6 +28,7 @@ export async function getUsers() {
 }
 
 export async function updateUserStatus(userId: string, isActive: boolean) {
+    await verifyAdmin();
     if (!userId) throw new Error('Invalid user ID');
 
     await prisma.user.update({
@@ -30,6 +40,7 @@ export async function updateUserStatus(userId: string, isActive: boolean) {
 }
 
 export async function adjustBalance(formData: FormData) {
+    await verifyAdmin();
     const userId = formData.get('userId') as string;
     const currency = formData.get('currency') as string;
     const type = formData.get('type') as 'CREDIT' | 'DEBIT';

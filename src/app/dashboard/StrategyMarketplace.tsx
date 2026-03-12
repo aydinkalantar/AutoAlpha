@@ -31,7 +31,7 @@ export default function StrategyMarketplace({ strategies, subscriptions, userId,
                 <h2 className="text-3xl font-bold text-foreground tracking-tight">Active Strategies</h2>
 
                 {/* iOS Style Segmented Control */}
-                <div className="bg-white/10 dark:bg-white/5 backdrop-blur-xl p-1.5 rounded-2xl flex border border-black/5 dark:border-white/10 relative">
+                <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl p-1.5 rounded-2xl flex border border-black/5 dark:border-white/10 relative">
                     {['SPOT', 'FUTURES'].map((tab) => (
                         <button
                             key={tab}

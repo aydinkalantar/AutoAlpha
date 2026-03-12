@@ -4,16 +4,26 @@ import crypto from 'crypto';
 import { MarketType, Currency, SupportedExchange } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
-
+async function verifyAdmin() {
+    const session = await getServerSession(authOptions);
+    if (!session?.user || (session.user as any).role !== "ADMIN") {
+        throw new Error("Unauthorized: Admin access required.");
+    }
+    return session;
+}
 
 export async function getStrategies() {
+    await verifyAdmin();
     return await prisma.strategy.findMany({
         orderBy: { createdAt: 'desc' }
     });
 }
 
 export async function createStrategy(formData: FormData) {
+    await verifyAdmin();
     const name = formData.get('name') as string;
     const marketType = formData.get('marketType') as MarketType;
     const settlementCurrency = formData.get('currency') as Currency;
@@ -61,6 +71,7 @@ export async function createStrategy(formData: FormData) {
 }
 
 export async function toggleStrategyActive(id: string) {
+    await verifyAdmin();
     const strategy = await prisma.strategy.findUnique({ where: { id } });
     if (!strategy) return;
 
@@ -73,6 +84,7 @@ export async function toggleStrategyActive(id: string) {
 }
 
 export async function toggleStrategyPublic(id: string) {
+    await verifyAdmin();
     const strategy = await prisma.strategy.findUnique({ where: { id } });
     if (!strategy) return;
 
@@ -86,6 +98,7 @@ export async function toggleStrategyPublic(id: string) {
 }
 
 export async function updateStrategySafeSettings(id: string, formData: FormData) {
+    await verifyAdmin();
     const name = formData.get('name') as string;
     const performanceFeePercentage = parseFloat(formData.get('performanceFee') as string) || 30.0;
     const defaultEquityPercentage = parseFloat(formData.get('defaultEquity') as string) || 95.0;
@@ -112,6 +125,7 @@ export async function updateStrategySafeSettings(id: string, formData: FormData)
 }
 
 export async function generateWebhook(id: string) {
+    await verifyAdmin();
     const newWebhookToken = crypto.randomBytes(32).toString('hex');
 
     await prisma.strategy.update({
@@ -122,6 +136,7 @@ export async function generateWebhook(id: string) {
 }
 
 export async function deleteStrategy(id: string) {
+    await verifyAdmin();
     await prisma.strategy.delete({
         where: { id }
     });

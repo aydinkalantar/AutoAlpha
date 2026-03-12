@@ -2,8 +2,19 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from 'next/cache';
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+
+async function verifyAdmin() {
+    const session = await getServerSession(authOptions);
+    if (!session?.user || (session.user as any).role !== "ADMIN") {
+        throw new Error("Unauthorized: Admin access required.");
+    }
+    return session;
+}
 
 export async function wipeSandboxData() {
+    await verifyAdmin();
     try {
         await prisma.$transaction([
             prisma.position.deleteMany({ where: { isPaper: true } }),
@@ -35,6 +46,7 @@ export async function wipeSandboxData() {
 
 
 export async function getSystemConfig() {
+    await verifyAdmin();
     // Upsert to ensure one global config exists
     const config = await prisma.systemConfig.upsert({
         where: { id: "global" },
@@ -45,6 +57,7 @@ export async function getSystemConfig() {
 }
 
 export async function updateSystemConfig(formData: FormData) {
+    await verifyAdmin();
     const stripeMode = formData.get('stripeMode') as string;
 
     // Test Keys

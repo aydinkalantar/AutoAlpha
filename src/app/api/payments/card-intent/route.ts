@@ -29,6 +29,27 @@ export async function POST(req: Request) {
             return new Response('Unsupported currency', { status: 400 });
         }
 
+        const user = await prisma.user.findUnique({ where: { id: userId } });
+        if (!user) {
+            return new Response('User not found', { status: 404 });
+        }
+
+        let customerId = user.stripeCustomerId;
+
+        // Create a Stripe Customer if they don't have one and we want to enable Auto-Deposit
+        if (!customerId) {
+            const customer = await stripe.customers.create({
+                email: user.email,
+                name: user.name || undefined,
+            });
+            customerId = customer.id;
+            
+            await prisma.user.update({
+                where: { id: userId },
+                data: { stripeCustomerId: customerId }
+            });
+        }
+
         const requestedAmount = parseFloat(desiredAmount);
 
         // Fee = 2.9% + $0.30
@@ -41,6 +62,8 @@ export async function POST(req: Request) {
         const paymentIntent = await stripe.paymentIntents.create({
             amount: amountInCents,
             currency: 'usd',
+            customer: customerId,
+            setup_future_usage: 'off_session', // Save the card for Auto-Refill
             metadata: {
                 userId,
                 currency,

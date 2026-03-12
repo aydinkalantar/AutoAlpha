@@ -11,9 +11,20 @@ export default function LiveExecutionsClient() {
     const fetchData = async () => {
         try {
             const res = await fetch('/api/admin/executions');
+            
+            if (!res.ok) {
+                if (res.status === 401 || res.status === 403) {
+                    window.location.href = '/login';
+                    return;
+                }
+                throw new Error('API Error');
+            }
+
             const json = await res.json();
-            setData(json);
-            setLastRefresh(new Date());
+            if (json && json.jobs) {
+                setData(json);
+                setLastRefresh(new Date());
+            }
         } catch (error) {
             console.error(error);
         } finally {
@@ -51,12 +62,12 @@ export default function LiveExecutionsClient() {
                 {/* BullMQ Jobs Feed */}
                 <div className="space-y-4">
                     <div className="flex items-center gap-2 mb-2">
-                        <TerminalSquare className="w-5 h-5 text-black/40" />
+                        <TerminalSquare className="w-5 h-5 text-black/40 dark:text-white/40" />
                         <h2 className="text-lg font-bold text-foreground">Queue Engine Jobs</h2>
-                        <span className="ml-2 px-2 py-0.5 rounded-md bg-black/5 text-[10px] font-bold uppercase tracking-widest text-black/40">BullMQ</span>
+                        <span className="ml-2 px-2 py-0.5 rounded-md bg-black/5 dark:bg-white/5 text-[10px] font-bold uppercase tracking-widest text-foreground/40">BullMQ</span>
                     </div>
 
-                    <div className="bg-[#1D1D1F] rounded-[2rem] p-6 h-[600px] overflow-y-auto space-y-4 shadow-2xl relative font-mono text-sm">
+                    <div className="bg-[#1D1D1F] dark:bg-black/40 border border-transparent dark:border-white/10 rounded-[2rem] p-6 h-[600px] overflow-y-auto space-y-4 shadow-2xl relative font-mono text-sm">
                         {data.jobs.length === 0 && loading && (
                             <div className="absolute inset-0 flex items-center justify-center text-white/30">
                                 <RefreshCw className="w-6 h-6 animate-spin" />
@@ -104,14 +115,14 @@ export default function LiveExecutionsClient() {
                 {/* Prisma Positions Feed */}
                 <div className="space-y-4">
                     <div className="flex items-center gap-2 mb-2">
-                        <Activity className="w-5 h-5 text-black/40" />
+                        <Activity className="w-5 h-5 text-black/40 dark:text-white/40" />
                         <h2 className="text-lg font-bold text-foreground">Exchange Dispatches</h2>
-                        <span className="ml-2 px-2 py-0.5 rounded-md bg-black/5 text-[10px] font-bold uppercase tracking-widest text-black/40">ccxt Success</span>
+                        <span className="ml-2 px-2 py-0.5 rounded-md bg-black/5 dark:bg-white/5 text-[10px] font-bold uppercase tracking-widest text-foreground/40">ccxt Success</span>
                     </div>
 
                     <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl rounded-[2rem] border border-black/5 dark:border-white/10 p-6 h-[600px] overflow-y-auto space-y-4 shadow-sm shadow-black-[0.03] dark:shadow-white/5">
                         {data.positions.length === 0 && !loading && (
-                            <div className="h-full flex items-center justify-center text-black/30 font-medium text-sm">
+                            <div className="h-full flex items-center justify-center text-foreground/30 font-medium text-sm">
                                 No exchange positions recorded recently.
                             </div>
                         )}
@@ -126,26 +137,26 @@ export default function LiveExecutionsClient() {
                                     </div>
                                 )}
                                 <div className="flex justify-between items-center mb-1">
-                                    <span className="font-bold text-foreground text-lg">{pos.symbol} <span className="text-black/40 font-medium text-sm ml-1">{pos.side}</span></span>
-                                    <span className={`text-xs font-bold px-2 py-0.5 rounded uppercase tracking-wider ${pos.isOpen ? 'bg-blue-50 text-blue-600' : 'bg-black/5 text-foreground/50'}`}>
+                                    <span className="font-bold text-foreground text-lg">{pos.symbol} <span className="text-foreground/40 font-medium text-sm ml-1">{pos.side}</span></span>
+                                    <span className={`text-xs font-bold px-2 py-0.5 rounded uppercase tracking-wider ${pos.isOpen ? 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400' : 'bg-black/5 dark:bg-white/5 text-foreground/50'}`}>
                                         {pos.isOpen ? 'OPEN' : 'CLOSED'}
                                     </span>
                                 </div>
-                                <div className="text-sm font-medium text-black/60 mb-4">{pos.strategy?.name} &rarr; {pos.user?.email}</div>
+                                <div className="text-sm font-medium text-foreground/60 mb-4">{pos.strategy?.name} &rarr; {pos.user?.email}</div>
 
                                 <div className="grid grid-cols-2 gap-4 text-sm mt-4 border-t border-black/5 dark:border-white/10 pt-4">
                                     <div>
-                                        <div className="text-black/40 text-xs mb-0.5 uppercase tracking-wider font-bold">Qty / Size</div>
+                                        <div className="text-foreground/40 text-xs mb-0.5 uppercase tracking-wider font-bold">Qty / Size</div>
                                         <div className="font-mono text-foreground font-semibold">{pos.filledAmount}</div>
                                     </div>
                                     <div className="text-right">
-                                        <div className="text-black/40 text-xs mb-0.5 uppercase tracking-wider font-bold">Exchange ID</div>
-                                        <div className="font-mono text-black/60 truncate" title={pos.exchangeOrderId}>{pos.exchangeOrderId}</div>
+                                        <div className="text-foreground/40 text-xs mb-0.5 uppercase tracking-wider font-bold">Exchange ID</div>
+                                        <div className="font-mono text-foreground/60 truncate" title={pos.exchangeOrderId}>{pos.exchangeOrderId}</div>
                                     </div>
                                     {(!pos.isOpen && pos.realizedPnl !== undefined) && (
                                         <div className="col-span-2 mt-2 bg-black/5 dark:bg-white/5 p-3 rounded-xl border border-black/5 dark:border-white/10 flex justify-between items-center">
                                             <div className="text-foreground/50 font-bold uppercase tracking-widest text-[10px]">Net PnL (After Fees)</div>
-                                            <div className={`font-mono font-bold ${pos.realizedPnl > 0 ? 'text-green-600' : pos.realizedPnl < 0 ? 'text-red-500' : 'text-black/80'}`}>
+                                            <div className={`font-mono font-bold ${pos.realizedPnl > 0 ? 'text-green-600' : pos.realizedPnl < 0 ? 'text-red-500' : 'text-foreground'}`}>
                                                 {pos.realizedPnl > 0 ? '+' : ''}${pos.realizedPnl.toFixed(4)}
                                             </div>
                                         </div>

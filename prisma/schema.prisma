@@ -57,6 +57,13 @@ model User {
   createdAt           DateTime       @default(now())
   updatedAt           DateTime       @updatedAt
 
+  // Auto-Deposit & Billing Fields
+  stripeCustomerId    String?
+  autoDepositEnabled  Boolean        @default(false)
+  autoDepositThreshold Float         @default(10.0)
+  autoDepositAmount    Float         @default(50.0)
+  lastAutoDepositAt    DateTime?
+
   referredBy          User?          @relation("UserReferrals", fields: [referredById], references: [id])
   referrals           User[]         @relation("UserReferrals")
   

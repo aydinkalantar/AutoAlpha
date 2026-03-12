@@ -46,22 +46,22 @@ export default function LedgerTable({ ledgers }: { ledgers: LedgerWithUser[] }) 
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <div className="flex bg-[#F5F5F7] p-1 rounded-xl">
+                <div className="flex bg-[#F5F5F7] dark:bg-white/5 p-1 rounded-xl">
                     <button
                         onClick={() => setFilter('ALL')}
-                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${filter === 'ALL' ? 'bg-white shadow-sm text-foreground' : 'text-foreground/50 hover:text-black'}`}
+                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${filter === 'ALL' ? 'bg-white dark:bg-white/10 shadow-sm text-foreground' : 'text-foreground/50 hover:text-foreground'}`}
                     >
                         All Entries
                     </button>
                     <button
                         onClick={() => setFilter('FEES')}
-                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${filter === 'FEES' ? 'bg-white shadow-sm text-foreground' : 'text-foreground/50 hover:text-black'}`}
+                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${filter === 'FEES' ? 'bg-white dark:bg-white/10 shadow-sm text-foreground' : 'text-foreground/50 hover:text-foreground'}`}
                     >
                         Performance Fees
                     </button>
                     <button
                         onClick={() => setFilter('ADJUSTMENTS')}
-                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${filter === 'ADJUSTMENTS' ? 'bg-white shadow-sm text-foreground' : 'text-foreground/50 hover:text-black'}`}
+                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${filter === 'ADJUSTMENTS' ? 'bg-white dark:bg-white/10 shadow-sm text-foreground' : 'text-foreground/50 hover:text-foreground'}`}
                     >
                         Manual Adjustments
                     </button>
@@ -69,7 +69,7 @@ export default function LedgerTable({ ledgers }: { ledgers: LedgerWithUser[] }) 
 
                 <button
                     onClick={exportToCsv}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-[#1D1D1F] text-white rounded-full hover:bg-black/80 transition-all font-bold text-sm shadow-md shadow-black/10"
+                    className="flex items-center gap-2 px-5 py-2.5 bg-foreground text-background rounded-full hover:bg-foreground/80 transition-all font-bold text-sm shadow-md shadow-black/10 dark:shadow-white/5"
                 >
                     <Download className="w-4 h-4" />
                     Export CSV
@@ -90,7 +90,7 @@ export default function LedgerTable({ ledgers }: { ledgers: LedgerWithUser[] }) 
                         <tbody className="divide-y divide-black/5">
                             {filteredLedgers.map((ledger) => (
                                 <tr key={ledger.id} className="hover:bg-black/[0.02] transition-colors">
-                                    <td className="px-8 py-5 text-black/60 font-medium whitespace-nowrap">
+                                    <td className="px-8 py-5 text-foreground/60 font-medium whitespace-nowrap">
                                         {new Date(ledger.createdAt).toLocaleString(undefined, {
                                             month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
                                         })}
@@ -103,14 +103,14 @@ export default function LedgerTable({ ledgers }: { ledgers: LedgerWithUser[] }) 
                                             {ledger.amount > 0 ? '+' : ''}{ledger.amount.toFixed(4)} {ledger.currency}
                                         </span>
                                     </td>
-                                    <td className="px-8 py-5 text-black/70">
+                                    <td className="px-8 py-5 text-foreground/70">
                                         {ledger.description}
                                     </td>
                                 </tr>
                             ))}
                             {filteredLedgers.length === 0 && (
                                 <tr>
-                                    <td colSpan={4} className="px-8 py-16 text-center text-black/40 font-semibold bg-white">
+                                    <td colSpan={4} className="px-8 py-16 text-center text-foreground/40 font-semibold">
                                         No ledger entries found for this filter.
                                     </td>
                                 </tr>

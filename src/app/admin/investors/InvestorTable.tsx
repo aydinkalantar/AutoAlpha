@@ -47,7 +47,7 @@ export default function InvestorTable({ users }: InvestorTableProps) {
                             {users.map((user) => {
                                 const hasValidKeys = user.exchangeKeys && user.exchangeKeys.length > 0 && user.exchangeKeys.some(k => k.isValid);
                                 return (
-                                    <tr key={user.id} className="hover:bg-black/[0.02] transition-colors bg-white">
+                                    <tr key={user.id} className="hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors">
                                         <td className="px-8 py-6 font-bold text-foreground flex items-center gap-3">
                                             {user.email}
                                             {!(user as any).isActive && user.role !== 'ADMIN' && (
@@ -62,7 +62,7 @@ export default function InvestorTable({ users }: InvestorTableProps) {
                                                     Connected
                                                 </span>
                                             ) : (
-                                                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#F5F5F7] text-black/40">
+                                                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#F5F5F7] dark:bg-white/5 text-foreground/40">
                                                     None
                                                 </span>
                                             )}
@@ -78,7 +78,7 @@ export default function InvestorTable({ users }: InvestorTableProps) {
                                                 <button
                                                     onClick={() => handleToggleStatus(user.id, (user as any).isActive)}
                                                     disabled={isPending}
-                                                    className="text-white bg-[#1D1D1F] px-4 py-2 rounded-full hover:bg-black/80 transition-colors flex items-center gap-2 font-bold text-xs uppercase tracking-tight disabled:opacity-50"
+                                                    className="text-background bg-foreground px-4 py-2 rounded-full hover:bg-foreground/80 transition-colors flex items-center gap-2 font-bold text-xs uppercase tracking-tight disabled:opacity-50"
                                                     title="Approve Account"
                                                 >
                                                     Approve
@@ -86,7 +86,7 @@ export default function InvestorTable({ users }: InvestorTableProps) {
                                             )}
                                             <button
                                                 onClick={() => openAdjustModal(user.id, user.email)}
-                                                className="text-foreground bg-[#F5F5F7] px-4 py-2 rounded-full hover:bg-black/5 transition-colors flex items-center gap-2 font-bold text-xs uppercase tracking-tight"
+                                                className="text-foreground bg-[#F5F5F7] dark:bg-white/5 px-4 py-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors flex items-center gap-2 font-bold text-xs uppercase tracking-tight"
                                                 title="Adjust Balance"
                                             >
                                                 <span>
@@ -99,7 +99,7 @@ export default function InvestorTable({ users }: InvestorTableProps) {
                             })}
                             {users.length === 0 && (
                                 <tr>
-                                    <td colSpan={5} className="px-8 py-16 text-center text-black/40 font-semibold bg-white">
+                                    <td colSpan={5} className="px-8 py-16 text-center text-foreground/40 font-semibold">
                                         No investors found in the system.
                                     </td>
                                 </tr>

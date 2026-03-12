@@ -18,9 +18,10 @@ type Position = {
 
 interface LiveRadarProps {
     openPositions: Position[];
+    isPaperMode: boolean;
 }
 
-export default function LiveRadar({ openPositions: initialPositions }: LiveRadarProps) {
+export default function LiveRadar({ openPositions: initialPositions, isPaperMode }: LiveRadarProps) {
     const [openPositions, setOpenPositions] = useState<Position[]>(initialPositions);
     const [prices, setPrices] = useState<Record<string, number>>({});
     const [loadingCloseId, setLoadingCloseId] = useState<string | null>(null);
@@ -34,9 +35,7 @@ export default function LiveRadar({ openPositions: initialPositions }: LiveRadar
     useEffect(() => {
         const fetchActivePositions = async () => {
             try {
-                // Check the first position's isPaper status as the context (assuming UI is locked to one mode)
-                const isPaper = initialPositions.length > 0 ? (initialPositions[0] as any).isPaper : true; // Defaulting true to be safe
-                const res = await fetch(`/api/user/positions/active?isPaper=${isPaper}`);
+                const res = await fetch(`/api/user/positions/active?isPaper=${isPaperMode}`);
                 if (res.ok) {
                     const data = await res.json();
                     if (data.success && data.positions) {
@@ -50,7 +49,7 @@ export default function LiveRadar({ openPositions: initialPositions }: LiveRadar
 
         const interval = setInterval(fetchActivePositions, 5000);
         return () => clearInterval(interval);
-    }, [initialPositions]);
+    }, [initialPositions, isPaperMode]);
 
     // Filter only unique symbols from the open positions
     const symbols = Array.from(new Set(openPositions.map(p => p.symbol)));

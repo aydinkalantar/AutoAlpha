@@ -33,7 +33,7 @@ export default async function WaitlistPage() {
                 </div>
                 
                 <div className="pt-6">
-                    <Link href="/api/auth/signout" className="inline-block text-sm font-bold bg-[#1D1D1F] text-white px-8 py-4 rounded-full hover:bg-black/80 transition-colors w-full md:w-auto">
+                    <Link href="/api/auth/signout" className="inline-block text-sm font-bold bg-black dark:bg-[#1D1D1F] text-white px-8 py-4 rounded-full hover:opacity-80 transition-opacity w-full md:w-auto">
                         Sign Out
                     </Link>
                 </div>

@@ -12,7 +12,7 @@ const redisConnection: any = process.env.REDIS_URL
         port: parseInt(process.env.REDIS_PORT || '6379'),
     };
 
-const tradeQueue = new Queue('trade-execution', {
+const tradeQueue = new Queue('qa-test-queue', {
     connection: redisConnection
 });
 

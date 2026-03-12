@@ -41,7 +41,7 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
       </div>
 
       {/* 1. The Navigation Bar */}
-      <header className="fixed top-0 w-full z-50 bg-white/10 dark:bg-black/5 backdrop-blur-2xl border-b border-black/5 dark:border-white/5 transition-colors duration-300">
+      <header className="fixed top-0 w-full z-50 bg-white/50 dark:bg-black/20 backdrop-blur-2xl border-b border-black/5 dark:border-white/5 transition-colors duration-300">
         <nav className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
@@ -58,6 +58,7 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
           </div>
 
           <div className="flex items-center gap-4">
+            <ThemeToggle />
             {status === "loading" ? (
               <div className="w-24 h-10 animate-pulse bg-black/5 dark:bg-white/10 rounded-full" />
             ) : session ? (
@@ -297,8 +298,13 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
       </main>
 
       {/* Footer */}
-      <footer className="w-full py-16 border-t border-black/5 dark:border-white/10 bg-white/10 dark:bg-white/5 backdrop-blur-2xl mt-20 z-10 relative">
+      <footer className="w-full py-16 border-t border-black/5 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-2xl mt-20 z-10 relative">
         <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+        <div className="max-w-7xl mx-auto px-6 mb-12 text-center text-xs font-medium text-foreground/40 leading-relaxed relative z-10">
+          <p className="mb-2"><strong className="text-foreground/60">No Financial Advice:</strong> AutoAlpha is a software execution tool, not a registered investment advisor, broker, or fiduciary. We provide automated trading technology. You are solely responsible for all trades executed via your API keys.</p>
+          <p><strong className="text-foreground/60">Risk Warning:</strong> Trading cryptocurrency involves extreme risk and potential for total loss of capital. <span className="font-bold text-foreground/70">Past performance is not indicative of future results.</span> Never trade with money you cannot afford to lose.</p>
+        </div>
+
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8 relative z-10">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center">
@@ -308,9 +314,9 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
           </div>
 
           <div className="flex flex-wrap justify-center gap-8 text-sm font-bold tracking-widest uppercase text-foreground/40">
-            <Link href="#" className="hover:text-foreground transition-colors">Terms of Service</Link>
-            <Link href="#" className="hover:text-foreground transition-colors">Privacy Policy</Link>
-            <Link href="#" className="hover:text-foreground transition-colors">Risk Disclaimer</Link>
+            <Link href="/terms" className="hover:text-foreground transition-colors">Terms of Service</Link>
+            <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
+            <Link href="/risk" className="hover:text-foreground transition-colors">Risk Disclaimer</Link>
           </div>
 
           <p className="text-sm font-medium text-foreground/40">© 2026 AutoAlpha. All rights reserved.</p>

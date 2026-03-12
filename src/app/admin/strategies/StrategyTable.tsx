@@ -27,7 +27,7 @@ export default function StrategyTable({ strategies }: { strategies: Strategy[] }
                     </tbody>
                 </table>
                 {strategies.length === 0 && (
-                    <div className="p-12 text-center text-black/40 font-medium">
+                    <div className="p-12 text-center text-black/40 dark:text-white/40 font-medium">
                         No strategies active. Create one above to get started.
                     </div>
                 )}
@@ -81,15 +81,15 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                 </td>
                 <td className="px-8 py-5 whitespace-nowrap">
                     <div className="flex flex-col">
-                        <span className="font-semibold text-black/80">
-                            {strategy.pair || `${strategy.targetExchange} ${strategy.marketType}`} <span className="text-black/40 text-xs ml-1">({strategy.marketType})</span>
+                        <span className="font-semibold text-black/80 dark:text-white/80">
+                            {strategy.pair || `${strategy.targetExchange} ${strategy.marketType}`} <span className="text-black/40 dark:text-white/40 text-xs ml-1">({strategy.marketType})</span>
                         </span>
                         <span className="text-foreground/50 text-xs mt-0.5 font-medium">
                             {strategy.leverage}x <span className="opacity-50">(Max: {strategy.maxLeverage}x)</span>
                         </span>
                     </div>
                 </td>
-                <td className="px-8 py-5 font-bold text-black/70 whitespace-nowrap">
+                <td className="px-8 py-5 font-bold text-black/70 dark:text-white/70 whitespace-nowrap">
                     {strategy.defaultEquityPercentage}%
                 </td>
                 <td className="px-8 py-5 whitespace-nowrap">
@@ -97,7 +97,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                         onClick={handlePublicToggle}
                         disabled={isPending}
                         className={`px-3 py-1 font-bold rounded-full transition-colors disabled:opacity-50 border ${strategy.isPublic
-                            ? 'bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100'
+                            ? 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-500/20 hover:bg-blue-100 dark:hover:bg-blue-500/20'
                             : 'bg-black/5 dark:bg-white/5 text-muted-foreground border-black/5 dark:border-white/10 hover:bg-black/10 dark:hover:bg-white/10'
                             }`}
                     >
@@ -106,8 +106,8 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                 </td>
                 <td className="px-8 py-5 whitespace-nowrap">
                     <span className={`px-3 py-1 text-xs font-bold rounded-full ${strategy.isActive
-                        ? 'bg-green-50 text-green-600'
-                        : 'bg-black/5 text-black/40'
+                        ? 'bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400'
+                        : 'bg-black/5 dark:bg-white/5 text-foreground/40'
                         }`}>
                         {strategy.isActive ? 'Active' : 'Paused'}
                     </span>
@@ -116,7 +116,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                     <div className="flex justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
                         <button
                             onClick={() => setShowEditModal(true)}
-                            className="w-10 h-10 bg-[#F5F5F7] hover:bg-black/5 rounded-full flex items-center justify-center text-black/60 hover:text-foreground transition-colors"
+                            className="w-10 h-10 bg-[#F5F5F7] dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 rounded-full flex items-center justify-center text-black/60 dark:text-white/60 hover:text-foreground transition-colors"
                             title="Edit Settings"
                         >
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -125,7 +125,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                         </button>
                         <button
                             onClick={() => setShowInstructions(true)}
-                            className="w-10 h-10 bg-[#F5F5F7] hover:bg-black/5 rounded-full flex items-center justify-center text-black/60 hover:text-foreground transition-colors"
+                            className="w-10 h-10 bg-[#F5F5F7] dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 rounded-full flex items-center justify-center text-black/60 dark:text-white/60 hover:text-foreground transition-colors"
                             title="Webhook Instructions"
                         >
                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -135,7 +135,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                         <button
                             onClick={handleWebhook}
                             disabled={isPending}
-                            className="w-10 h-10 bg-[#F5F5F7] hover:bg-black/5 rounded-full flex items-center justify-center text-black/60 hover:text-foreground transition-colors disabled:opacity-50"
+                            className="w-10 h-10 bg-[#F5F5F7] dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 rounded-full flex items-center justify-center text-black/60 dark:text-white/60 hover:text-foreground transition-colors disabled:opacity-50"
                             title="Regenerate Webhook"
                         >
                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -145,7 +145,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                         <button
                             onClick={handleToggle}
                             disabled={isPending}
-                            className={`${strategy.isActive ? 'text-white bg-red-600 hover:bg-red-700 shadow-sm shadow-red-500/20' : 'text-green-800 bg-green-100 hover:bg-green-200'} px-5 py-2 rounded-full transition-all flex items-center gap-2 disabled:opacity-50 font-bold text-xs uppercase tracking-tight`}
+                            className={`${strategy.isActive ? 'text-white bg-red-600 dark:bg-red-500/80 hover:bg-red-700 dark:hover:bg-red-500 shadow-sm shadow-red-500/20' : 'text-green-800 dark:text-green-400 bg-green-100 dark:bg-green-500/10 hover:bg-green-200 dark:hover:bg-green-500/20'} px-5 py-2 rounded-full transition-all flex items-center gap-2 disabled:opacity-50 font-bold text-xs uppercase tracking-tight`}
                             title={strategy.isActive ? 'Kill Switch (Pause)' : 'Reactivate'}
                         >
                             <span className="relative flex h-2 w-2">
@@ -166,7 +166,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                         <button
                             onClick={handleDelete}
                             disabled={isPending}
-                            className="text-red-500 hover:text-red-600 bg-red-50 hover:bg-red-100 px-4 py-2 rounded-full transition-colors flex items-center justify-center disabled:opacity-50"
+                            className="text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 px-4 py-2 rounded-full transition-colors flex items-center justify-center disabled:opacity-50"
                             title="Delete Strategy"
                         >
                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -231,27 +231,27 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                                     </div>
 
                                     {/* Method 2: Pine Script Native */}
-                                    <div className="space-y-2 p-4 bg-blue-50/50 rounded-[1.5rem] border border-blue-100">
+                                    <div className="space-y-2 p-4 bg-blue-50/50 dark:bg-blue-500/5 rounded-[1.5rem] border border-blue-100 dark:border-blue-500/20">
                                         <div className="flex items-center gap-2 mb-1">
-                                            <span className="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded">Method B</span>
-                                            <span className="text-sm font-semibold text-blue-900">Advanced Pine Script (Recommended)</span>
+                                            <span className="text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-500/10 px-2 py-1 rounded">Method B</span>
+                                            <span className="text-sm font-semibold text-blue-900 dark:text-blue-300">Advanced Pine Script (Recommended)</span>
                                         </div>
-                                        <p className="text-xs text-blue-800/60 mb-2">Build the precise JSON string exactly inside your Pine Script code variables (e.g. `msg_long`), and paste only this single variable hook into your TradingView Alert Message box:</p>
+                                        <p className="text-xs text-blue-800/60 dark:text-blue-400/60 mb-2">Build the precise JSON string exactly inside your Pine Script code variables (e.g. `msg_long`), and paste only this single variable hook into your TradingView Alert Message box:</p>
                                         <div className="relative group mb-3">
                                             <code className="block w-full bg-[#1D1D1F] text-blue-300 p-3 rounded-lg text-[13px] whitespace-pre font-mono shadow-inner font-bold">
                                                 {`{{strategy.order.alert_message}}`}
                                             </code>
                                         </div>
-                                        <p className="text-xs text-blue-800/60">Example Pine Script Implementation:</p>
+                                        <p className="text-xs text-blue-800/60 dark:text-blue-400/60">Example Pine Script Implementation:</p>
                                         <div className="relative group">
-                                            <code className="block w-full bg-white border border-blue-100/50 text-blue-900 p-3 rounded-lg text-[11px] overflow-x-auto whitespace-pre font-mono shadow-sm">
+                                            <code className="block w-full bg-white dark:bg-[#1C1C1E] border border-blue-100/50 dark:border-blue-500/10 text-blue-900 dark:text-blue-300 p-3 rounded-lg text-[11px] overflow-x-auto whitespace-pre font-mono shadow-sm">
                                                 {`msg_long = '{"webhookToken": "${strategy.webhookToken}", "symbol": "' + syminfo.ticker + '", "action": "long", "price": ' + str.tostring(close) + ', "order_id": "Long_Entry_01"}'\n\nstrategy.entry("Long", strategy.long, alert_message = msg_long)`}
                                             </code>
                                         </div>
                                     </div>
 
                                 </div>
-                                <p className="text-xs text-black/40 font-medium pb-2 text-center">For testing, you can use the `test-webhook.js` Node script to fire signals locally.</p>
+                                <p className="text-xs text-black/40 dark:text-white/40 font-medium pb-2 text-center">For testing, you can use the `test-webhook.js` Node script to fire signals locally.</p>
                             </div>
 
                         </div>
@@ -282,7 +282,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                                     type="button"
                                     onClick={() => setShowEditModal(false)}
                                     title="Close"
-                                    className="p-2 bg-[#F5F5F7] hover:bg-black/5 rounded-full text-foreground/50 hover:text-black transition-colors"
+                                    className="p-2 bg-[#F5F5F7] dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 rounded-full text-foreground/50 hover:text-black dark:hover:text-white transition-colors"
                                 >
                                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
@@ -292,33 +292,33 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <label className="text-xs font-bold text-black/60 uppercase tracking-wide">Strategy Name</label>
-                                    <input required name="name" defaultValue={strategy.name} className="w-full bg-[#F5F5F7] text-foreground px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
+                                    <label className="text-xs font-bold text-black/60 dark:text-white/60 uppercase tracking-wide">Strategy Name</label>
+                                    <input required name="name" defaultValue={strategy.name} className="w-full bg-[#F5F5F7] dark:bg-[#1D1D1F] text-foreground px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-xs font-bold text-black/60 uppercase tracking-wide">Perf. Fee %</label>
-                                    <input required type="number" step="0.1" name="performanceFee" defaultValue={strategy.performanceFeePercentage} className="w-full bg-[#F5F5F7] text-foreground px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
+                                    <label className="text-xs font-bold text-black/60 dark:text-white/60 uppercase tracking-wide">Perf. Fee %</label>
+                                    <input required type="number" step="0.1" name="performanceFee" defaultValue={strategy.performanceFeePercentage} className="w-full bg-[#F5F5F7] dark:bg-[#1D1D1F] text-foreground px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-xs font-bold text-black/60 uppercase tracking-wide">Default Equity %</label>
-                                    <input required type="number" step="0.1" name="defaultEquity" defaultValue={strategy.defaultEquityPercentage} className="w-full bg-[#F5F5F7] text-foreground px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
+                                    <label className="text-xs font-bold text-black/60 dark:text-white/60 uppercase tracking-wide">Default Equity %</label>
+                                    <input required type="number" step="0.1" name="defaultEquity" defaultValue={strategy.defaultEquityPercentage} className="w-full bg-[#F5F5F7] dark:bg-[#1D1D1F] text-foreground px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-xs font-bold text-black/60 uppercase tracking-wide">Expected ROI %</label>
-                                    <input type="number" step="0.1" name="expectedRoi" defaultValue={strategy.expectedRoiPercentage || ''} placeholder="Optional" className="w-full bg-[#F5F5F7] text-foreground px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
+                                    <label className="text-xs font-bold text-black/60 dark:text-white/60 uppercase tracking-wide">Expected ROI %</label>
+                                    <input type="number" step="0.1" name="expectedRoi" defaultValue={strategy.expectedRoiPercentage || ''} placeholder="Optional" className="w-full bg-[#F5F5F7] dark:bg-[#1D1D1F] text-foreground px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-xs font-bold text-black/60 uppercase tracking-wide">Win Rate %</label>
-                                    <input type="number" step="0.1" name="winRate" defaultValue={strategy.winRatePercentage || ''} placeholder="Optional" className="w-full bg-[#F5F5F7] text-foreground px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
+                                    <label className="text-xs font-bold text-black/60 dark:text-white/60 uppercase tracking-wide">Win Rate %</label>
+                                    <input type="number" step="0.1" name="winRate" defaultValue={strategy.winRatePercentage || ''} placeholder="Optional" className="w-full bg-[#F5F5F7] dark:bg-[#1D1D1F] text-foreground px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-xs font-bold text-black/60 uppercase tracking-wide">Max Drawdown %</label>
-                                    <input type="number" step="0.1" name="drawdown" defaultValue={strategy.drawdownPercentage || ''} placeholder="Optional" className="w-full bg-[#F5F5F7] text-foreground px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
+                                    <label className="text-xs font-bold text-black/60 dark:text-white/60 uppercase tracking-wide">Max Drawdown %</label>
+                                    <input type="number" step="0.1" name="drawdown" defaultValue={strategy.drawdownPercentage || ''} placeholder="Optional" className="w-full bg-[#F5F5F7] dark:bg-[#1D1D1F] text-foreground px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-shadow" />
                                 </div>
                             </div>
 
                             <div className="pt-4 flex justify-end gap-3">
-                                <button type="button" onClick={() => setShowEditModal(false)} className="px-6 py-3 rounded-full font-bold text-black/60 hover:bg-black/5 transition-colors">Cancel</button>
+                                <button type="button" onClick={() => setShowEditModal(false)} className="px-6 py-3 rounded-full font-bold text-black/60 dark:text-white/60 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Cancel</button>
                                 <button type="submit" disabled={isPending} className="px-8 py-3 rounded-full font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors disabled:opacity-50 shadow-lg shadow-blue-500/20">
                                     {isPending ? 'Saving...' : 'Save Strategy'}
                                 </button>

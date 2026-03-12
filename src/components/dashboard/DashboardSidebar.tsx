@@ -8,8 +8,7 @@ import { useTheme } from 'next-themes';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { useState, useEffect } from 'react';
-import DepositModal from './DepositModal';
-import WithdrawModal from '@/app/dashboard/WithdrawModal';
+import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { useRealtime } from '@/components/dashboard/RealtimeProvider';
 
@@ -20,8 +19,6 @@ export function cn(...inputs: ClassValue[]) {
 export default function DashboardSidebar({ children, notificationBell, userId, balances }: { children?: React.ReactNode, notificationBell?: React.ReactNode, userId?: string, balances?: { usdtBalance: number; usdcBalance: number } }) {
     const pathname = usePathname();
     const [isCollapsed, setIsCollapsed] = useState(false);
-    const [isDepositOpen, setIsDepositOpen] = useState(false);
-    const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
     const { isSoundEnabled, toggleSound } = useRealtime();
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
@@ -116,14 +113,14 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
 
                 <div className="p-4 pb-8 border-t border-black/5 dark:border-white/10 flex flex-col items-center gap-2 overflow-hidden">
                     <div className="w-full flex flex-col gap-2 mb-2">
-                        <button onClick={() => setIsDepositOpen(true)} className={cn("flex items-center justify-center gap-2 py-3 text-sm font-bold bg-gradient-to-br from-cyan-400 to-purple-600 text-white rounded-xl shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:opacity-90 transition-all w-full", isCollapsed ? "px-0" : "px-3")}>
+                        <Link href="/dashboard/deposit" className={cn("flex items-center justify-center gap-2 py-3 text-sm font-bold bg-gradient-to-br from-cyan-400 to-purple-600 text-white rounded-xl shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:opacity-90 transition-all w-full", isCollapsed ? "px-0" : "px-3")}>
                             <Wallet className="w-5 h-5 flex-shrink-0" />
                             {!isCollapsed && <span className="whitespace-nowrap">Deposit</span>}
-                        </button>
-                        <button onClick={() => setIsWithdrawOpen(true)} className={cn("flex items-center justify-center gap-2 py-3 text-sm font-bold bg-white/50 dark:bg-white/5 backdrop-blur-md text-foreground border border-black/5 dark:border-white/10 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-all w-full", isCollapsed ? "px-0" : "px-3")}>
+                        </Link>
+                        <Link href="/dashboard/withdraw" className={cn("flex items-center justify-center gap-2 py-3 text-sm font-bold bg-white/50 dark:bg-white/5 backdrop-blur-md text-foreground border border-black/5 dark:border-white/10 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-all w-full", isCollapsed ? "px-0" : "px-3")}>
                             <ArrowUpRight className="w-5 h-5 flex-shrink-0 opacity-70" />
                             {!isCollapsed && <span className="whitespace-nowrap">Withdraw</span>}
-                        </button>
+                        </Link>
                     </div>
 
                     <div className="w-full h-px bg-black/5 dark:bg-white/10" />
@@ -132,10 +129,6 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                         <Link href="/" className={cn("flex items-center gap-3 py-3 text-sm font-bold text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
                             <ChevronLeft className="w-5 h-5 flex-shrink-0" />
                             {!isCollapsed && <span className="whitespace-nowrap">Home</span>}
-                        </Link>
-                        <Link href="mailto:support@autoalpha.ai" className={cn("flex items-center gap-3 py-3 text-sm font-bold text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
-                            <HelpCircle className="w-5 h-5 flex-shrink-0" />
-                            {!isCollapsed && <span className="whitespace-nowrap">Support</span>}
                         </Link>
                         <button onClick={() => signOut({ callbackUrl: '/login' })} className={cn("flex items-center gap-3 py-3 text-sm font-bold text-red-500/80 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
                             <LogOut className="w-5 h-5 flex-shrink-0" />
@@ -152,11 +145,19 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                             </button>
                         )}
                     </div>
+                    
+                    {!isCollapsed && (
+                        <div className="mt-4 pt-4 border-t border-black/5 dark:border-white/10 flex flex-col gap-2 w-full text-center">
+                            <div className="flex justify-center gap-3 text-[10px] font-bold tracking-widest uppercase text-foreground/40">
+                                <Link href="/terms" target="_blank" className="hover:text-foreground transition-colors">Terms</Link>
+                                <Link href="/privacy" target="_blank" className="hover:text-foreground transition-colors">Privacy</Link>
+                                <Link href="/risk" target="_blank" className="hover:text-foreground transition-colors">Risk</Link>
+                            </div>
+                            <span className="text-[10px] text-foreground/30 font-medium tracking-wide">© 2026 AutoAlpha</span>
+                        </div>
+                    )}
                 </div>
             </div>
-
-            <DepositModal isOpen={isDepositOpen} onClose={() => setIsDepositOpen(false)} />
-            {userId && balances && <WithdrawModal isOpen={isWithdrawOpen} onClose={() => setIsWithdrawOpen(false)} userId={userId} balances={balances} />}
 
             <div className={cn("flex-1 flex flex-col min-h-screen relative z-10 transition-all duration-300 pb-20 md:pb-0", isCollapsed ? "md:ml-20" : "md:ml-64 lg:ml-64")}>
                 {notificationBell && (
@@ -169,8 +170,9 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                 </main>
             </div>
 
-            {/* Mobile Bottom Navigation (Thumb Zone) */}
-            <nav className="md:hidden fixed bottom-0 left-0 right-0 h-20 bg-white/80 dark:bg-black/80 backdrop-blur-2xl border-t border-black/5 dark:border-white/10 z-50 flex items-center justify-around px-2 pb-2 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+            {/* Mobile Bottom Navigation (Floating Pill) */}
+            <div className="md:hidden fixed bottom-6 left-4 right-4 z-50">
+                <nav className="h-16 bg-white/80 dark:bg-[#1C1C1E]/80 backdrop-blur-3xl border border-black/5 dark:border-white/10 rounded-[2rem] flex items-center justify-around px-2 shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
                 {navItems.filter(item => ['Overview', 'Strategy Report', 'Marketplace'].includes(item.name)).map((item) => {
                     const isActive = item.href === '/dashboard'
                         ? pathname === '/dashboard'
@@ -182,32 +184,62 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                             key={item.href}
                             href={item.href}
                             className={cn(
-                                "flex flex-col items-center justify-center w-16 h-14 rounded-xl transition-all",
+                                "relative flex flex-col items-center justify-center w-14 h-12 rounded-2xl transition-all duration-300",
                                 isActive
-                                    ? "text-cyan-500"
-                                    : "text-foreground/50 hover:text-foreground active:bg-black/5 dark:active:bg-white/5"
+                                    ? "text-cyan-500 bg-cyan-500/10 dark:bg-cyan-500/20"
+                                    : "text-foreground/40 hover:text-foreground/70 active:scale-95"
                             )}
                         >
-                            <Icon className={cn("w-6 h-6 mb-1", isActive ? "drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]" : "")} />
-                            <span className="text-[10px] font-bold truncate w-full text-center px-1">{item.name === 'Strategy Report' ? 'Report' : item.name}</span>
+                            <Icon className={cn("w-5.5 h-5.5 transition-transform duration-300", isActive ? "scale-110 drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]" : "")} />
+                            {isActive && (
+                                <motion.div
+                                    layoutId="mobileNavIndicator"
+                                    className="absolute -bottom-1 w-1 h-1 rounded-full bg-cyan-400"
+                                />
+                            )}
                         </Link>
                     );
                 })}
-                <button
-                    onClick={() => setIsDepositOpen(true)}
-                    className="flex flex-col items-center justify-center w-16 h-14 rounded-xl text-foreground/50 hover:text-foreground active:bg-black/5 dark:active:bg-white/5 transition-all"
+                <Link
+                    href="/dashboard/deposit"
+                    className={cn(
+                        "relative flex flex-col items-center justify-center w-14 h-12 rounded-2xl transition-all duration-300 group",
+                        pathname === '/dashboard/deposit'
+                            ? "text-cyan-500 bg-cyan-500/10 dark:bg-cyan-500/20"
+                            : "text-foreground/40 hover:text-foreground/70 active:scale-95"
+                    )}
+                    aria-label="Deposit"
+                    title="Deposit"
                 >
-                    <Wallet className="w-6 h-6 mb-1 text-purple-500 dark:text-purple-400" />
-                    <span className="text-[10px] font-bold">Deposit</span>
-                </button>
-                <button
-                    onClick={() => setIsWithdrawOpen(true)}
-                    className="flex flex-col items-center justify-center w-16 h-14 rounded-xl text-foreground/50 hover:text-foreground active:bg-black/5 dark:active:bg-white/5 transition-all"
+                    <Wallet className={cn("w-5.5 h-5.5 transition-transform duration-300", pathname === '/dashboard/deposit' ? "scale-110 drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]" : "group-hover:text-purple-500 transition-colors")} />
+                    {pathname === '/dashboard/deposit' && (
+                        <motion.div
+                            layoutId="mobileNavIndicator"
+                            className="absolute -bottom-1 w-1 h-1 rounded-full bg-cyan-400"
+                        />
+                    )}
+                </Link>
+                <Link
+                    href="/dashboard/withdraw"
+                    className={cn(
+                        "relative flex flex-col items-center justify-center w-14 h-12 rounded-2xl transition-all duration-300 group",
+                        pathname === '/dashboard/withdraw'
+                            ? "text-cyan-500 bg-cyan-500/10 dark:bg-cyan-500/20"
+                            : "text-foreground/40 hover:text-foreground/70 active:scale-95"
+                    )}
+                    aria-label="Withdraw"
+                    title="Withdraw"
                 >
-                    <ArrowUpRight className="w-6 h-6 mb-1 text-emerald-500 dark:text-emerald-400" />
-                    <span className="text-[10px] font-bold">Withdraw</span>
-                </button>
-            </nav>
+                    <ArrowUpRight className={cn("w-5.5 h-5.5 transition-transform duration-300", pathname === '/dashboard/withdraw' ? "scale-110 drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]" : "group-hover:text-emerald-500 transition-colors")} />
+                    {pathname === '/dashboard/withdraw' && (
+                        <motion.div
+                            layoutId="mobileNavIndicator"
+                            className="absolute -bottom-1 w-1 h-1 rounded-full bg-cyan-400"
+                        />
+                    )}
+                </Link>
+                </nav>
+            </div>
         </>
     );
 }

@@ -49,7 +49,7 @@ export default function LoginPage() {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-cyan-500/20 to-purple-600/20 blur-[100px] rounded-full pointer-events-none" />
 
             {/* Back to Home */}
-            <Link href="/" className="absolute top-8 left-8 lg:top-12 lg:left-12 flex items-center gap-2 text-foreground/60 hover:text-foreground transition-colors font-medium text-sm z-50 bg-white/5 dark:bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-black/5 dark:border-white/10">
+            <Link href="/" className="absolute top-8 left-8 lg:top-12 lg:left-12 flex items-center gap-2 text-foreground/60 hover:text-foreground transition-colors font-medium text-sm z-50 bg-black/5 dark:bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-black/5 dark:border-white/10">
                 <ChevronLeft className="w-4 h-4" />
                 Back to Home
             </Link>

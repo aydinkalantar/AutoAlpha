@@ -4,7 +4,7 @@ import { DollarSign, Activity, Users, Box } from 'lucide-react';
 import RevenueChart from './RevenueChart';
 
 
-const tradeQueue = new Queue('trade-execution', {
+const tradeQueue = new Queue('qa-test-queue', {
     connection: process.env.REDIS_URL ? new (require('ioredis'))(process.env.REDIS_URL, { maxRetriesPerRequest: null, family: 0 }) : {
         host: process.env.REDIS_HOST || 'localhost',
         port: parseInt(process.env.REDIS_PORT || '6379'),
@@ -50,7 +50,7 @@ export default async function AdminOverviewPage() {
     const platformAUM = activeSubAUM._sum.currentVirtualBalance || 0;
 
     // 3. Active Users
-    const activeUsersCount = await prisma.user.count();
+    const activeUsersCount = await prisma.user.count({ where: { isActive: true } });
 
     // 4. Pending Queue Jobs
     const waitingJobsCount = await tradeQueue.getWaitingCount();
@@ -79,14 +79,14 @@ export default async function AdminOverviewPage() {
     for (let i = 0; i < 30; i++) {
         const d = new Date(thirtyDaysAgo);
         d.setDate(d.getDate() + i);
-        // Format as YYYY-MM-DD local time to avoid UTC shift mismatches
-        const dateStr = d.toLocaleDateString('en-CA'); 
+        // Format as YYYY-MM-DD strictly in UTC to avoid server timezone mismatches
+        const dateStr = d.toISOString().split('T')[0];
         chartDataMap[dateStr] = 0;
     }
 
     recentLedgers.forEach(l => {
-        // Match the YYYY-MM-DD format strictly
-        const dateStr = l.createdAt.toLocaleDateString('en-CA');
+        // Match the YYYY-MM-DD format strictly in UTC
+        const dateStr = l.createdAt.toISOString().split('T')[0];
         if (chartDataMap[dateStr] !== undefined) {
             chartDataMap[dateStr] += Math.abs(l.amount);
         }

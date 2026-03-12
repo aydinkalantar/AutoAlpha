@@ -33,7 +33,7 @@ export default function CreateStrategyForm() {
                 {/* Top Row */}
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-black/60 px-2">Strategy Name</label>
+                        <label className="text-sm font-semibold text-foreground/60 px-2">Strategy Name</label>
                         <input
                             type="text"
                             name="name"
@@ -44,7 +44,7 @@ export default function CreateStrategyForm() {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-black/60 px-2">Pair</label>
+                        <label className="text-sm font-semibold text-foreground/60 px-2">Pair</label>
                         <select
                             name="pair"
                             required
@@ -89,7 +89,7 @@ export default function CreateStrategyForm() {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-black/60 px-2">Market Type</label>
+                        <label className="text-sm font-semibold text-foreground/60 px-2">Market Type</label>
                         <select
                             name="marketType"
                             value={marketType}
@@ -102,7 +102,7 @@ export default function CreateStrategyForm() {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-black/60 px-2">Default Leverage</label>
+                        <label className="text-sm font-semibold text-foreground/60 px-2">Default Leverage</label>
                         <input
                             type="number"
                             name="leverage"
@@ -115,7 +115,7 @@ export default function CreateStrategyForm() {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-black/60 px-2">Max Leverage</label>
+                        <label className="text-sm font-semibold text-foreground/60 px-2">Max Leverage</label>
                         <input
                             type="number"
                             name="maxLeverage"
@@ -131,7 +131,7 @@ export default function CreateStrategyForm() {
                 {/* Bottom Row */}
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-black/60 px-2">Default Equity %</label>
+                        <label className="text-sm font-semibold text-foreground/60 px-2">Default Equity %</label>
                         <input
                             type="number"
                             name="defaultEquity"
@@ -145,7 +145,7 @@ export default function CreateStrategyForm() {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-black/60 px-2">Description</label>
+                        <label className="text-sm font-semibold text-foreground/60 px-2">Description</label>
                         <input
                             type="text"
                             placeholder="Advanced automated trading"
@@ -154,7 +154,7 @@ export default function CreateStrategyForm() {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-black/60 px-2">Expected ROI (%)</label>
+                        <label className="text-sm font-semibold text-foreground/60 px-2">Expected ROI (%)</label>
                         <input
                             type="number"
                             name="expectedRoi"
@@ -165,7 +165,7 @@ export default function CreateStrategyForm() {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-black/60 px-2">Win Rate (%)</label>
+                        <label className="text-sm font-semibold text-foreground/60 px-2">Win Rate (%)</label>
                         <input
                             type="number"
                             name="winRate"
@@ -178,7 +178,7 @@ export default function CreateStrategyForm() {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-black/60 px-2">Drawdown (%)</label>
+                        <label className="text-sm font-semibold text-foreground/60 px-2">Drawdown (%)</label>
                         <input
                             type="number"
                             name="drawdown"
@@ -199,7 +199,7 @@ export default function CreateStrategyForm() {
                         id="isPublic"
                         className="w-5 h-5 rounded-[0.4rem] border-black/5 dark:border-white/10 text-primary focus:ring-primary/20 bg-background"
                     />
-                    <label htmlFor="isPublic" className="text-sm font-semibold text-black/60">
+                    <label htmlFor="isPublic" className="text-sm font-semibold text-foreground/60">
                         Show on Public Landing Page
                     </label>
                 </div>

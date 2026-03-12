@@ -2,10 +2,7 @@ import cron from 'node-cron';
 import ccxt from 'ccxt';
 import { prisma } from "@/lib/prisma";
 import { decryptKey } from '@/lib/encryption';
-
-
-
-// Task 1: 5-Minute Reconciliation Loop
+import Stripe from 'stripe';// Task 1: 5-Minute Reconciliation Loop
 cron.schedule('*/5 * * * *', async () => {
     console.log('[Cron] Running 5-Minute Open Position Reconciliation...');
 
@@ -76,16 +73,19 @@ cron.schedule('*/5 * * * *', async () => {
 
                         if (simulatedPnl > 0) {
                             const platformFee = simulatedPnl * (pos.strategy.performanceFeePercentage / 100);
+                            let user;
 
                             if (pos.strategy.settlementCurrency === 'USDT') {
-                                await tx.user.update({
+                                user = await tx.user.update({
                                     where: { id: pos.userId },
-                                    data: { usdtBalance: { decrement: platformFee } }
+                                    data: { usdtBalance: { decrement: platformFee } },
+                                    select: { referredById: true }
                                 });
                             } else {
-                                await tx.user.update({
+                                user = await tx.user.update({
                                     where: { id: pos.userId },
-                                    data: { usdcBalance: { decrement: platformFee } }
+                                    data: { usdcBalance: { decrement: platformFee } },
+                                    select: { referredById: true }
                                 });
                             }
 
@@ -95,10 +95,28 @@ cron.schedule('*/5 * * * *', async () => {
                                     amount: -platformFee,
                                     currency: pos.strategy.settlementCurrency,
                                     description: `Performance Fee Deducted for ${pos.symbol} Trade`,
-                                    type: 'FEE_DEDUCTION',
-                                    status: 'COMPLETED'
+                                    type: 'FEE_DEDUCTION'
                                 }
                             });
+
+                            if (user.referredById) {
+                                const commission = platformFee * 0.10;
+                                const updateField = pos.strategy.settlementCurrency === 'USDT' ? 'usdtBalance' : 'usdcBalance';
+                                await tx.user.update({
+                                    where: { id: user.referredById },
+                                    data: { [updateField]: { increment: commission } }
+                                });
+                                
+                                await tx.ledger.create({
+                                    data: {
+                                        userId: user.referredById,
+                                        amount: commission,
+                                        currency: pos.strategy.settlementCurrency,
+                                        description: `Affiliate Commission from network trade`,
+                                        type: 'AFFILIATE_COMMISSION'
+                                    }
+                                });
+                            }
 
                             await tx.notification.create({
                                 data: {
@@ -173,6 +191,136 @@ cron.schedule('0 0 * * *', async () => {
         }
     } catch (err) {
         console.error('[Cron] Fatal Error in Health Check Job:', err);
+    }
+});
+
+// Task 3: Hourly Auto-Deposit Processing
+cron.schedule('0 * * * *', async () => {
+    console.log('[Cron] Running Hourly Auto-Deposit Processing...');
+
+    try {
+        const config = await prisma.systemConfig.findUnique({ where: { id: "global" } });
+        const secretKey = config?.stripeMode === 'LIVE'
+            ? (config?.stripeLiveSecretKey || process.env.STRIPE_SECRET_KEY)
+            : (config?.stripeTestSecretKey || process.env.STRIPE_SECRET_KEY);
+
+        if (!secretKey) {
+            console.error('[Cron] Auto-Deposit Failed: Stripe Configuration Missing');
+            return;
+        }
+
+        const stripe = new Stripe(secretKey as string, {
+            apiVersion: '2023-10-16' as any,
+        });
+
+        // Find users who have auto-deposit enabled, have a stripe customer ID, and whose balance is below threshold
+        const eligibleUsers = await prisma.user.findMany({
+            where: {
+                autoDepositEnabled: true,
+                stripeCustomerId: { not: null },
+                // Safety check: Don't charge if they were charged in the last 12 hours
+                OR: [
+                    { lastAutoDepositAt: null },
+                    { lastAutoDepositAt: { lt: new Date(Date.now() - 12 * 60 * 60 * 1000) } }
+                ]
+            }
+        });
+
+        for (const user of eligibleUsers) {
+            // Check actual ledger balance combined
+            const totalBalance = user.usdtBalance; // Assuming USDT is the primary gas currency
+
+            if (totalBalance < user.autoDepositThreshold) {
+                console.log(`[Cron] User ${user.email} (ID: ${user.id}) balance ${totalBalance} is below threshold ${user.autoDepositThreshold}. Initiating Auto-Deposit of ${user.autoDepositAmount}...`);
+
+                try {
+                    // Fetch customer's default payment method
+                    const paymentMethods = await stripe.paymentMethods.list({
+                        customer: user.stripeCustomerId!,
+                        type: 'card',
+                    });
+
+                    if (paymentMethods.data.length === 0) {
+                        console.log(`[Cron] User ${user.id} has no saved payment methods. Skipping.`);
+                        continue;
+                    }
+
+                    const defaultPaymentMethod = paymentMethods.data[0].id;
+
+                    // Calculate gross amount reflecting Stripe fees (2.9% + $0.30)
+                    const grossAmount = (user.autoDepositAmount + 0.30) / 0.971;
+                    const amountInCents = Math.round(grossAmount * 100);
+
+                    // Create and Confirm PaymentIntent off-session
+                    const paymentIntent = await stripe.paymentIntents.create({
+                        amount: amountInCents,
+                        currency: 'usd',
+                        customer: user.stripeCustomerId!,
+                        payment_method: defaultPaymentMethod,
+                        off_session: true,
+                        confirm: true,
+                        description: `AutoAlpha Auto-Refill (Threshold: $${user.autoDepositThreshold})`,
+                        metadata: {
+                            userId: user.id,
+                            isAutoDeposit: 'true',
+                            netAmount: user.autoDepositAmount.toString()
+                        }
+                    });
+
+                    if (paymentIntent.status === 'succeeded') {
+                        // 1. Give them the balance
+                        await prisma.user.update({
+                            where: { id: user.id },
+                            data: {
+                                usdtBalance: { increment: user.autoDepositAmount },
+                                lastAutoDepositAt: new Date()
+                            }
+                        });
+
+                        // 2. Write to Accounting Ledger
+                        await prisma.ledger.create({
+                            data: {
+                                userId: user.id,
+                                amount: user.autoDepositAmount,
+                                currency: 'USDT',
+                                type: 'DEPOSIT',
+                                description: 'Stripe Auto-Deposit Refill'
+                            }
+                        });
+
+                        // 3. Send Notification
+                        await prisma.notification.create({
+                            data: {
+                                userId: user.id,
+                                title: 'Auto-Refill Successful',
+                                message: `Your Gas Tank fell below $${user.autoDepositThreshold}. We successfully deposited $${user.autoDepositAmount} using your saved card.`,
+                                type: 'SYSTEM'
+                            }
+                        });
+                        console.log(`[Cron] Auto-Deposit success for ${user.id}`);
+                    }
+
+                } catch (stripeErr: any) {
+                    console.error(`[Cron] Stripe charge failed for user ${user.id}:`, stripeErr.message);
+                    
+                    // Specific handling for declined off-session cards
+                    if (stripeErr.code === 'authentication_required') {
+                        // User's bank demands 3D Secure, which we can't do off-session.
+                        await prisma.notification.create({
+                            data: {
+                                userId: user.id,
+                                title: 'Auto-Refill Failed: Authentication Required',
+                                message: `Your bank denied the automated charge. Please log in and make a manual deposit to re-authenticate your card.`,
+                                type: 'ALERT'
+                            }
+                        });
+                    }
+                }
+            }
+        }
+
+    } catch (err) {
+        console.error('[Cron] Fatal Error in Auto-Deposit Job:', err);
     }
 });
 
