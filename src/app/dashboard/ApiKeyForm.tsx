@@ -54,7 +54,7 @@ export default function ApiKeyForm({ userId, existingKeys }: ApiKeyFormProps) {
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/20 to-transparent" />
             <h2 className="text-2xl font-bold text-foreground mb-8 tracking-tight relative z-10">Connect Exchange</h2>
 
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
+            <form onSubmit={handleSubmit} autoComplete="off" className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
                 <input type="hidden" name="userId" value={userId} />
 
                 <div className="space-y-3 relative z-10">
@@ -83,6 +83,8 @@ export default function ApiKeyForm({ userId, existingKeys }: ApiKeyFormProps) {
                         type="text"
                         name="apiKey"
                         required
+                        autoComplete="off"
+                        spellCheck="false"
                         className="w-full bg-white/40 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-[1rem] px-5 py-4 text-foreground font-medium placeholder-foreground/30 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all backdrop-blur-md"
                         placeholder="e.g. 1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0t..."
                     />
@@ -94,6 +96,9 @@ export default function ApiKeyForm({ userId, existingKeys }: ApiKeyFormProps) {
                         type="password"
                         name="apiSecret"
                         required
+                        autoComplete="new-password"
+                        spellCheck="false"
+                        data-lpignore="true"
                         className="w-full bg-white/40 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-[1rem] px-5 py-4 text-foreground font-medium placeholder-foreground/30 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all backdrop-blur-md"
                         placeholder="e.g. z9y8x7w6v5u4t3s2r1q0p9o8n7m6l5k4j3i2h1g0..."
                     />

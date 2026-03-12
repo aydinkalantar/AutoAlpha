@@ -197,7 +197,7 @@ cron.schedule('0 0 * * *', async () => {
 });
 
 // Task 3: Hourly Auto-Deposit Processing
-cron.schedule('* * * * *', async () => {
+cron.schedule('0 * * * *', async () => {
     console.log('[Cron] Running Hourly Auto-Deposit Processing...');
 
     try {
