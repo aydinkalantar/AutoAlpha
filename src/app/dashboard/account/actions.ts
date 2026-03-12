@@ -57,3 +57,21 @@ export async function deleteAccount(formData: FormData) {
 
     return { success: true };
 }
+
+export async function toggleTradeEmailNotifications(enabled: boolean) {
+    const session = await getServerSession(authOptions);
+    if (!session?.user) return { success: false, error: "Unauthorized" };
+
+    const userId = (session.user as any).id;
+
+    try {
+        await prisma.user.update({
+            where: { id: userId },
+            data: { tradeEmailNotifications: enabled }
+        });
+        return { success: true };
+    } catch (e) {
+        console.error("Failed to toggle trade notifications:", e);
+        return { success: false, error: "Database update failed" };
+    }
+}

@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import SecurityActions from './SecurityActions';
+import NotificationSettings from './NotificationSettings';
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -141,17 +142,13 @@ export default async function AccountHubPage() {
                         </div>
                         <ChevronRight className="w-5 h-5 text-foreground/40 group-hover:text-foreground transition-colors" />
                     </Link>
+                </div>
+            </div>
 
-                    {/* Accounting is typically in bottom nav, but good to have here just in case users expect it in the Hub */}
-                    <Link href="/dashboard/accounting" className="bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl p-6 flex items-center justify-between group hover:bg-black/5 dark:hover:bg-white/5 transition-all md:hidden">
-                        <div className="flex items-center gap-4">
-                            <div className="p-3 bg-cyan-500/10 rounded-xl text-cyan-500">
-                                <FileText className="w-6 h-6" />
-                            </div>
-                            <span className="font-bold text-lg">Accounting</span>
-                        </div>
-                        <ChevronRight className="w-5 h-5 text-foreground/40 group-hover:text-foreground transition-colors" />
-                    </Link>
+            <div className="relative z-10 space-y-6">
+                <h3 className="text-xl font-bold text-foreground">Notification Preferences</h3>
+                <div className="grid md:w-1/2">
+                    <NotificationSettings initialEnabled={(user as any).tradeEmailNotifications ?? true} />
                 </div>
             </div>
 

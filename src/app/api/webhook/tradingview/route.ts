@@ -3,6 +3,7 @@ import { Queue } from 'bullmq';
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import Redis from 'ioredis';
+import { sendTradeNotificationEmail } from "@/lib/emails";
 
 
 
@@ -252,6 +253,33 @@ export async function POST(req: Request) {
             });
 
         await tradeQueue.addBulk(jobs);
+
+        // --- PHASE 28: ASYNC EMAIL NOTIFICATIONS ---
+        // Fire and forget email notifications to users who have opted in
+        // We do this asynchronously so it does not block the webhook response
+        Promise.all(subscriptions
+            .filter(sub => (sub.user as any).tradeEmailNotifications !== false) // Default to true if undefined or true
+            .map(sub => {
+                const execExchange = (strategy.targetExchange as string) === 'UNIVERSAL' ? sub.exchange! : strategy.targetExchange;
+                
+                // Estimate the allocation size for the email display
+                const virtualBalance = sub.currentVirtualBalance > 0 ? sub.currentVirtualBalance : strategy.defaultEquityPercentage;
+                const tradeAmount = virtualBalance * strategy.leverage;
+
+                return sendTradeNotificationEmail({
+                    userEmail: sub.user.email,
+                    strategyName: strategy.name,
+                    side: parsedSide as 'BUY' | 'SELL', 
+                    symbol: symbol,
+                    price: price ? Number(price) : null,
+                    amount: tradeAmount,
+                    exchange: execExchange
+                });
+            })
+        ).catch(err => {
+            console.error("Non-fatal: Failed to send batches of trade emails", err);
+        });
+        // --- END ASYNC EMAIL NOTIFICATIONS ---
 
         return NextResponse.json({
             success: true,
