@@ -15,16 +15,21 @@ async function verifyAdmin() {
 
 export async function getUsers() {
     await verifyAdmin();
-    return await prisma.user.findMany({
-        include: {
-            exchangeKeys: true,
-            subscriptions: true,
-            ledgers: true
-        },
-        orderBy: {
-            createdAt: 'desc'
-        }
-    });
+    try {
+        return await prisma.user.findMany({
+            include: {
+                exchangeKeys: true,
+                subscriptions: true,
+                ledgers: true
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        });
+    } catch (e) {
+        console.warn("Could not fetch users from database. Returning empty array.");
+        return [];
+    }
 }
 
 export async function updateUserStatus(userId: string, isActive: boolean) {
