@@ -17,9 +17,14 @@ async function verifyAdmin() {
 
 export async function getStrategies() {
     await verifyAdmin();
-    return await prisma.strategy.findMany({
-        orderBy: { createdAt: 'desc' }
-    });
+    try {
+        return await prisma.strategy.findMany({
+            orderBy: { createdAt: 'desc' }
+        });
+    } catch (e) {
+        console.warn("Could not fetch strategies from database. Returning empty array.");
+        return [];
+    }
 }
 
 export async function createStrategy(formData: FormData) {
