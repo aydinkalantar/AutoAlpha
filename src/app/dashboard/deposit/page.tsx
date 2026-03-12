@@ -287,7 +287,11 @@ export default function DepositPage() {
                                 <input 
                                     type="checkbox" 
                                     checked={saveCard}
-                                    onChange={(e) => setSaveCard(e.target.checked)}
+                                    onChange={(e) => {
+                                        setSaveCard(e.target.checked);
+                                        setClientSecret('');
+                                        setIsProcessing(false);
+                                    }}
                                     className="w-5 h-5 rounded border-black/20 dark:border-white/20 text-purple-600 focus:ring-purple-500/50 bg-white dark:bg-black/50"
                                 />
                                 <div className="space-y-0.5">
