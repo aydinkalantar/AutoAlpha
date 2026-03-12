@@ -298,28 +298,36 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
       </main>
 
       {/* Footer */}
-      <footer className="w-full py-16 border-t border-black/5 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-2xl mt-20 z-10 relative">
+      <footer className="w-full py-12 border-t border-black/5 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-2xl mt-20 z-10 relative">
         <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent pointer-events-none" />
-        <div className="max-w-7xl mx-auto px-6 mb-12 text-center text-xs font-medium text-foreground/40 leading-relaxed relative z-10">
-          <p className="mb-2"><strong className="text-foreground/60">No Financial Advice:</strong> AutoAlpha is a software execution tool, not a registered investment advisor, broker, or fiduciary. We provide automated trading technology. You are solely responsible for all trades executed via your API keys.</p>
-          <p><strong className="text-foreground/60">Risk Warning:</strong> Trading cryptocurrency involves extreme risk and potential for total loss of capital. <span className="font-bold text-foreground/70">Past performance is not indicative of future results.</span> Never trade with money you cannot afford to lose.</p>
-        </div>
-
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8 relative z-10">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center">
-              <div className="w-3 h-3 bg-white rounded-sm transform rotate-45" />
+        
+        <div className="max-w-7xl mx-auto px-6 flex flex-col items-center gap-8 relative z-10">
+          <div className="w-full flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center">
+                <div className="w-3 h-3 bg-white rounded-sm transform rotate-45" />
+              </div>
+              <span className="font-bold text-xl tracking-tight text-foreground/80">AutoAlpha</span>
             </div>
-            <span className="font-bold text-xl tracking-tight text-foreground/80">AutoAlpha</span>
+
+            <div className="flex flex-wrap justify-center gap-6 text-sm font-bold tracking-widest uppercase text-foreground/40">
+              <Link href="/terms" className="hover:text-foreground transition-colors">Terms of Service</Link>
+              <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
+              <Link href="/risk" className="hover:text-foreground transition-colors">Risk Disclaimer</Link>
+            </div>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-8 text-sm font-bold tracking-widest uppercase text-foreground/40">
-            <Link href="/terms" className="hover:text-foreground transition-colors">Terms of Service</Link>
-            <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
-            <Link href="/risk" className="hover:text-foreground transition-colors">Risk Disclaimer</Link>
-          </div>
+          <div className="w-full h-px bg-black/5 dark:bg-white/10" />
 
-          <p className="text-sm font-medium text-foreground/40">© 2026 AutoAlpha. All rights reserved.</p>
+          <div className="w-full flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 text-[11px] text-foreground/40">
+            <div className="max-w-4xl space-y-2 leading-relaxed text-left text-foreground/30">
+              <p><strong className="text-foreground/50 font-semibold">No Financial Advice:</strong> AutoAlpha is a software execution tool, not a registered investment advisor, broker, or fiduciary. We provide automated trading technology. You are solely responsible for all trades executed via your API keys.</p>
+              <p><strong className="text-foreground/50 font-semibold">Risk Warning:</strong> Trading cryptocurrency involves extreme risk and potential for total loss of capital. <span className="font-semibold text-foreground/40">Past performance is not indicative of future results.</span> Never trade with money you cannot afford to lose.</p>
+            </div>
+            <div className="shrink-0 text-left lg:text-right font-medium text-foreground/30">
+              © 2026 AutoAlpha. All rights reserved.
+            </div>
+          </div>
         </div>
       </footer>
     </div >
