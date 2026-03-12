@@ -172,6 +172,11 @@ export async function resetPaperCapital(userId: string) {
             data: { isOpen: false, exitPrice: 0 }
         });
 
+        // Delete all paper subscriptions (virtual wallets attached to strategies)
+        await tx.subscription.deleteMany({
+            where: { userId, isPaper: true }
+        });
+
         // Add a ledger entry
         await tx.ledger.create({
             data: {
