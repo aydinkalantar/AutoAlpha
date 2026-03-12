@@ -75,7 +75,8 @@ export async function createStrategy(formData: FormData) {
             }
         });
     } catch (e) {
-        throw new Error("Could not connect to database to create strategy.");
+        console.warn("Could not connect to database to create strategy.");
+        return { error: "Database offline" };
     }
 
     revalidatePath('/admin/strategies');
