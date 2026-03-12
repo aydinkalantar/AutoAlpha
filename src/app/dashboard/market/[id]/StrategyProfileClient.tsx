@@ -149,8 +149,8 @@ export default function StrategyProfileClient({
                 <div className="lg:col-span-2 space-y-8">
                     {/* Key Metrics Row */}
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                        <MetricCard title="Total Return" value={strategy.expectedRoiPercentage != null ? `+${strategy.expectedRoiPercentage.toFixed(1)}%` : "N/A"} color="text-emerald-500" />
-                        <MetricCard title="Max Drawdown" value={strategy.drawdownPercentage != null ? `-${strategy.drawdownPercentage.toFixed(1)}%` : "N/A"} color="text-rose-500" />
+                        <MetricCard title="Total Return" value={strategy.expectedRoiPercentage != null ? `${strategy.expectedRoiPercentage > 0 ? '+' : ''}${strategy.expectedRoiPercentage.toFixed(1)}%` : "N/A"} color={strategy.expectedRoiPercentage >= 0 ? "text-emerald-500" : "text-rose-500"} />
+                        <MetricCard title="Max Drawdown" value={strategy.drawdownPercentage != null ? `-${Math.abs(strategy.drawdownPercentage).toFixed(1)}%` : "N/A"} color="text-rose-500" />
                         <MetricCard title="Win Rate" value={strategy.winRatePercentage != null ? `${strategy.winRatePercentage.toFixed(1)}%` : "N/A"} color="text-blue-500" />
                         <MetricCard title="Profit Factor" value={strategy.profitFactor != null ? strategy.profitFactor.toFixed(2) : "N/A"} color="text-amber-500" />
                     </div>

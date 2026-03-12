@@ -65,14 +65,14 @@ export default function StrategyMarketplace({ strategies, subscriptions, userId,
                         <div className="space-y-4 flex-grow mb-8 relative z-10 border-t border-black/5 dark:border-white/5 pt-4">
                             <div className="flex justify-between items-center text-sm pb-2">
                                 <span className="font-semibold tracking-wider uppercase text-xs text-foreground/50">Total Return</span>
-                                <span className="font-black text-emerald-500">
-                                    {strategy.expectedRoiPercentage != null ? `+${strategy.expectedRoiPercentage.toFixed(1)}%` : "N/A"}
+                                <span className={`font-black ${strategy.expectedRoiPercentage != null && strategy.expectedRoiPercentage >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                                    {strategy.expectedRoiPercentage != null ? `${strategy.expectedRoiPercentage > 0 ? '+' : ''}${strategy.expectedRoiPercentage.toFixed(1)}%` : "N/A"}
                                 </span>
                             </div>
                             <div className="flex justify-between items-center text-sm pb-2">
                                 <span className="font-semibold tracking-wider uppercase text-xs text-foreground/50">Max Drawdown</span>
                                 <span className="font-bold text-rose-500">
-                                    {strategy.drawdownPercentage != null ? `-${strategy.drawdownPercentage.toFixed(1)}%` : "N/A"}
+                                    {strategy.drawdownPercentage != null ? `-${Math.abs(strategy.drawdownPercentage).toFixed(1)}%` : "N/A"}
                                 </span>
                             </div>
                             <div className="flex justify-between items-center text-sm pb-2">
