@@ -25,58 +25,17 @@ export default async function AdminOverviewPage() {
         return <div>Access Denied</div>;
     }
     // 1. Total Revenue (Sum of positive Ledger amounts, assuming platform fees are positive in our context or recorded specifically)
-    // Actually, looking at TradeWorker: fee is created as `amount: -platformFee, description: 'Performance Fee Deducted'`. If the user was deducted, the system gained it.
-    // So system revenue is the sum of all absolute values of fee deductions.
-    const revenueEntries = await prisma.ledger.aggregate({
-        _sum: {
-            amount: true
-        },
-        where: {
-            description: {
-                contains: 'Performance Fee Deducted'
-            }
-        }
-    });
-    // The amount is negative in the ledger (subtracting from user). So we take absolute value.
-    const totalRevenue = Math.abs(revenueEntries._sum.amount || 0);
-
-    // 2. Platform AUM (Sum of currentVirtualBalance across all active Subscriptions)
-    const activeSubAUM = await prisma.subscription.aggregate({
-        _sum: {
-            currentVirtualBalance: true
-        },
-        where: {
-            isActive: true
-        }
-    });
-    const platformAUM = activeSubAUM._sum.currentVirtualBalance || 0;
-
-    // 3. Active Users
-    const activeUsersCount = await prisma.user.count({ where: { isActive: true } });
-
-    // 4. Pending Queue Jobs
-    const waitingJobsCount = await tradeQueue.getWaitingCount();
-
-    // Fetch Last 30 Days Revenue for Chart
+    let totalRevenue = 0;
+    let platformAUM = 0;
+    let activeUsersCount = 0;
+    let waitingJobsCount = 0;
+    let recentLedgers: any[] = [];
+    
+    // Group by Day securely
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 29); // Include today as the 30th day
     thirtyDaysAgo.setHours(0, 0, 0, 0); // Start of day
 
-    const recentLedgers = await prisma.ledger.findMany({
-        where: {
-            description: { contains: 'Performance Fee Deducted' },
-            createdAt: { gte: thirtyDaysAgo }
-        },
-        select: {
-            amount: true,
-            createdAt: true
-        },
-        orderBy: {
-            createdAt: 'asc'
-        }
-    });
-
-    // Group by Day securely
     const chartDataMap: Record<string, number> = {};
     for (let i = 0; i < 30; i++) {
         const d = new Date(thirtyDaysAgo);
@@ -86,13 +45,62 @@ export default async function AdminOverviewPage() {
         chartDataMap[dateStr] = 0;
     }
 
-    recentLedgers.forEach(l => {
-        // Match the YYYY-MM-DD format strictly in UTC
-        const dateStr = l.createdAt.toISOString().split('T')[0];
-        if (chartDataMap[dateStr] !== undefined) {
-            chartDataMap[dateStr] += Math.abs(l.amount);
-        }
-    });
+    try {
+        const revenueEntries = await prisma.ledger.aggregate({
+            _sum: {
+                amount: true
+            },
+            where: {
+                description: {
+                    contains: 'Performance Fee Deducted'
+                }
+            }
+        });
+        // The amount is negative in the ledger (subtracting from user). So we take absolute value.
+        totalRevenue = Math.abs(revenueEntries._sum.amount || 0);
+
+        // 2. Platform AUM (Sum of currentVirtualBalance across all active Subscriptions)
+        const activeSubAUM = await prisma.subscription.aggregate({
+            _sum: {
+                currentVirtualBalance: true
+            },
+            where: {
+                isActive: true
+            }
+        });
+        platformAUM = activeSubAUM._sum.currentVirtualBalance || 0;
+
+        // 3. Active Users
+        activeUsersCount = await prisma.user.count({ where: { isActive: true } });
+
+        // 4. Pending Queue Jobs
+        waitingJobsCount = await tradeQueue.getWaitingCount();
+
+        // Fetch Last 30 Days Revenue for Chart
+        recentLedgers = await prisma.ledger.findMany({
+            where: {
+                description: { contains: 'Performance Fee Deducted' },
+                createdAt: { gte: thirtyDaysAgo }
+            },
+            select: {
+                amount: true,
+                createdAt: true
+            },
+            orderBy: {
+                createdAt: 'asc'
+            }
+        });
+
+        recentLedgers.forEach(l => {
+            // Match the YYYY-MM-DD format strictly in UTC
+            const dateStr = l.createdAt.toISOString().split('T')[0];
+            if (chartDataMap[dateStr] !== undefined) {
+                chartDataMap[dateStr] += Math.abs(l.amount);
+            }
+        });
+    } catch (e) {
+        console.warn("Could not connect to database on admin page. Returning default 0 metrics.");
+    }
 
     // Accumulate for running total chart or just daily bars. Let's do daily revenue area chart.
     const chartData = Object.entries(chartDataMap).map(([date, amount]) => ({
