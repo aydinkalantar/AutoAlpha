@@ -1,14 +1,23 @@
 "use client";
 
 import { useTransition } from "react";
-import { toggleTestnetMode } from "./actions";
+import { toggleTestnetMode, resetPaperCapital } from "./actions";
+import { RotateCw } from "lucide-react";
 
 export default function TestnetToggle({ initialMode, userId }: { initialMode: boolean, userId: string }) {
     const [isPending, startTransition] = useTransition();
+    const [isResetting, startReset] = useTransition();
 
     const handleToggle = () => {
         startTransition(async () => {
             await toggleTestnetMode(userId, !initialMode);
+        });
+    };
+
+    const handleReset = () => {
+        if (!confirm("Are you sure you want to reset your paper balance to $100k? This will forcefully pause open paper trades.")) return;
+        startReset(async () => {
+            await resetPaperCapital(userId);
         });
     };
 
@@ -20,7 +29,7 @@ export default function TestnetToggle({ initialMode, userId }: { initialMode: bo
 
             <button
                 onClick={handleToggle}
-                disabled={isPending}
+                disabled={isPending || isResetting}
                 className={`w-14 h-7 flex items-center rounded-full p-1 transition-all duration-300 ease-in-out cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${initialMode ? 'bg-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.5)]' : 'bg-black/20 dark:bg-white/20'}`}
                 title="Toggle Execution Mode"
             >
@@ -38,6 +47,21 @@ export default function TestnetToggle({ initialMode, userId }: { initialMode: bo
                     </span>
                 )}
             </div>
+
+            {/* Paper Reset Button */}
+            {initialMode && (
+                <div className="pl-4 ml-2 border-l border-black/10 dark:border-white/10">
+                    <button
+                        onClick={handleReset}
+                        disabled={isResetting || isPending}
+                        className="flex items-center gap-1.5 text-xs font-bold text-foreground/50 hover:text-cyan-500 transition-colors disabled:opacity-50"
+                        title="Reset Paper Capital to $100k"
+                    >
+                        <RotateCw className={`w-3.5 h-3.5 ${isResetting ? 'animate-spin' : ''}`} />
+                        <span>Reset Funds</span>
+                    </button>
+                </div>
+            )}
         </div>
     );
 }

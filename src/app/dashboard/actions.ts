@@ -131,3 +131,37 @@ export async function toggleTestnetMode(userId: string, isTestnetMode: boolean) 
     revalidatePath('/dashboard');
     revalidatePath('/dashboard/settings');
 }
+
+export async function resetPaperCapital(userId: string) {
+    if (!userId) throw new Error("Unauthorized");
+
+    await prisma.$transaction(async (tx) => {
+        // Reset balances
+        await tx.user.update({
+            where: { id: userId },
+            data: {
+                paperUsdtBalance: 100000,
+                paperUsdcBalance: 0
+            }
+        });
+
+        // Close all open paper positions
+        await tx.position.updateMany({
+            where: { userId, isPaper: true, isOpen: true },
+            data: { isOpen: false, exitPrice: 0 }
+        });
+
+        // Add a ledger entry
+        await tx.ledger.create({
+            data: {
+                userId,
+                amount: 100000,
+                currency: 'USDT',
+                type: 'DEPOSIT',
+                description: 'Paper Capital Manual Reset'
+            }
+        });
+    });
+
+    revalidatePath('/dashboard');
+}
