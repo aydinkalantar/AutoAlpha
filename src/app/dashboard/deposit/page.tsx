@@ -7,8 +7,10 @@ import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from './CheckoutForm';
 import { getStripePublishableKey } from '@/app/actions/stripe';
 import { Stripe } from '@stripe/stripe-js';
+import { useSession } from 'next-auth/react';
 
 export default function DepositPage() {
+    const { data: session } = useSession();
     const [currency, setCurrency] = useState<'USDT' | 'USDC'>('USDT');
     const [method, setMethod] = useState<'web3' | 'card'>('web3');
     const [network, setNetwork] = useState<'ethereum' | 'arbitrum' | 'optimism' | 'base' | 'polygon'>('ethereum');
@@ -20,28 +22,23 @@ export default function DepositPage() {
     // Stripe State
     const [clientSecret, setClientSecret] = useState('');
     const [grossAmount, setGrossAmount] = useState(0);
-    const [userId, setUserId] = useState('');
     const [stripePromise, setStripePromise] = useState<Promise<Stripe | null> | null>(null);
 
+    const userId = (session?.user as any)?.id;
+
     useEffect(() => {
-        const fetchUserIdAndStripeKey = async () => {
+        const fetchStripeKey = async () => {
             try {
-                const res = await fetch('/api/user/profile');
-                if (res.ok) {
-                    const data = await res.json();
-                    setUserId(data.user?.id);
-                }
-                
                 // Fetch dynamic Stripe key from Admin Config
                 const pubKey = await getStripePublishableKey();
                 if (pubKey) {
                     setStripePromise(loadStripe(pubKey));
                 }
             } catch (err) {
-                console.error("Failed to load user session or Stripe key");
+                console.error("Failed to load Stripe key");
             }
         };
-        fetchUserIdAndStripeKey();
+        fetchStripeKey();
     }, []);
 
     // Provide a dummy web3 wallet address for demonstration
