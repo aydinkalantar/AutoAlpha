@@ -4,8 +4,9 @@ import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { prisma } from "@/lib/prisma";
 import Link from 'next/link';
-import { ArrowLeft, Activity, Percent, ShieldAlert, Zap } from 'lucide-react';
+import { ArrowLeft, Activity, Percent, ShieldAlert, Zap, Info } from 'lucide-react';
 import EquityCurveChart from '@/components/dashboard/EquityCurveChart';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,7 +43,7 @@ export default async function StrategyTearsheetPage({ params }: { params: { id: 
     const activeSubscription = user.subscriptions[0];
 
     return (
-        <div className="p-8 md:p-12 max-w-7xl mx-auto space-y-8">
+        <div className="p-8 pt-20 md:p-12 md:pt-20 max-w-7xl mx-auto space-y-8">
             <div className="flex items-center space-x-4">
                 <Link href="/dashboard/market" className="p-2 bg-white/5 dark:bg-black/20 hover:bg-white/10 dark:hover:bg-black/40 rounded-full transition-all text-foreground/70 hover:text-foreground">
                     <ArrowLeft className="w-6 h-6" />
@@ -98,28 +99,76 @@ export default async function StrategyTearsheetPage({ params }: { params: { id: 
                             <div className="bg-black/5 dark:bg-white/5 rounded-xl p-4 border border-black/5 dark:border-white/5">
                                 <div className="flex items-center gap-2 text-foreground/50 mb-1">
                                     <Activity className="w-4 h-4 text-cyan-500" />
-                                    <span className="text-xs font-bold uppercase tracking-wider">Win Rate</span>
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="text-xs font-bold uppercase tracking-wider">Win Rate</span>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <button aria-label="Info about Win Rate" className="cursor-help focus:outline-none">
+                                                    <Info className="w-3.5 h-3.5 text-foreground/40 hover:text-cyan-500 transition-colors" />
+                                                </button>
+                                            </TooltipTrigger>
+                                            <TooltipContent className="max-w-[250px] bg-white dark:bg-[#1C1C1E] border border-black/10 dark:border-white/10 text-foreground p-3 rounded-xl shadow-2xl backdrop-blur-xl font-medium leading-relaxed">
+                                                <p>The historical percentage of trades closed with a profit.</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </div>
                                 </div>
                                 <span className="text-2xl font-black text-foreground">{strategy.winRatePercentage ?? 62.5}%</span>
                             </div>
                             <div className="bg-black/5 dark:bg-white/5 rounded-xl p-4 border border-black/5 dark:border-white/5">
                                 <div className="flex items-center gap-2 text-foreground/50 mb-1">
                                     <ShieldAlert className="w-4 h-4 text-purple-500" />
-                                    <span className="text-xs font-bold uppercase tracking-wider">Max DD</span>
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="text-xs font-bold uppercase tracking-wider">Max DD</span>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <button aria-label="Info about Max Drawdown" className="cursor-help focus:outline-none">
+                                                    <Info className="w-3.5 h-3.5 text-foreground/40 hover:text-cyan-500 transition-colors" />
+                                                </button>
+                                            </TooltipTrigger>
+                                            <TooltipContent className="max-w-[250px] bg-white dark:bg-[#1C1C1E] border border-black/10 dark:border-white/10 text-foreground p-3 rounded-xl shadow-2xl backdrop-blur-xl font-medium leading-relaxed">
+                                                <p>Maximum Drawdown. The largest observed historical peak-to-trough drop in equity.</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </div>
                                 </div>
                                 <span className="text-2xl font-black text-foreground">{strategy.drawdownPercentage ?? 12.4}%</span>
                             </div>
                             <div className="bg-black/5 dark:bg-white/5 rounded-xl p-4 border border-black/5 dark:border-white/5">
                                 <div className="flex items-center gap-2 text-foreground/50 mb-1">
                                     <Percent className="w-4 h-4 text-emerald-500" />
-                                    <span className="text-xs font-bold uppercase tracking-wider">Profit Factor</span>
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="text-xs font-bold uppercase tracking-wider">Profit Factor</span>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <button aria-label="Info about Profit Factor" className="cursor-help focus:outline-none">
+                                                    <Info className="w-3.5 h-3.5 text-foreground/40 hover:text-cyan-500 transition-colors" />
+                                                </button>
+                                            </TooltipTrigger>
+                                            <TooltipContent className="max-w-[250px] bg-white dark:bg-[#1C1C1E] border border-black/10 dark:border-white/10 text-foreground p-3 rounded-xl shadow-2xl backdrop-blur-xl font-medium leading-relaxed">
+                                                <p>Ratio of gross profit to gross loss. Values above 1.0 indicate profitability.</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </div>
                                 </div>
                                 <span className="text-2xl font-black text-foreground">1.84</span>
                             </div>
                             <div className="bg-black/5 dark:bg-white/5 rounded-xl p-4 border border-black/5 dark:border-white/5">
                                 <div className="flex items-center gap-2 text-foreground/50 mb-1">
                                     <Zap className="w-4 h-4 text-amber-500" />
-                                    <span className="text-xs font-bold uppercase tracking-wider">Perf. Fee</span>
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="text-xs font-bold uppercase tracking-wider">Perf. Fee</span>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <button aria-label="Info about Performance Fee" className="cursor-help focus:outline-none">
+                                                    <Info className="w-3.5 h-3.5 text-foreground/40 hover:text-cyan-500 transition-colors" />
+                                                </button>
+                                            </TooltipTrigger>
+                                            <TooltipContent className="max-w-[250px] bg-white dark:bg-[#1C1C1E] border border-black/10 dark:border-white/10 text-foreground p-3 rounded-xl shadow-2xl backdrop-blur-xl font-medium leading-relaxed">
+                                                <p>The performance fee percentage deducted automatically only on profitable trades (Gas).</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </div>
                                 </div>
                                 <span className="text-2xl font-black text-foreground">{strategy.performanceFeePercentage}%</span>
                             </div>

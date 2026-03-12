@@ -20,7 +20,7 @@ export const dynamic = 'force-dynamic';
 function DetailCard({ icon: Icon, label, value, isSensitive = false }: { icon: any, label: string, value: string, isSensitive?: boolean }) {
     return (
         <div className="bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl p-6 relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
             <div className="flex items-center gap-4 relative z-10">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-400/20 to-purple-600/20 flex items-center justify-center flex-shrink-0 border border-black/5 dark:border-white/10">
                     <Icon className="w-6 h-6 text-foreground/80" />
@@ -58,7 +58,7 @@ export default async function AccountHubPage() {
     }).format(new Date(user.createdAt));
 
     return (
-        <div className="p-8 md:p-12 max-w-7xl mx-auto space-y-12">
+        <div className="p-8 pt-20 md:p-12 md:pt-20 max-w-7xl mx-auto space-y-12">
             <div className="flex flex-col md:flex-row justify-between md:items-end gap-6 relative z-10">
                 <div className="space-y-6">
                     <div>

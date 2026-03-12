@@ -1,7 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import { Queue } from 'bullmq';
-import { DollarSign, Activity, Users, Box } from 'lucide-react';
+import { DollarSign, Activity, Users, Box, Info } from 'lucide-react';
 import RevenueChart from './RevenueChart';
+import Link from 'next/link';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 
 const tradeQueue = new Queue('qa-test-queue', {
@@ -99,9 +101,14 @@ export default async function AdminOverviewPage() {
     }));
 
     return (
-        <div className="space-y-8 max-w-6xl mx-auto">
+        <div className="p-8 pt-20 md:p-12 md:pt-20 max-w-7xl mx-auto space-y-8">
             <div className="relative z-10">
-                <h1 className="text-4xl font-bold text-foreground tracking-tight">Command Center</h1>
+                <div className="flex items-center gap-3">
+                    <h1 className="text-4xl font-bold text-foreground tracking-tight">Command Center</h1>
+                    <Link href="/dashboard/academy" className="text-foreground/40 hover:text-cyan-500 transition-colors" title="Platform Documentation">
+                        <Info className="w-5 h-5" />
+                    </Link>
+                </div>
                 <p className="text-foreground/60 mt-2 text-lg font-medium">Global operations, revenue, and health overview.</p>
             </div>
 
@@ -112,18 +119,21 @@ export default async function AdminOverviewPage() {
                     value={`$${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                     subtitle="Lifetime API Fees"
                     icon={<DollarSign className="w-5 h-5 text-foreground/50" />}
+                    tooltip="The aggregate sum of all performance fees collected by the platform across all users."
                 />
                 <KPICard
                     title="Platform AUM"
                     value={`$${platformAUM.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                     subtitle="Active Subscriptions"
                     icon={<Activity className="w-5 h-5 text-foreground/50" />}
+                    tooltip="Assets Under Management. The total virtual capital currently allocated to active strategies across all platform users."
                 />
                 <KPICard
                     title="Active Users"
                     value={activeUsersCount.toString()}
                     subtitle="Registered Accounts"
                     icon={<Users className="w-5 h-5 text-foreground/50" />}
+                    tooltip="The total number of active users registered on the platform."
                 />
                 <KPICard
                     title="Queue Health"
@@ -131,6 +141,7 @@ export default async function AdminOverviewPage() {
                     subtitle="Pending Pending Trade Jobs"
                     icon={<Box className="w-5 h-5 text-foreground/50" />}
                     alert={waitingJobsCount > 10}
+                    tooltip="Real-time count of pending trade execution jobs waiting in the internal BullMQ Redis queue."
                 />
             </div>
 
@@ -149,12 +160,28 @@ export default async function AdminOverviewPage() {
     );
 }
 
-function KPICard({ title, value, subtitle, icon, alert }: { title: string, value: string, subtitle: string, icon: React.ReactNode, alert?: boolean }) {
+function KPICard({ title, value, subtitle, icon, alert, tooltip }: { title: string, value: string, subtitle: string, icon: React.ReactNode, alert?: boolean, tooltip?: string }) {
     return (
         <div className="bg-white/50 dark:bg-white/5 backdrop-blur-2xl p-6 rounded-3xl shadow-xl border border-black/5 dark:border-white/10 flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 transition-all">
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/20 to-transparent" />
             <div className="flex justify-between items-start mb-6 relative z-10">
-                <h3 className="text-sm font-bold tracking-wider uppercase text-foreground/50">{title}</h3>
+                <div className="flex flex-col gap-1">
+                    <div className="flex items-center gap-1.5">
+                        <h3 className="text-sm font-bold tracking-wider uppercase text-foreground/50">{title}</h3>
+                        {tooltip && (
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <button aria-label={`Info about ${title}`} className="cursor-help focus:outline-none">
+                                        <Info className="w-4 h-4 text-foreground/30 hover:text-cyan-500 transition-colors" />
+                                    </button>
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-[250px] bg-white dark:bg-[#1C1C1E] border border-black/10 dark:border-white/10 text-foreground p-3 rounded-xl shadow-2xl backdrop-blur-xl font-medium leading-relaxed">
+                                    <p>{tooltip}</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        )}
+                    </div>
+                </div>
                 <div className={`p-2 rounded-xl backdrop-blur-md border border-black/5 dark:border-white/10 shadow-sm ${alert ? 'bg-red-500/20 text-red-500 animate-pulse' : 'bg-white/40 dark:bg-white/10 text-foreground/70'}`}>
                     {icon}
                 </div>

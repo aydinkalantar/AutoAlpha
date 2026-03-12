@@ -165,3 +165,14 @@ export async function resetPaperCapital(userId: string) {
 
     revalidatePath('/dashboard');
 }
+
+export async function completeOnboarding(userId: string) {
+    if (!userId) throw new Error("Unauthorized");
+
+    await prisma.user.update({
+        where: { id: userId },
+        data: { hasCompletedOnboarding: true }
+    });
+
+    revalidatePath('/dashboard');
+}

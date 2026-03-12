@@ -50,7 +50,7 @@ export default async function StrategyReportPage() {
         : user.usdtBalance + user.usdcBalance;
 
     return (
-        <div className="p-8 pt-20 md:p-12 md:pt-24 max-w-7xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="p-8 pt-20 md:p-12 md:pt-20 max-w-7xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div>
                 <h1 className="text-4xl font-bold text-foreground tracking-tight">Strategy Report</h1>
                 <p className="text-foreground/60 mt-2 text-lg">Analyze individual algorithmic performance and historical execution logs.</p>

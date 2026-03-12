@@ -160,7 +160,7 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                 </div>
             </div>
 
-            <div className={cn("flex-1 flex flex-col min-h-screen relative z-10 transition-all duration-300 pb-20 md:pb-0", isCollapsed ? "md:ml-20" : "md:ml-64 lg:ml-64")}>
+            <div className={cn("flex-1 flex flex-col min-h-screen w-full md:w-auto max-w-[100vw] md:max-w-none overflow-x-hidden relative z-10 transition-all duration-300 pb-20 md:pb-0", isCollapsed ? "md:ml-20" : "md:ml-64 lg:ml-64")}>
                 {notificationBell && (
                     <div className="absolute top-6 right-8 z-50">
                         {notificationBell}

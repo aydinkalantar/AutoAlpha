@@ -26,7 +26,7 @@ export default function StrategyMarketplace({ strategies, subscriptions, userId,
     const filteredStrategies = strategies.filter(s => s.marketType === activeTab);
 
     return (
-        <div className="space-y-8 mt-12">
+        <div id="strategy-marketplace" className="space-y-8 mt-12">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                 <h2 className="text-3xl font-bold text-foreground tracking-tight">Active Strategies</h2>
 

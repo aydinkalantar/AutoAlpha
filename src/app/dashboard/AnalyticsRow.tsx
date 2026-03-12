@@ -2,7 +2,8 @@
 
 import React, { useMemo } from 'react';
 import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, Legend } from 'recharts';
-import { Target, TrendingUp, ShieldAlert, PieChart as PieChartIcon } from 'lucide-react';
+import { Target, TrendingUp, ShieldAlert, PieChart as PieChartIcon, Info } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface AnalyticsRowProps {
     positions: any[];
@@ -101,14 +102,26 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
             <div className="col-span-1 xl:col-span-3 flex overflow-x-auto sm:overflow-visible snap-x snap-mandatory pb-6 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0 sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 hide-scrollbar">
                 {/* Win Rate KPI */}
                 <div className="min-w-[85vw] sm:min-w-0 flex-shrink-0 snap-center bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-6 flex flex-col justify-between relative overflow-hidden group">
-                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                     <div className="flex justify-between items-start mb-4">
                         <div className="p-2 bg-emerald-500/10 rounded-xl">
                             <Target className="w-5 h-5 text-emerald-500" />
                         </div>
                     </div>
                     <div>
-                        <h4 className="text-sm font-medium text-foreground/50 mb-1">Win Rate</h4>
+                        <div className="flex items-center gap-1.5 mb-1">
+                            <h4 className="text-sm font-medium text-foreground/50">Win Rate</h4>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <button aria-label="Info about Win Rate" className="text-foreground/30 hover:text-cyan-500 cursor-help transition-colors focus:outline-none">
+                                        <Info className="w-4 h-4" />
+                                    </button>
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-[250px] bg-white dark:bg-[#1C1C1E] border border-black/10 dark:border-white/10 text-foreground p-3 rounded-xl shadow-2xl backdrop-blur-xl font-medium leading-relaxed">
+                                    <p>The percentage of trades that close in profit. A high win rate indicates consistent accuracy, but must be balanced with the average win/loss ratio.</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </div>
                         <div className="flex items-baseline gap-2">
                             <span className="text-3xl font-bold tracking-tight">{winRate.toFixed(1)}%</span>
                             <span className="text-xs text-foreground/40 font-medium">{totalTrades} trades</span>
@@ -118,14 +131,26 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
 
                 {/* Profit Factor KPI */}
                 <div className="min-w-[85vw] sm:min-w-0 flex-shrink-0 snap-center bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-6 flex flex-col justify-between relative overflow-hidden group">
-                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                     <div className="flex justify-between items-start mb-4">
                         <div className="p-2 bg-cyan-500/10 rounded-xl">
                             <TrendingUp className="w-5 h-5 text-cyan-500" />
                         </div>
                     </div>
                     <div>
-                        <h4 className="text-sm font-medium text-foreground/50 mb-1">Profit Factor</h4>
+                        <div className="flex items-center gap-1.5 mb-1">
+                            <h4 className="text-sm font-medium text-foreground/50">Profit Factor</h4>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <button className="text-foreground/30 hover:text-cyan-500 cursor-help transition-colors focus:outline-none">
+                                        <Info className="w-4 h-4" />
+                                    </button>
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-[250px] bg-white dark:bg-[#1C1C1E] border border-black/10 dark:border-white/10 text-foreground p-3 rounded-xl shadow-2xl backdrop-blur-xl font-medium leading-relaxed">
+                                    <p>Gross Profit divided by Gross Loss. A Profit Factor greater than 1.0 indicates a profitable system. Above 1.5 is generally considered mathematically excellent.</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </div>
                         <div className="flex items-baseline gap-2">
                             <span className="text-3xl font-bold tracking-tight">{profitFactor.toFixed(2)}</span>
                             <span className="text-xs text-emerald-500 font-medium">Gross Prof / Loss</span>
@@ -135,14 +160,26 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
 
                 {/* Max Drawdown KPI */}
                 <div className="min-w-[85vw] sm:min-w-0 flex-shrink-0 snap-center bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-6 flex flex-col justify-between relative overflow-hidden group">
-                    <div className="absolute inset-0 bg-gradient-to-br from-rose-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-rose-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                     <div className="flex justify-between items-start mb-4">
                         <div className="p-2 bg-rose-500/10 rounded-xl">
                             <ShieldAlert className="w-5 h-5 text-rose-500" />
                         </div>
                     </div>
                     <div>
-                        <h4 className="text-sm font-medium text-foreground/50 mb-1">Max Drawdown</h4>
+                        <div className="flex items-center gap-1.5 mb-1">
+                            <h4 className="text-sm font-medium text-foreground/50">Max Drawdown</h4>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <button className="text-foreground/30 hover:text-cyan-500 cursor-help transition-colors focus:outline-none">
+                                        <Info className="w-4 h-4" />
+                                    </button>
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-[250px] bg-white dark:bg-[#1C1C1E] border border-black/10 dark:border-white/10 text-foreground p-3 rounded-xl shadow-2xl backdrop-blur-xl font-medium leading-relaxed">
+                                    <p>The maximum observed percentage loss from a peak to a trough. It indicates the largest historical drop in portfolio value before a new peak is achieved, reflecting downside risk.</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </div>
                         <div className="flex items-baseline gap-2">
                             <span className="text-3xl font-bold tracking-tight">${maxDrawdown.toFixed(2)}</span>
                             <span className="text-xs text-rose-500 font-medium">Peak-to-Trough</span>
@@ -152,14 +189,26 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
 
                 {/* Total Return (ROI) KPI */}
                 <div className="min-w-[85vw] sm:min-w-0 flex-shrink-0 snap-center bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-4 md:p-6 flex flex-col justify-between relative overflow-hidden group">
-                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                     <div className="flex justify-between items-start mb-4">
                         <div className="p-2 bg-indigo-500/10 rounded-xl">
                             <PieChartIcon className="w-5 h-5 text-indigo-500" />
                         </div>
                     </div>
                     <div>
-                        <h4 className="text-sm font-medium text-foreground/50 mb-1">Total Return (ROI)</h4>
+                        <div className="flex items-center gap-1.5 mb-1">
+                            <h4 className="text-sm font-medium text-foreground/50">Total Return (ROI)</h4>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <button className="text-foreground/30 hover:text-cyan-500 cursor-help transition-colors focus:outline-none">
+                                        <Info className="w-4 h-4" />
+                                    </button>
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-[250px] bg-white dark:bg-[#1C1C1E] border border-black/10 dark:border-white/10 text-foreground p-3 rounded-xl shadow-2xl backdrop-blur-xl font-medium leading-relaxed">
+                                    <p>Total Return on Investment represents the net percentage gain or loss relative to the initial capital deployed.</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </div>
                         <div className="flex items-baseline gap-2">
                             <span className={`text-3xl font-bold tracking-tight ${roiPercentage >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
                                 {roiPercentage >= 0 ? '+' : ''}{roiPercentage.toFixed(2)}%
@@ -171,14 +220,26 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
 
                 {/* Total Revenue KPI */}
                 <div className="min-w-[85vw] sm:min-w-0 flex-shrink-0 snap-center bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-4 md:p-6 flex flex-col justify-between relative overflow-hidden group">
-                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                     <div className="flex justify-between items-start mb-4">
                         <div className="p-2 bg-purple-500/10 rounded-xl">
                             <TrendingUp className="w-5 h-5 text-purple-500" />
                         </div>
                     </div>
                     <div>
-                        <h4 className="text-sm font-medium text-foreground/50 mb-1">Total Revenue</h4>
+                        <div className="flex items-center gap-1.5 mb-1">
+                            <h4 className="text-sm font-medium text-foreground/50">Total Revenue</h4>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <button className="text-foreground/30 hover:text-cyan-500 cursor-help transition-colors focus:outline-none">
+                                        <Info className="w-4 h-4" />
+                                    </button>
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-[250px] bg-white dark:bg-[#1C1C1E] border border-black/10 dark:border-white/10 text-foreground p-3 rounded-xl shadow-2xl backdrop-blur-xl font-medium leading-relaxed">
+                                    <p>The absolute gross profit generated across all closed positions over the lifetime of the account.</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </div>
                         <div className="flex items-baseline gap-2">
                             <span className={`text-3xl font-bold tracking-tight ${totalRevenue >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
                                 {totalRevenue >= 0 ? '+' : '-'}${Math.abs(totalRevenue).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -190,7 +251,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
 
                 {/* 24h PnL KPI */}
                 <div className="min-w-[85vw] sm:min-w-0 flex-shrink-0 snap-center bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-4 md:p-6 flex flex-col justify-between relative overflow-hidden group">
-                    <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                     <div className="flex justify-between items-start mb-4">
                         <div className="p-2 bg-amber-500/10 rounded-xl">
                             <Target className="w-5 h-5 text-amber-500" />

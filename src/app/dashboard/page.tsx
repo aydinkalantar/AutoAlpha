@@ -6,6 +6,9 @@ import LiveRadar from './LiveRadar';
 import AnalyticsRow from './AnalyticsRow';
 import { prisma } from "@/lib/prisma";
 import TestnetToggle from './TestnetToggle';
+import WelcomeModal from './WelcomeModal';
+import Link from 'next/link';
+import { Info } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -55,10 +58,16 @@ export default async function DashboardPage() {
     const modeSubscriptions = user.subscriptions.filter((s: any) => s.isPaper === isPaperMode);
 
     return (
-        <div className="p-8 pt-20 md:p-12 md:pt-24 max-w-7xl mx-auto space-y-12">
+        <div className="p-8 pt-20 md:p-12 md:pt-20 max-w-7xl mx-auto space-y-12">
+            <WelcomeModal userId={user.id} hasCompletedOnboarding={user.hasCompletedOnboarding ?? false} />
             <div className="flex flex-col md:flex-row justify-between md:items-end gap-6">
                 <div>
-                    <h1 className="text-4xl font-bold text-foreground tracking-tight">Investor Dashboard</h1>
+                    <div className="flex items-center gap-3">
+                        <h1 className="text-4xl font-bold text-foreground tracking-tight">Investor Dashboard</h1>
+                        <Link href="/dashboard/academy" className="text-foreground/40 hover:text-cyan-500 transition-colors" title="Platform Documentation">
+                            <Info className="w-5 h-5" />
+                        </Link>
+                    </div>
                     <p className="text-foreground/60 mt-2 text-lg">Manage your capital and monitor active positions.</p>
                     <div className="mt-6">
                         <TestnetToggle initialMode={user.isTestnetMode} userId={user.id} />

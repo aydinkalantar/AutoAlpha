@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { SessionProvider } from "@/components/SessionProvider";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export const dynamic = 'force-dynamic';
 
@@ -59,7 +60,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <SessionProvider>
-            {children}
+            <TooltipProvider>
+              {children}
+            </TooltipProvider>
           </SessionProvider>
         </ThemeProvider>
         </div>

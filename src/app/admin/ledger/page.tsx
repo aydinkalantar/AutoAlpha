@@ -13,7 +13,7 @@ export default async function AdminLedgerPage() {
     });
 
     return (
-        <div className="p-8 md:p-12 max-w-7xl mx-auto space-y-8">
+        <div className="p-8 pt-20 md:p-12 md:pt-20 max-w-7xl mx-auto space-y-8">
             <div>
                 <h1 className="text-4xl font-bold text-foreground tracking-tight">Master Ledger</h1>
                 <p className="text-foreground/60 mt-2 text-lg">Accounting record of all platform fees, credits, and debits.</p>
