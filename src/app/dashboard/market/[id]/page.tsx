@@ -46,8 +46,8 @@ export default async function StrategyProfilePage({ params }: { params: Promise<
     const activeSubscription = user.subscriptions.length > 0 ? user.subscriptions[0] : null;
 
     const connectedExchanges = user.exchangeKeys
-        .filter(key => key.isTestnet === isPaperMode && key.isValid)
-        .map(key => key.exchange);
+        .filter((key: any) => key.isTestnet === isPaperMode && key.isValid)
+        .map((key: any) => key.exchange);
 
     const serializedStrategy = JSON.parse(JSON.stringify(strategy));
 

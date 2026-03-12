@@ -60,7 +60,7 @@ export default async function AffiliateHubPage() {
     }
 
     const totalReferrals = user.referrals.length;
-    const totalCommissionsEarned = user.ledgers.reduce((acc, ledger) => acc + ledger.amount, 0);
+    const totalCommissionsEarned = user.ledgers.reduce((acc: number, ledger: any) => acc + ledger.amount, 0);
 
     return (
         <div className="p-8 pt-20 md:p-12 md:pt-20 max-w-7xl mx-auto space-y-12">
@@ -132,7 +132,7 @@ export default async function AffiliateHubPage() {
                     </div>
                 ) : (
                     <div className="space-y-4">
-                        {user.ledgers.map((ledger) => (
+                        {user.ledgers.map((ledger: any) => (
                             <div key={ledger.id} className="flex items-center justify-between p-6 bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl">
                                 <div>
                                     <p className="text-foreground font-medium">{ledger.description}</p>

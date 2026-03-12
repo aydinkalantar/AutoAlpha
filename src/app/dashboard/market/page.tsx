@@ -56,8 +56,8 @@ export default async function MarketPage() {
     
     // Filter purely valid exchange keys matching the active sandbox mode environment
     const connectedExchanges = user.exchangeKeys
-        .filter(key => key.isTestnet === isPaperMode && key.isValid)
-        .map(key => key.exchange);
+        .filter((key: any) => key.isTestnet === isPaperMode && key.isValid)
+        .map((key: any) => key.exchange);
 
     return (
         <div className="p-8 pt-20 md:p-12 md:pt-20 max-w-7xl mx-auto space-y-12">

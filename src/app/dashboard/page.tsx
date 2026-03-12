@@ -63,7 +63,7 @@ export default async function DashboardPage() {
     // Sort closed positions chronologically oldest to newest for the Equity Curve builder
     const closedPositions = modePositions
         .filter((p: any) => !p.isOpen)
-        .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+        .sort((a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
 
     // Select appropriate balance
     const totalBalance = isPaperMode

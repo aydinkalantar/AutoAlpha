@@ -55,7 +55,7 @@ export default async function StrategyReportPage() {
     // Pass strictly logically closed trades for graphing purposes (chronologically mapped earliest to latest)
     const closedPositions = modePositions
         .filter((p: any) => !p.isOpen)
-        .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+        .sort((a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
 
     const modeSubscriptions = user.subscriptions.filter((s: any) => s.isPaper === isPaperMode);
 
