@@ -7,10 +7,15 @@ export const dynamic = 'force-dynamic';
 
 
 export default async function AdminLedgerPage() {
-    const ledgers = await prisma.ledger.findMany({
-        orderBy: { createdAt: 'desc' },
-        include: { user: { select: { email: true } } }
-    });
+    let ledgers: any[] = [];
+    try {
+        ledgers = await prisma.ledger.findMany({
+            orderBy: { createdAt: 'desc' },
+            include: { user: { select: { email: true } } }
+        });
+    } catch (e) {
+        console.warn("Could not fetch ledgers from database. Returning empty array.");
+    }
 
     return (
         <div className="p-8 pt-20 md:p-12 md:pt-20 max-w-7xl mx-auto space-y-8">
