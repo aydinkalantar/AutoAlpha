@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { RefreshCw, Activity, TerminalSquare, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { RefreshCw, Activity, TerminalSquare, AlertCircle, CheckCircle2, Trash2 } from 'lucide-react';
 
 export default function LiveExecutionsClient() {
     const [data, setData] = useState<{ jobs: any[], positions: any[] }>({ jobs: [], positions: [] });
     const [loading, setLoading] = useState(true);
     const [lastRefresh, setLastRefresh] = useState(new Date());
+    const [isPurging, setIsPurging] = useState(false);
 
     const fetchData = async () => {
         try {
@@ -38,6 +39,19 @@ export default function LiveExecutionsClient() {
         return () => clearInterval(interval);
     }, []);
 
+    const handlePurge = async () => {
+        if (!confirm('Are you sure you want to permanently delete all completed and failed execution logs from the Redis queue?')) return;
+        setIsPurging(true);
+        try {
+            await fetch('/api/admin/executions', { method: 'DELETE' });
+            await fetchData();
+        } catch (error) {
+            console.error('Failed to purge queue', error);
+        } finally {
+            setIsPurging(false);
+        }
+    };
+
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-end mb-8">
@@ -65,6 +79,15 @@ export default function LiveExecutionsClient() {
                         <TerminalSquare className="w-5 h-5 text-black/40 dark:text-white/40" />
                         <h2 className="text-lg font-bold text-foreground">Queue Engine Jobs</h2>
                         <span className="ml-2 px-2 py-0.5 rounded-md bg-black/5 dark:bg-white/5 text-[10px] font-bold uppercase tracking-widest text-foreground/40">BullMQ</span>
+                        <div className="flex-1" />
+                        <button
+                            onClick={handlePurge}
+                            disabled={isPurging}
+                            className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 text-xs font-bold transition-colors disabled:opacity-50"
+                        >
+                            <Trash2 className={`w-3.5 h-3.5 ${isPurging ? 'animate-pulse' : ''}`} />
+                            {isPurging ? 'Purging...' : 'Purge Logs'}
+                        </button>
                     </div>
 
                     <div className="bg-[#1D1D1F] dark:bg-black/40 border border-transparent dark:border-white/10 rounded-[2rem] p-6 h-[600px] overflow-y-auto space-y-4 shadow-2xl relative font-mono text-sm">

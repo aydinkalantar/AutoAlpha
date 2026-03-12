@@ -58,3 +58,21 @@ export async function GET() {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
+
+export async function DELETE() {
+    try {
+        const session = await getServerSession(authOptions);
+        if (!session?.user || (session.user as any).role !== "ADMIN") {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+        }
+
+        // Clean up to 1000 completed and failed jobs
+        await tradeQueue.clean(0, 1000, 'completed');
+        await tradeQueue.clean(0, 1000, 'failed');
+
+        return NextResponse.json({ success: true, message: 'Queue purged successfully' });
+    } catch (error: any) {
+        console.error("Failed to purge queue", error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+}
