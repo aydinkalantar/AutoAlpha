@@ -12,11 +12,12 @@ export default function StrategyEditClient({ initialStrategy }: { initialStrateg
     const [winRate, setWinRate] = useState(initialStrategy.winRatePercentage || "");
     const [drawdown, setDrawdown] = useState(initialStrategy.drawdownPercentage || "");
     const [profitFactor, setProfitFactor] = useState(initialStrategy.profitFactor || "");
+    const [expectedRoi, setExpectedRoi] = useState(initialStrategy.expectedRoiPercentage || "");
     
     // Parse JSON array back into mutable objects
     const [riskParams, setRiskParams] = useState<{ id: number, text: string }[]>(
         initialStrategy.riskParameters 
-            ? (initialStrategy.riskParameters as string[]).map((text, i) => ({ id: i, text }))
+            ? (initialStrategy.riskParameters as string[]).map((text: string, i: number) => ({ id: i, text }))
             : []
     );
 
@@ -40,6 +41,7 @@ export default function StrategyEditClient({ initialStrategy }: { initialStrateg
             winRatePercentage: winRate ? parseFloat(winRate as string) : null,
             drawdownPercentage: drawdown ? parseFloat(drawdown as string) : null,
             profitFactor: profitFactor ? parseFloat(profitFactor as string) : null,
+            expectedRoiPercentage: expectedRoi ? parseFloat(expectedRoi as string) : null,
         };
 
         const result = await updateStrategyDetails(initialStrategy.id, data);
@@ -64,21 +66,116 @@ export default function StrategyEditClient({ initialStrategy }: { initialStrateg
             complete: async (results) => {
                 setUploadStatus("uploading");
                 
-                // Map generic TV columns (Date/Time + Equity/Balance) into clean dataset
-                const parsedData = results.data.map((row: any) => {
-                    const dateVal = row["Time"] || row["Date"] || Object.values(row)[0];
-                    const equityVal = row["Equity"] || row["Balance"] || Object.values(row).find((val: any) => !isNaN(parseFloat(val)) && parseFloat(val) > 100);
+                let winningTrades = 0;
+                let losingTrades = 0;
+                let grossProfit = 0;
+                let grossLoss = 0;
+                let peakEquity = 10000;
+                let maxDrawdownPct = 0;
+                let lastPnlPct = 0;
+
+                const parsedData: any[] = [];
+                let currentEquity = 10000; // Base capital
+                let hasTradeRows = false;
+
+                // TradingView has two rows per trade (Entry and Exit). We only want Exits for realized equity.
+                const tradeExits = results.data.filter((row: any) => {
+                    const type = (row["Type"] || "").toString().toLowerCase();
+                    return type.includes("exit") || type.includes("close") || (row["Signal"] || "").toString().toLowerCase().includes("close");
+                });
+
+                // If no recognizable 'Type' or 'Signal' column has 'exit'/'close', default to all rows
+                const dataToUse: any[] = tradeExits.length > 0 ? tradeExits : (results.data as any[]);
+
+                for (let i = 0; i < dataToUse.length; i++) {
+                    const row = dataToUse[i];
+                    const dateVal = row["Date and time"] || row["Date/Time"] || row["Time"] || row["Date"] || Object.values(row)[0];
+                    if (!dateVal) continue;
                     
-                    return {
+                    const pnlStr = row["Net P&L USDT"] || row["Profit/Loss"] || row["Net P&L"] || row["Profit"];
+                    const cumPnlStr = row["Cumulative P&L USDT"] || row["Cum. Profit"] || row["Cumulative P&L"];
+                    const cumPnlPctStr = row["Cumulative P&L %"] || row["Cum. Profit %"] || row["Net P&L %"]; // some files just use continuous %
+                    
+                    let pnl = 0;
+                    if (pnlStr !== undefined && pnlStr !== "") {
+                        pnl = parseFloat(pnlStr.toString().replace(/,/g, ''));
+                        hasTradeRows = true;
+                    }
+
+                    if (cumPnlPctStr !== undefined && cumPnlPctStr !== "") {
+                        lastPnlPct = parseFloat(cumPnlPctStr.toString().replace(/,/g, ''));
+                    }
+
+                    let eq = NaN;
+                    if (cumPnlStr !== undefined && cumPnlStr !== "") {
+                        eq = 10000 + parseFloat(cumPnlStr.toString().replace(/,/g, ''));
+                    } else if (pnlStr !== undefined && pnlStr !== "") {
+                        currentEquity += pnl;
+                        eq = currentEquity;
+                    } else {
+                        // fallback to finding the first large number
+                        const fallbackEq = row["Equity"] || row["Balance"] || Object.values(row).find((val: any) => !isNaN(parseFloat(val)) && parseFloat(val) > 100);
+                        if (fallbackEq !== undefined && fallbackEq !== "") eq = parseFloat(fallbackEq.toString().replace(/,/g, ''));
+                    }
+
+                    if (isNaN(eq)) continue;
+
+                    if (pnl > 0) {
+                        winningTrades++;
+                        grossProfit += pnl;
+                    } else if (pnl < 0) {
+                        losingTrades++;
+                        grossLoss += Math.abs(pnl);
+                    }
+
+                    if (eq > peakEquity) peakEquity = eq;
+                    const dd = ((peakEquity - eq) / peakEquity) * 100;
+                    if (dd > maxDrawdownPct) maxDrawdownPct = dd;
+
+                    parsedData.push({
                         date: dateVal as string,
-                        equity: parseFloat(equityVal as string)
-                    };
-                }).filter(point => !isNaN(point.equity) && point.date);
+                        equity: parseFloat(eq.toFixed(2))
+                    });
+                }
+
+                // Check chronological order
+                if (parsedData.length > 1) {
+                    const d1 = new Date(parsedData[0].date).getTime();
+                    const d2 = new Date(parsedData[parsedData.length - 1].date).getTime();
+                    if (d1 > d2) {
+                        parsedData.reverse(); // Reverse to older->newer
+                    }
+                }
 
                 if (parsedData.length === 0) {
                     setUploadStatus("error");
                     alert("Could not parse Equity/Time data. Ensure it's a valid TradingView List of Trades CSV.");
                     return;
+                }
+
+                // Auto-fill KPIs if we parsed valid trades
+                if (hasTradeRows) {
+                    const totalTrades = winningTrades + losingTrades;
+                    if (totalTrades > 0) {
+                        const calculatedWinRate = (winningTrades / totalTrades) * 100;
+                        setWinRate(calculatedWinRate.toFixed(1));
+                    }
+                    if (grossLoss > 0) {
+                        const calculatedProfitFactor = grossProfit / grossLoss;
+                        setProfitFactor(calculatedProfitFactor.toFixed(2));
+                    }
+                    if (maxDrawdownPct > 0) {
+                        setDrawdown(maxDrawdownPct.toFixed(1));
+                    }
+                    if (lastPnlPct !== 0) {
+                        setExpectedRoi(lastPnlPct.toFixed(1));
+                    } else if (parsedData.length > 0) {
+                        // Calculate simple ROI from base 10000
+                        const eqStart = 10000;
+                        const eqEnd = parsedData[parsedData.length - 1].equity;
+                        const returnPct = ((eqEnd - eqStart) / eqStart) * 100;
+                        if (!isNaN(returnPct)) setExpectedRoi(returnPct.toFixed(1));
+                    }
                 }
 
                 const uploadRes = await uploadStrategyBacktestData(initialStrategy.id, parsedData);
@@ -164,18 +261,22 @@ export default function StrategyEditClient({ initialStrategy }: { initialStrateg
 
                     <div className="pt-6 border-t border-black/5 dark:border-white/10">
                          <h2 className="text-lg font-bold mb-4">Static KPIs</h2>
-                         <div className="grid grid-cols-3 gap-4">
+                         <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="text-xs font-bold uppercase text-foreground/50 mb-2 block tracking-wider">Total Return (%)</label>
+                                <input type="number" step="0.01" value={expectedRoi} onChange={(e) => setExpectedRoi(e.target.value)} placeholder="3188.1" className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl px-4 py-3 font-medium focus:outline-none focus:ring-2 ring-purple-500/50" />
+                            </div>
                             <div>
                                 <label className="text-xs font-bold uppercase text-foreground/50 mb-2 block tracking-wider">Win Rate (%)</label>
-                                <input type="number" step="0.01" value={winRate} onChange={(e) => setWinRate(e.target.value)} placeholder="64.5" className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl px-4 py-3 font-medium focus:outline-none focus:ring-2 ring-purple-500/50" />
+                                <input type="number" step="0.01" value={winRate} onChange={(e) => setWinRate(e.target.value)} placeholder="75.0" className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl px-4 py-3 font-medium focus:outline-none focus:ring-2 ring-purple-500/50" />
                             </div>
                             <div>
                                 <label className="text-xs font-bold uppercase text-foreground/50 mb-2 block tracking-wider">Max Drawdown (%)</label>
-                                <input type="number" step="0.01" value={drawdown} onChange={(e) => setDrawdown(e.target.value)} placeholder="-12.3" className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl px-4 py-3 font-medium focus:outline-none focus:ring-2 ring-purple-500/50" />
+                                <input type="number" step="0.01" value={drawdown} onChange={(e) => setDrawdown(e.target.value)} placeholder="13.7" className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl px-4 py-3 font-medium focus:outline-none focus:ring-2 ring-purple-500/50" />
                             </div>
                             <div>
                                 <label className="text-xs font-bold uppercase text-foreground/50 mb-2 block tracking-wider">Profit Factor</label>
-                                <input type="number" step="0.01" value={profitFactor} onChange={(e) => setProfitFactor(e.target.value)} placeholder="1.85" className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl px-4 py-3 font-medium focus:outline-none focus:ring-2 ring-purple-500/50" />
+                                <input type="number" step="0.01" value={profitFactor} onChange={(e) => setProfitFactor(e.target.value)} placeholder="4.36" className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl px-4 py-3 font-medium focus:outline-none focus:ring-2 ring-purple-500/50" />
                             </div>
                          </div>
                     </div>

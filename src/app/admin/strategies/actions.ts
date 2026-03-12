@@ -151,6 +151,7 @@ export async function updateStrategyDetails(id: string, data: {
     winRatePercentage?: number | null;
     drawdownPercentage?: number | null;
     profitFactor?: number | null;
+    expectedRoiPercentage?: number | null;
 }) {
     await verifyAdmin();
 
@@ -162,7 +163,8 @@ export async function updateStrategyDetails(id: string, data: {
                 riskParameters: data.riskParameters ?? undefined,
                 winRatePercentage: data.winRatePercentage ?? undefined,
                 drawdownPercentage: data.drawdownPercentage ?? undefined,
-                profitFactor: data.profitFactor ?? undefined
+                profitFactor: data.profitFactor ?? undefined,
+                expectedRoiPercentage: data.expectedRoiPercentage ?? undefined
             }
         });
         return { success: true };
@@ -176,41 +178,10 @@ export async function uploadStrategyBacktestData(id: string, backtestData: any[]
     await verifyAdmin();
 
     try {
-        let expectedRoiPercentage: number | null = null;
-        let drawdownPercentage: number | null = null;
-
-        if (backtestData && backtestData.length > 0) {
-            const initialEquity = Number(backtestData[0].equity);
-            const finalEquity = Number(backtestData[backtestData.length - 1].equity);
-
-            if (initialEquity > 0) {
-                expectedRoiPercentage = ((finalEquity - initialEquity) / initialEquity) * 100;
-            }
-
-            let peak = initialEquity;
-            let maxDrawdown = 0;
-
-            for (const row of backtestData) {
-                const equity = Number(row.equity);
-                if (equity > peak) {
-                    peak = equity;
-                }
-                if (peak > 0) {
-                    const drawdown = ((peak - equity) / peak) * 100;
-                    if (drawdown > maxDrawdown) {
-                        maxDrawdown = drawdown;
-                    }
-                }
-            }
-            drawdownPercentage = maxDrawdown;
-        }
-
         await prisma.strategy.update({
             where: { id },
             data: { 
-                backtestData: backtestData as any,
-                ...(expectedRoiPercentage !== null && { expectedRoiPercentage }),
-                ...(drawdownPercentage !== null && { drawdownPercentage })
+                backtestData: backtestData as any
             }
         });
         return { success: true };
