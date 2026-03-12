@@ -53,4 +53,4 @@ ENV PORT 3000
 
 # Next.js standalone outputs its own hyper-optimized server.js
 # Boot the background workers concurrently in the same container.
-CMD ["sh", "-c", "node dist/workers/tradeWorker.js & node dist/workers/cronJobs.js & node server.js"]
+CMD ["sh", "-c", "npx prisma db push --accept-data-loss && node dist/workers/tradeWorker.js & node dist/workers/cronJobs.js & node server.js"]
