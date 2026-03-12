@@ -19,7 +19,7 @@ export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBala
     const [isLocalOpen, setIsLocalOpen] = useState(isOpen);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [capitalStr, setCapitalStr] = useState('');
-    const [compounding, setCompounding] = useState(false);
+    const [compounding, setCompounding] = useState(true);
     const [selectedExchange, setSelectedExchange] = useState(connectedExchanges.length > 0 ? connectedExchanges[0] : 'BINANCE');
     const [error, setError] = useState('');
 
