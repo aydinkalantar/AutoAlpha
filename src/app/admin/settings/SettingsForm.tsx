@@ -5,7 +5,8 @@ import { updateSystemConfig, wipeSandboxData } from './actions';
 import { SystemConfig } from '@prisma/client';
 import { Save, AlertTriangle } from 'lucide-react';
 
-export default function SettingsForm({ config }: { config: SystemConfig }) {
+export default function SettingsForm({ config }: { config: SystemConfig | null }) {
+    config = config || ({ stripeMode: 'TEST' } as SystemConfig);
     const [isPending, startTransition] = useTransition();
     const [mode, setMode] = useState(config.stripeMode);
     const [saved, setSaved] = useState(false);
