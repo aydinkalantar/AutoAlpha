@@ -5,9 +5,8 @@ import { Wallet, CreditCard, ChevronRight, AlertCircle, RefreshCw } from 'lucide
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from './CheckoutForm';
-
-// Initialize Stripe outside of component render to avoid recreating Stripe object
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
+import { getStripePublishableKey } from '@/app/actions/stripe';
+import { Stripe } from '@stripe/stripe-js';
 
 export default function DepositPage() {
     const [currency, setCurrency] = useState<'USDT' | 'USDC'>('USDT');
@@ -22,21 +21,27 @@ export default function DepositPage() {
     const [clientSecret, setClientSecret] = useState('');
     const [grossAmount, setGrossAmount] = useState(0);
     const [userId, setUserId] = useState('');
+    const [stripePromise, setStripePromise] = useState<Promise<Stripe | null> | null>(null);
 
     useEffect(() => {
-        // Fetch user context for Stripe
-        const fetchUserId = async () => {
+        const fetchUserIdAndStripeKey = async () => {
             try {
                 const res = await fetch('/api/user/profile');
                 if (res.ok) {
                     const data = await res.json();
                     setUserId(data.user?.id);
                 }
+                
+                // Fetch dynamic Stripe key from Admin Config
+                const pubKey = await getStripePublishableKey();
+                if (pubKey) {
+                    setStripePromise(loadStripe(pubKey));
+                }
             } catch (err) {
-                console.error("Failed to load user session for billing");
+                console.error("Failed to load user session or Stripe key");
             }
         };
-        fetchUserId();
+        fetchUserIdAndStripeKey();
     }, []);
 
     // Provide a dummy web3 wallet address for demonstration
@@ -279,7 +284,7 @@ export default function DepositPage() {
                             </p>
                         </div>
 
-                        {clientSecret ? (
+                        {clientSecret && stripePromise ? (
                             <div className="mt-8 animate-in fade-in slide-in-from-bottom-2">
                                 <Elements options={{ clientSecret, appearance: { theme: 'stripe' } }} stripe={stripePromise}>
                                     <CheckoutForm
