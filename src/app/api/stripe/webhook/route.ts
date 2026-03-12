@@ -3,25 +3,38 @@ import Stripe from 'stripe';
 import { headers } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: '2023-10-16' as any,
-});
-
-const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
-
 export async function POST(req: Request) {
+    const config = await prisma.systemConfig.findUnique({ where: { id: "global" } });
+    const isLive = config?.stripeMode === 'LIVE';
+
+    const secretKey = isLive
+        ? (config?.stripeLiveSecretKey || process.env.STRIPE_SECRET_KEY)
+        : (config?.stripeTestSecretKey || process.env.STRIPE_SECRET_KEY);
+
+    const endpointSecret = isLive
+        ? (config?.stripeLiveWebhookSecret || process.env.STRIPE_WEBHOOK_SECRET)
+        : (config?.stripeTestWebhookSecret || process.env.STRIPE_WEBHOOK_SECRET);
+
+    if (!secretKey || !endpointSecret) {
+        return NextResponse.json({ message: "Missing required Stripe Secrets or Webhook Signatures in Admin Config" }, { status: 400 });
+    }
+
+    const stripe = new Stripe(secretKey as string, {
+        apiVersion: '2023-10-16' as any,
+    });
+
     const body = await req.text();
     const headersList = await headers();
     const sig = headersList.get('stripe-signature');
 
-    if (!sig || !endpointSecret) {
-        return NextResponse.json({ message: "Missing required Stripe Secrets or Signature" }, { status: 400 });
+    if (!sig) {
+        return NextResponse.json({ message: "Missing Stripe Signature Header" }, { status: 400 });
     }
 
     let event: Stripe.Event;
 
     try {
-        event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
+        event = stripe.webhooks.constructEvent(body, sig, endpointSecret as string);
     } catch (err: any) {
         console.error("Webhook signature mismatch:", err.message);
         return NextResponse.json({ message: `Webhook Error: ${err.message}` }, { status: 400 });
