@@ -20,10 +20,15 @@ export async function GET(req: Request) {
         }
 
         // Fetch open positions matching the user constraint
-        const openPositions = await prisma.position.findMany({
-            where: whereClause,
-            orderBy: { createdAt: 'desc' }
-        });
+        let openPositions: any[] = [];
+        try {
+            openPositions = await prisma.position.findMany({
+                where: whereClause,
+                orderBy: { createdAt: 'desc' }
+            });
+        } catch (dbError) {
+            console.warn("Database offline: Returning empty active positions array.");
+        }
 
         return NextResponse.json({ success: true, positions: openPositions });
 

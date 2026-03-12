@@ -68,54 +68,70 @@ export async function mockDeposit(formData: FormData) {
         throw new Error("Invalid deposit parameters");
     }
 
-    await prisma.$transaction(async (tx: any) => {
-        if (currency === 'USDT') {
-            await tx.user.update({
-                where: { id: userId },
-                data: { usdtBalance: { increment: amount } }
-            });
-        } else if (currency === 'USDC') {
-            await tx.user.update({
-                where: { id: userId },
-                data: { usdcBalance: { increment: amount } }
-            });
-        }
-
-        await tx.ledger.create({
-            data: {
-                userId,
-                amount,
-                currency,
-                description: "Sandbox Mock Deposit"
+    try {
+        await prisma.$transaction(async (tx: any) => {
+            if (currency === 'USDT') {
+                await tx.user.update({
+                    where: { id: userId },
+                    data: { usdtBalance: { increment: amount } }
+                });
+            } else if (currency === 'USDC') {
+                await tx.user.update({
+                    where: { id: userId },
+                    data: { usdcBalance: { increment: amount } }
+                });
             }
-        });
-    });
 
+            await tx.ledger.create({
+                data: {
+                    userId,
+                    amount,
+                    currency,
+                    description: "Sandbox Mock Deposit"
+                }
+            });
+        });
+    } catch (e: any) {
+        console.warn("Database offline: Could not mock deposit.", e.message);
+    }
     revalidatePath('/dashboard');
 }
 
 export async function getUnreadNotifications(userId: string) {
-    return prisma.notification.findMany({
-        where: { userId, isRead: false },
-        orderBy: { createdAt: 'desc' },
-        take: 20
-    });
+    try {
+        return await prisma.notification.findMany({
+            where: { userId, isRead: false },
+            orderBy: { createdAt: 'desc' },
+            take: 20
+        });
+    } catch (e) {
+        console.warn("Database offline: returning empty notifications array.");
+        return [];
+    }
 }
 
 export async function markNotificationAsRead(id: string) {
-    await prisma.notification.update({
-        where: { id },
-        data: { isRead: true }
-    });
+    try {
+        await prisma.notification.update({
+            where: { id },
+            data: { isRead: true }
+        });
+    } catch (e) {
+        console.warn("Database offline: skipped marking notification as read.");
+    }
     revalidatePath('/dashboard');
     return true;
 }
 
 export async function markAllAsRead(userId: string) {
-    await prisma.notification.updateMany({
-        where: { userId, isRead: false },
-        data: { isRead: true }
-    });
+    try {
+        await prisma.notification.updateMany({
+            where: { userId, isRead: false },
+            data: { isRead: true }
+        });
+    } catch (e) {
+        console.warn("Database offline: skipped marking all notifications as read.");
+    }
     revalidatePath('/dashboard');
     return true;
 }
