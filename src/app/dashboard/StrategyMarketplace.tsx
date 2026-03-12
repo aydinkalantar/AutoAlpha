@@ -104,8 +104,9 @@ export default function StrategyMarketplace({ strategies, subscriptions, userId,
                                                             <span className={`w-2 h-2 rounded-full ${sub.isActive ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)]'}`}></span>
                                                             {sub.exchange || strategy.targetExchange}
                                                         </span>
-                                                        <label className="relative inline-flex items-center cursor-pointer">
+                                                        <label htmlFor={`toggle-${sub.id}`} className="relative inline-flex items-center cursor-pointer">
                                                             <input
+                                                                id={`toggle-${sub.id}`}
                                                                 type="checkbox"
                                                                 className="sr-only peer"
                                                                 title="Toggle Strategy Subscription"
