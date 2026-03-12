@@ -103,7 +103,7 @@ export default function RegisterPage() {
                                     type="email"
                                     required
                                     className="w-full bg-white/50 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-xl pl-10 pr-4 py-3 text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner"
-                                    placeholder="investor@example.com"
+                                    placeholder="info@autoalpha.trade"
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                 />

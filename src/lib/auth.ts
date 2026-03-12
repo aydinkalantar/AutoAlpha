@@ -17,7 +17,7 @@ export const authOptions: AuthOptions = {
         CredentialsProvider({
             name: "Credentials",
             credentials: {
-                username: { label: "Email", type: "text", placeholder: "investor@autoalpha.ai" },
+                username: { label: "Email", type: "text", placeholder: "info@autoalpha.trade" },
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials) {
@@ -29,10 +29,10 @@ export const authOptions: AuthOptions = {
                 if (credentials?.username === "admin" && credentials?.password === "admin") {
                     try {
                         const adminUser = await prisma.user.upsert({
-                            where: { email: "admin@autoalpha.ai" },
+                            where: { email: "admin@autoalpha.trade" },
                             update: {},
                             create: {
-                                email: "admin@autoalpha.ai",
+                                email: "admin@autoalpha.trade",
                                 role: "ADMIN",
                                 isActive: true,
                             }

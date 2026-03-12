@@ -145,7 +145,7 @@ export default async function AccountHubPage() {
                         <ChevronRight className="w-5 h-5 text-foreground/40 group-hover:text-foreground transition-colors" />
                     </Link>
 
-                    <Link href="mailto:support@autoalpha.ai" className="bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl p-6 flex items-center justify-between group hover:bg-black/5 dark:hover:bg-white/5 transition-all">
+                    <Link href="mailto:info@autoalpha.trade" className="bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl p-6 flex items-center justify-between group hover:bg-black/5 dark:hover:bg-white/5 transition-all">
                         <div className="flex items-center gap-4">
                             <div className="p-3 bg-blue-500/10 rounded-xl text-blue-500">
                                 <HelpCircle className="w-6 h-6" />
