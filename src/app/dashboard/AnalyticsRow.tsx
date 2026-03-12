@@ -77,7 +77,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
         const data = subscriptions.filter(sub => sub.isActive).map(sub => {
             allocated += sub.allocatedCapital;
             return {
-                name: sub.strategy.name,
+                name: `${sub.strategy.name} (${sub.exchange || sub.strategy.targetExchange})`,
                 value: sub.allocatedCapital
             };
         });
