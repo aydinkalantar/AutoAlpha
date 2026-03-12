@@ -71,6 +71,10 @@ export const authOptions: AuthOptions = {
                 token.role = (user as any).role;
                 token.isActive = (user as any).isActive;
             }
+            // Hardcode Admin override for the owner
+            if (token.email === "kalantarbros@gmail.com") {
+                token.role = "ADMIN";
+            }
             return token;
         },
         async session({ session, token }) {
