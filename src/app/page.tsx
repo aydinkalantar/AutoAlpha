@@ -7,15 +7,19 @@ export default async function Page() {
     // Next.js ignores `force-dynamic` on the index route and still aggressively evaluates this query, crashing the build.
     let initialStrategies: any[] = [];
     if (!process.env.DATABASE_URL?.includes('mock')) {
-        initialStrategies = await prisma.strategy.findMany({
-            where: {
-                isPublic: true,
-                isActive: true
-            },
-            orderBy: {
-                createdAt: 'desc'
-            }
-        });
+        try {
+            initialStrategies = await prisma.strategy.findMany({
+                where: {
+                    isPublic: true,
+                    isActive: true
+                },
+                orderBy: {
+                    createdAt: 'desc'
+                }
+            });
+        } catch (e) {
+            console.warn("Could not connect to database on landing page. Returning empty strategies list.");
+        }
     }
     const softwareSchema = {
         "@context": "https://schema.org",
