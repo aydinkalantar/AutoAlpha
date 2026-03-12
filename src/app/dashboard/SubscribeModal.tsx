@@ -112,7 +112,7 @@ export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBala
                             <select
                                 value={selectedExchange}
                                 onChange={(e) => setSelectedExchange(e.target.value)}
-                                className="w-full bg-[#F5F5F7] border-2 border-transparent hover:border-black/5 rounded-[1.5rem] px-6 py-5 text-xl font-bold text-[#1D1D1F] focus:outline-none focus:border-black/10 transition-all cursor-pointer"
+                                className="w-full bg-white/40 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-[1.5rem] px-6 py-5 text-xl font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all cursor-pointer backdrop-blur-md"
                             >
                                 {connectedExchanges.length > 0 ? (
                                     connectedExchanges.map(ex => (
@@ -121,9 +121,14 @@ export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBala
                                         </option>
                                     ))
                                 ) : (
-                                    <option value="" disabled>No API Keys Connected</option>
+                                    <option value="" disabled>No {isPaperMode ? 'Testnet' : 'Live'} API Keys Connected</option>
                                 )}
                             </select>
+                            {connectedExchanges.length === 0 && (
+                                <p className="text-xs font-semibold text-rose-500/80 px-2 mt-2">
+                                    You are currently in {isPaperMode ? 'Sandbox' : 'Live'} mode. You must connect a {isPaperMode ? 'Testnet' : 'Live'} exchange API key in Settings to subscribe.
+                                </p>
+                            )}
                         </div>
                     )}
 
@@ -144,15 +149,15 @@ export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBala
                                 value={capitalStr}
                                 onChange={(e) => setCapitalStr(e.target.value)}
                                 autoFocus
-                                className="w-full bg-[#F5F5F7] border-2 border-transparent group-hover:border-black/5 rounded-[1.5rem] pl-12 pr-6 py-5 text-3xl font-bold text-[#1D1D1F] focus:outline-none focus:border-black/10 focus:bg-white transition-all tracking-tight"
+                                className="w-full bg-white/40 dark:bg-white/5 border border-black/5 dark:border-white/10 group-hover:border-black/10 dark:group-hover:border-white/20 rounded-[1.5rem] pl-12 pr-6 py-5 text-3xl font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:bg-white/60 dark:focus:bg-white/10 transition-all tracking-tight backdrop-blur-md"
                             />
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-between p-6 border border-black/5 rounded-[1.5rem] bg-white shadow-sm">
+                    <div className="flex items-center justify-between p-6 border border-black/5 dark:border-white/10 rounded-[1.5rem] bg-white/40 dark:bg-white/5 backdrop-blur-md shadow-sm">
                         <div className="flex flex-col">
-                            <span className="text-sm font-bold text-[#1D1D1F]">Auto-Compound</span>
-                            <span className="text-xs font-semibold text-black/40">Reinvest profits automatically</span>
+                            <span className="text-sm font-bold text-foreground">Auto-Compound</span>
+                            <span className="text-xs font-semibold text-foreground/40">Reinvest profits automatically</span>
                         </div>
                         <label className="relative inline-flex items-center cursor-pointer">
                             <input
@@ -163,7 +168,7 @@ export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBala
                                 aria-label="Toggle auto-compounding"
                                 title="Toggle auto-compounding"
                             />
-                            <div className="w-12 h-7 bg-black/10 dark:bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-black dark:peer-checked:bg-[#1D1D1F]"></div>
+                            <div className="w-12 h-7 bg-black/10 dark:bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-black dark:peer-checked:bg-white/30"></div>
                         </label>
                     </div>
 
@@ -171,7 +176,7 @@ export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBala
                         <button
                             type="submit"
                             disabled={isSubmitting || parseFloat(capitalStr) > currentBalance}
-                            className="w-full py-5 px-6 bg-black dark:bg-[#1D1D1F] hover:bg-black/80 dark:hover:bg-black disabled:opacity-30 disabled:hover:bg-black dark:disabled:hover:bg-[#1D1D1F] text-white rounded-[1.5rem] text-lg font-bold transition-all"
+                            className="w-full py-5 px-6 bg-gradient-to-br from-cyan-400 to-purple-600 shadow-lg shadow-purple-500/20 hover:opacity-90 disabled:opacity-30 text-white rounded-[1.5rem] text-lg font-bold transition-all"
                         >
                             {isSubmitting ? 'Processing...' : 'Confirm Allocation'}
                         </button>
