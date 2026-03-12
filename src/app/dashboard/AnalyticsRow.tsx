@@ -13,8 +13,8 @@ interface AnalyticsRowProps {
 export default function AnalyticsRow({ positions, subscriptions, totalBalance }: AnalyticsRowProps) {
     const closedPositions = useMemo(() => positions.filter(p => !p.isOpen), [positions]);
 
-    const { winRate, profitFactor, totalTrades, maxDrawdown, totalRevenue } = useMemo(() => {
-        if (closedPositions.length === 0) return { winRate: 0, profitFactor: 0, totalTrades: 0, maxDrawdown: 0, totalRevenue: 0 };
+    const { winRate, profitFactor, totalTrades, maxDrawdown, totalRevenue, dailyPnl, roiPercentage } = useMemo(() => {
+        if (closedPositions.length === 0) return { winRate: 0, profitFactor: 0, totalTrades: 0, maxDrawdown: 0, totalRevenue: 0, dailyPnl: 0, roiPercentage: 0 };
 
         let wins = 0;
         let grossProfit = 0;
@@ -23,6 +23,10 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
         let peakCumulativePnl = 0;
         let currentDrawdown = 0;
         let maxDrawdownVal = 0;
+        let last24hPnl = 0;
+
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
 
         for (const pos of closedPositions) {
             const isLong = pos.side === 'LONG' || pos.side === 'BUY';
@@ -44,19 +48,27 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
             if (currentDrawdown > maxDrawdownVal) {
                 maxDrawdownVal = currentDrawdown;
             }
+
+            // Check if closed in last 24h
+            if (new Date(pos.updatedAt || pos.createdAt) >= yesterday) {
+                last24hPnl += exitPnl;
+            }
         }
 
         const winRate = (wins / closedPositions.length) * 100;
         const profitFactor = grossLoss === 0 ? (grossProfit > 0 ? 99.9 : 0) : grossProfit / grossLoss;
+        const roiPercentage = totalBalance > 0 ? (cumulativePnl / totalBalance) * 100 : 0;
 
         return { 
             winRate, 
             profitFactor, 
             totalTrades: closedPositions.length, 
             maxDrawdown: maxDrawdownVal,
-            totalRevenue: cumulativePnl
+            totalRevenue: cumulativePnl,
+            dailyPnl: last24hPnl,
+            roiPercentage
         };
-    }, [closedPositions]);
+    }, [closedPositions, totalBalance]);
 
     // Calculate allocation distribution
     const donutData = useMemo(() => {
@@ -139,12 +151,15 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
                 </div>
 
                 {/* Total Revenue KPI */}
-                <div className="min-w-[85vw] sm:min-w-0 flex-shrink-0 snap-center bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-6 flex flex-col justify-between relative overflow-hidden group">
+                <div className="min-w-[85vw] sm:min-w-0 flex-shrink-0 snap-center bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-4 md:p-6 flex flex-col justify-between relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     <div className="flex justify-between items-start mb-4">
                         <div className="p-2 bg-purple-500/10 rounded-xl">
                             <TrendingUp className="w-5 h-5 text-purple-500" />
                         </div>
+                        <span className={`text-sm font-bold ${roiPercentage >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                            {roiPercentage >= 0 ? '+' : ''}{roiPercentage.toFixed(2)}% ROI
+                        </span>
                     </div>
                     <div>
                         <h4 className="text-sm font-medium text-foreground/50 mb-1">Total Revenue</h4>
@@ -152,7 +167,25 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
                             <span className={`text-3xl font-bold tracking-tight ${totalRevenue >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
                                 {totalRevenue >= 0 ? '+' : '-'}${Math.abs(totalRevenue).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </span>
-                            <span className="text-xs text-foreground/40 font-medium">Realized PnL</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* 24h PnL KPI */}
+                <div className="min-w-[85vw] sm:min-w-0 flex-shrink-0 snap-center bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-4 md:p-6 flex flex-col justify-between relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="flex justify-between items-start mb-4">
+                        <div className="p-2 bg-amber-500/10 rounded-xl">
+                            <Target className="w-5 h-5 text-amber-500" />
+                        </div>
+                    </div>
+                    <div>
+                        <h4 className="text-sm font-medium text-foreground/50 mb-1">24h Daily PnL</h4>
+                        <div className="flex items-baseline gap-2">
+                            <span className={`text-3xl font-bold tracking-tight ${dailyPnl >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                                {dailyPnl >= 0 ? '+' : '-'}${Math.abs(dailyPnl).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </span>
+                            <span className="text-xs text-foreground/40 font-medium">Last 24 hours</span>
                         </div>
                     </div>
                 </div>
