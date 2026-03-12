@@ -54,7 +54,7 @@ export default function LiveExecutionsClient() {
                         Live Connection
                     </span>
                     <span>•</span>
-                    <span>Last pulse: {lastRefresh.toLocaleTimeString()}</span>
+                    <span suppressHydrationWarning>Last pulse: {lastRefresh.toLocaleTimeString()}</span>
                 </div>
             </div>
 
