@@ -47,13 +47,17 @@ export async function wipeSandboxData() {
 
 export async function getSystemConfig() {
     await verifyAdmin();
-    // Upsert to ensure one global config exists
-    const config = await prisma.systemConfig.upsert({
-        where: { id: "global" },
-        update: {},
-        create: { id: "global" }
-    });
-    return config;
+    try {
+        const config = await prisma.systemConfig.upsert({
+            where: { id: "global" },
+            update: {},
+            create: { id: "global" }
+        });
+        return config;
+    } catch (e) {
+        console.warn("Could not fetch system config from database. Returning null.");
+        return null;
+    }
 }
 
 export async function updateSystemConfig(formData: FormData) {
