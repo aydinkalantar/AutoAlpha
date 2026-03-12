@@ -24,7 +24,7 @@ export async function sendTradeNotificationEmail(data: TradeEmailData) {
         const priceStr = data.price ? `$${data.price.toFixed(4)}` : "Market Price";
         
         await resend.emails.send({
-            from: 'AutoAlpha Trading <notifications@autoalpha.ai>', // Can be changed based on domain verification
+            from: 'AutoAlpha Trading <notifications@autoalpha.trade>',
             to: data.userEmail,
             subject: `Trade Alert: ${data.strategyName} executed on ${data.symbol}`,
             html: `
