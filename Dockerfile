@@ -17,8 +17,9 @@ RUN npx prisma generate
 # Build Next.js & compile workers
 # Set a dummy DATABASE_URL and REDIS_HOST so Next.js static prerendering doesn't crash if it evaluates imports during build
 ARG DATABASE_URL="postgresql://mock:mock@localhost:5432/mock"
+ARG DIRECT_URL="postgresql://mock:mock@localhost:5432/mock"
 ARG REDIS_HOST="localhost"
-RUN DATABASE_URL=${DATABASE_URL} REDIS_HOST=${REDIS_HOST} npm run build
+RUN DATABASE_URL=${DATABASE_URL} DIRECT_URL=${DIRECT_URL} REDIS_HOST=${REDIS_HOST} npm run build
 RUN npx --yes esbuild src/workers/tradeWorker.ts --bundle --platform=node --target=node20 --outdir=dist/workers --packages=external
 RUN npx --yes esbuild src/workers/cronJobs.ts --bundle --platform=node --target=node20 --outdir=dist/workers --packages=external
 
