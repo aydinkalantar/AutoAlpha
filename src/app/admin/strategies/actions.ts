@@ -29,6 +29,7 @@ export async function createStrategy(formData: FormData) {
     const settlementCurrency = formData.get('currency') as Currency;
     const performanceFeeStr = formData.get('performanceFee') as string;
     const targetExchange = formData.get('targetExchange') as SupportedExchange;
+    const description = formData.get('description') as string | null;
 
     const pair = formData.get('pair') as string;
     const leverage = parseFloat(formData.get('leverage') as string) || 1.0;
@@ -53,6 +54,7 @@ export async function createStrategy(formData: FormData) {
             targetExchange,
             marketType,
             settlementCurrency,
+            description,
             performanceFeePercentage,
             webhookToken,
             pair,

@@ -148,6 +148,7 @@ export default function CreateStrategyForm() {
                         <label className="text-sm font-semibold text-foreground/60 px-2">Description</label>
                         <input
                             type="text"
+                            name="description"
                             placeholder="Advanced automated trading"
                             className="w-full bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-[1.2rem] px-5 py-4 text-foreground focus:outline-none focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                         />
