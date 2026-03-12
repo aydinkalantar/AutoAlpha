@@ -91,59 +91,83 @@ export default function StrategyMarketplace({ strategies, subscriptions, userId,
                             )}
                         </div>
 
-                        {subscriptions.find(sub => sub.strategyId === strategy.id) ? (
-                            <div className="w-full relative z-10 flex flex-col gap-2 mt-2">
-                                <div className="py-3 border border-black/5 dark:border-white/10 rounded-xl px-4 flex items-center justify-between shadow-sm bg-white/20 dark:bg-white/5">
-                                    <span className="text-sm font-semibold tracking-tight">Strategy Active</span>
-                                    <label className="relative inline-flex items-center cursor-pointer">
-                                        <input
-                                            type="checkbox"
-                                            className="sr-only peer"
-                                            title="Toggle Strategy Subscription"
-                                            aria-label="Toggle Strategy Subscription"
-                                            checked={subscriptions.find(sub => sub.strategyId === strategy.id)?.isActive}
-                                            onChange={async () => {
-                                                const sub = subscriptions.find(s => s.strategyId === strategy.id);
-                                                if (sub) {
-                                                    const res = await fetch(`/api/user/subscriptions/${sub.id}/toggle`, { method: "POST" });
-                                                    if (res.ok) window.location.reload();
-                                                }
-                                            }}
-                                        />
-                                        <div className="w-11 h-6 bg-rose-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
-                                    </label>
-                                </div>
-                                <div className="grid grid-cols-2 gap-3 mt-1">
-                                    <Link
-                                        href={`/dashboard/market/${strategy.id}`}
-                                        className="w-full py-2.5 flex items-center justify-center bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-xl text-sm font-bold transition-all"
-                                    >
-                                        Details
-                                    </Link>
-                                    <button
-                                        onClick={() => setEditingAllocation({ sub: subscriptions.find(sub => sub.strategyId === strategy.id)!, strategy })}
-                                        className="w-full py-2.5 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-xl text-sm font-bold transition-all"
-                                    >
-                                        Capital
-                                    </button>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="grid grid-cols-2 gap-3 mt-2 relative z-10">
-                                <Link
-                                    href={`/dashboard/market/${strategy.id}`}
-                                    className="w-full py-4 flex items-center justify-center bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 text-foreground rounded-xl font-bold transition-colors"
-                                >
-                                    Details
-                                </Link>
-                                <button
-                                    onClick={() => setSelectedStrategy(strategy)}
-                                    className="w-full py-4 bg-gradient-to-br from-cyan-400 to-purple-600 shadow-lg shadow-purple-500/20 text-white rounded-xl font-bold hover:opacity-90 transition-opacity"
-                                >
-                                    Subscribe
-                                </button>
-                            </div>
-                        )}
+                        {(() => {
+                            const activeSubs = subscriptions.filter(sub => sub.strategyId === strategy.id);
+                            if (activeSubs.length > 0) {
+                                return (
+                                    <div className="w-full relative z-10 flex flex-col gap-3 mt-2">
+                                        <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1 custom-scrollbar">
+                                            {activeSubs.map(sub => (
+                                                <div key={sub.id} className="py-3 border border-black/5 dark:border-white/10 rounded-xl px-4 flex flex-col gap-3 shadow-sm bg-white/40 dark:bg-white/5 backdrop-blur-md">
+                                                    <div className="flex items-center justify-between">
+                                                        <span className="text-sm font-bold tracking-tight flex items-center gap-2">
+                                                            <span className={`w-2 h-2 rounded-full ${sub.isActive ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)]'}`}></span>
+                                                            {sub.exchange || strategy.targetExchange}
+                                                        </span>
+                                                        <label className="relative inline-flex items-center cursor-pointer">
+                                                            <input
+                                                                type="checkbox"
+                                                                className="sr-only peer"
+                                                                title="Toggle Strategy Subscription"
+                                                                checked={sub.isActive}
+                                                                onChange={async () => {
+                                                                    const res = await fetch(`/api/user/subscriptions/${sub.id}/toggle`, { method: "POST" });
+                                                                    if (res.ok) window.location.reload();
+                                                                }}
+                                                            />
+                                                            <div className="w-9 h-5 bg-rose-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+                                                        </label>
+                                                    </div>
+                                                    <div className="flex items-center justify-between">
+                                                        <span className="text-xs font-semibold text-foreground/60">Allocated</span>
+                                                        <span className="text-xs font-bold text-foreground">
+                                                            ${sub.allocatedCapital.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                        </span>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => setEditingAllocation({ sub, strategy })}
+                                                        className="w-full py-2 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-lg text-xs font-bold transition-all"
+                                                    >
+                                                        Manage Capital
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-3 mt-1 pt-2 border-t border-black/5 dark:border-white/5">
+                                            <Link
+                                                href={`/dashboard/market/${strategy.id}`}
+                                                className="w-full py-2.5 flex items-center justify-center bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-xl text-sm font-bold transition-all"
+                                            >
+                                                Details
+                                            </Link>
+                                            <button
+                                                onClick={() => setSelectedStrategy(strategy)}
+                                                className="w-full py-2.5 flex items-center justify-center bg-gradient-to-br from-cyan-400/10 to-purple-600/10 hover:from-cyan-400/20 hover:to-purple-600/20 text-foreground dark:text-white rounded-xl text-sm font-bold transition-all border border-purple-500/30"
+                                            >
+                                                + Exchange
+                                            </button>
+                                        </div>
+                                    </div>
+                                );
+                            } else {
+                                return (
+                                    <div className="grid grid-cols-2 gap-3 mt-2 relative z-10 border-t border-black/5 dark:border-white/5 pt-4">
+                                        <Link
+                                            href={`/dashboard/market/${strategy.id}`}
+                                            className="w-full py-4 flex items-center justify-center bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 text-foreground rounded-xl font-bold transition-colors"
+                                        >
+                                            Details
+                                        </Link>
+                                        <button
+                                            onClick={() => setSelectedStrategy(strategy)}
+                                            className="w-full py-4 bg-gradient-to-br from-cyan-400 to-purple-600 shadow-lg shadow-purple-500/20 text-white rounded-xl font-bold hover:opacity-90 transition-opacity"
+                                        >
+                                            Subscribe
+                                        </button>
+                                    </div>
+                                );
+                            }
+                        })()}
                     </div>
                 ))}
 
