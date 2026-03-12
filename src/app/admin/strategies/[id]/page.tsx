@@ -4,7 +4,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import StrategyEditClient from "./StrategyEditClient";
 
-export default async function AdminStrategyEditPage({ params }: { params: { id: string } }) {
+export default async function AdminStrategyEditPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
     const session = await getServerSession(authOptions);
 
     if (!session || (session.user as any).role !== "ADMIN") {
@@ -12,7 +13,7 @@ export default async function AdminStrategyEditPage({ params }: { params: { id: 
     }
 
     const strategy = await prisma.strategy.findUnique({
-        where: { id: params.id },
+        where: { id },
     });
 
     if (!strategy) {

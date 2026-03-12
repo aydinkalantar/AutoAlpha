@@ -64,12 +64,16 @@ export default function StrategyMarketplace({ strategies, subscriptions, userId,
 
                         <div className="space-y-4 flex-grow mb-8 relative z-10 border-t border-black/5 dark:border-white/5 pt-4">
                             <div className="flex justify-between items-center text-sm pb-2">
-                                <span className="font-semibold tracking-wider uppercase text-xs text-foreground/50">Risk Level</span>
-                                <span className="font-bold text-amber-500">Moderate</span>
+                                <span className="font-semibold tracking-wider uppercase text-xs text-foreground/50">Total Return</span>
+                                <span className="font-black text-emerald-500">
+                                    {strategy.expectedRoiPercentage != null ? `+${strategy.expectedRoiPercentage.toFixed(1)}%` : "N/A"}
+                                </span>
                             </div>
                             <div className="flex justify-between items-center text-sm pb-2">
-                                <span className="font-semibold tracking-wider uppercase text-xs text-foreground/50">Historical APY</span>
-                                <span className="font-black text-emerald-500">~68.4%</span>
+                                <span className="font-semibold tracking-wider uppercase text-xs text-foreground/50">Max Drawdown</span>
+                                <span className="font-bold text-rose-500">
+                                    {strategy.drawdownPercentage != null ? `-${strategy.drawdownPercentage.toFixed(1)}%` : "N/A"}
+                                </span>
                             </div>
                             <div className="flex justify-between items-center text-sm pb-2">
                                 <span className="font-semibold tracking-wider uppercase text-xs text-foreground/50">Settlement</span>
@@ -109,20 +113,36 @@ export default function StrategyMarketplace({ strategies, subscriptions, userId,
                                         <div className="w-11 h-6 bg-rose-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
                                     </label>
                                 </div>
-                                <button
-                                    onClick={() => setEditingAllocation({ sub: subscriptions.find(sub => sub.strategyId === strategy.id)!, strategy })}
-                                    className="w-full py-2.5 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-xl text-sm font-bold transition-all"
-                                >
-                                    Edit Capital
-                                </button>
+                                <div className="grid grid-cols-2 gap-3 mt-1">
+                                    <Link
+                                        href={`/dashboard/market/${strategy.id}`}
+                                        className="w-full py-2.5 flex items-center justify-center bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-xl text-sm font-bold transition-all"
+                                    >
+                                        Details
+                                    </Link>
+                                    <button
+                                        onClick={() => setEditingAllocation({ sub: subscriptions.find(sub => sub.strategyId === strategy.id)!, strategy })}
+                                        className="w-full py-2.5 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-xl text-sm font-bold transition-all"
+                                    >
+                                        Capital
+                                    </button>
+                                </div>
                             </div>
                         ) : (
-                            <button
-                                onClick={() => setSelectedStrategy(strategy)}
-                                className="w-full relative z-10 py-4 mt-2 bg-gradient-to-br from-cyan-400 to-purple-600 shadow-lg shadow-purple-500/20 text-white rounded-xl font-bold hover:opacity-90 transition-opacity"
-                            >
-                                Subscribe
-                            </button>
+                            <div className="grid grid-cols-2 gap-3 mt-2 relative z-10">
+                                <Link
+                                    href={`/dashboard/market/${strategy.id}`}
+                                    className="w-full py-4 flex items-center justify-center bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 text-foreground rounded-xl font-bold transition-colors"
+                                >
+                                    Details
+                                </Link>
+                                <button
+                                    onClick={() => setSelectedStrategy(strategy)}
+                                    className="w-full py-4 bg-gradient-to-br from-cyan-400 to-purple-600 shadow-lg shadow-purple-500/20 text-white rounded-xl font-bold hover:opacity-90 transition-opacity"
+                                >
+                                    Subscribe
+                                </button>
+                            </div>
                         )}
                     </div>
                 ))}
