@@ -239,7 +239,7 @@ function DepositContent() {
                             type="number"
                             value={amount}
                             onChange={(e) => setAmount(e.target.value)}
-                            className="w-full bg-white/50 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-[1.5rem] pl-14 pr-28 py-6 text-4xl font-bold text-foreground placeholder:text-foreground/20 focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner transition-all"
+                            className="w-full bg-white/50 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-[1.5rem] pl-14 pr-[150px] md:pr-40 py-6 text-4xl font-bold text-foreground placeholder:text-foreground/20 focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner transition-all"
                             placeholder="0.00"
                         />
                         {method === 'web3' ? (
