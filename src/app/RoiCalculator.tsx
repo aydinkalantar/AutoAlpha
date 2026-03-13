@@ -48,6 +48,9 @@ export default function RoiCalculator() {
                                         max="100000"
                                         step="1000"
                                         value={investment}
+                                        title="Investment Amount"
+                                        aria-label="Investment Amount"
+                                        placeholder="Enter amount"
                                         onChange={handleSliderChange}
                                         className="w-full h-2 bg-black/10 dark:bg-white/10 rounded-lg appearance-none cursor-pointer relative z-10"
                                         style={{

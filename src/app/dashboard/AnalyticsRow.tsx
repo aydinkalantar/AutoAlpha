@@ -5,14 +5,18 @@ import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, L
 import { Target, TrendingUp, ShieldAlert, PieChart as PieChartIcon, Info } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import Link from 'next/link';
 
 interface AnalyticsRowProps {
     positions: any[];
     subscriptions: any[];
     totalBalance: number;
+    isPaperMode: boolean;
+    usdtBalance: number;
+    usdcBalance: number;
 }
 
-export default function AnalyticsRow({ positions, subscriptions, totalBalance }: AnalyticsRowProps) {
+export default function AnalyticsRow({ positions, subscriptions, totalBalance, isPaperMode, usdtBalance, usdcBalance }: AnalyticsRowProps) {
     const closedPositions = useMemo(() => positions.filter(p => !p.isOpen), [positions]);
 
     const { winRate, profitFactor, totalTrades, maxDrawdown, totalRevenue, dailyPnl, roiPercentage } = useMemo(() => {
@@ -106,7 +110,79 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
                 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
             `}</style>
 
-            <div className="col-span-1 xl:col-span-3 flex overflow-x-auto sm:overflow-visible snap-x snap-mandatory pb-6 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0 sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 hide-scrollbar">
+            {/* Connected Exchange Balance Box */}
+            <div className="col-span-1 md:col-span-2 xl:col-span-2 bg-white/50 dark:bg-white/5 backdrop-blur-2xl flex flex-col justify-center py-6 px-8 rounded-2xl border border-black/5 dark:border-white/10 shadow-xl relative overflow-hidden">
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-500/40 dark:via-cyan-400/20 to-transparent" />
+                <span className="text-sm font-bold tracking-wider uppercase mb-2 relative z-10 text-cyan-600 dark:text-cyan-400">
+                    {isPaperMode ? 'Paper Capital' : 'Connected Exchange Balance'}
+                </span>
+                <div className="flex items-baseline space-x-1 relative z-10">
+                    <span className="text-3xl font-bold text-foreground/50">$</span>
+                    <span className="text-5xl font-black text-foreground tracking-tight">
+                        {!isPaperMode ? '--' : totalBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </span>
+                </div>
+            </div>
+
+            {/* Gas Tank Widget */}
+            <div className="col-span-1 md:col-span-1 xl:col-span-1 bg-white/50 dark:bg-white/5 backdrop-blur-xl flex flex-col justify-between py-6 px-6 rounded-2xl border border-black/5 dark:border-white/10 shadow-xl relative overflow-hidden">
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-purple-500/40 dark:via-purple-400/20 to-transparent" />
+                <div className="flex flex-col mb-4 relative z-10">
+                    <span className="text-sm font-bold tracking-wider uppercase text-foreground/50 mb-1">Gas Tank Balance</span>
+                    <span className="text-2xl font-black text-foreground">
+                        ${(usdtBalance + usdcBalance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span className="text-sm font-bold text-foreground/50">USDC</span>
+                    </span>
+                </div>
+                <Link href="/dashboard/deposit" className="relative z-10 self-start text-xs font-bold tracking-wider uppercase text-purple-600 dark:text-purple-400 hover:text-purple-500 bg-purple-500/10 hover:bg-purple-500/20 px-4 py-2 rounded-xl transition-colors border border-purple-500/20">
+                    Top Up
+                </Link>
+            </div>
+
+            {/* Allocation Donut */}
+            <div className="col-span-1 md:col-span-3 xl:col-span-1 bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-6 flex flex-col relative overflow-hidden">
+                <div className="flex items-center gap-2 mb-4">
+                    <PieChartIcon className="w-4 h-4 text-cyan-500" />
+                    <h3 className="text-sm font-semibold tracking-tight text-foreground/70 uppercase">Capital Allocation</h3>
+                </div>
+                <div className="flex-1 min-h-[160px] w-full relative">
+                    {donutData.length > 0 ? (
+                        <ResponsiveContainer width="100%" height="100%" minHeight={200}>
+                            <PieChart margin={{ top: 10, right: 0, bottom: 10, left: 0 }} style={{ overflow: 'visible' }}>
+                                <Pie
+                                    data={donutData}
+                                    cx="50%"
+                                    cy="45%"
+                                    innerRadius={50}
+                                    outerRadius={70}
+                                    paddingAngle={2}
+                                    dataKey="value"
+                                    stroke="none"
+                                >
+                                    {donutData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={entry.name === 'Idle Capital' ? '#3f3f46' : COLORS[index % COLORS.length]} />
+                                    ))}
+                                </Pie>
+                                <RechartsTooltip
+                                    formatter={(value: any) => [`$${value.toLocaleString()}`, 'Capital']}
+                                    contentStyle={{ borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', backgroundColor: 'rgba(0,0,0,0.8)', color: '#fff' }}
+                                />
+                                <Legend 
+                                    verticalAlign="bottom" 
+                                    height={40} 
+                                    iconType="circle" 
+                                    wrapperStyle={{ fontSize: '11px', fontWeight: '600', paddingTop: '0px', bottom: '0px' }} 
+                                />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    ) : (
+                        <div className="absolute inset-0 m-6 rounded-[50%] border-2 border-dashed border-black/10 dark:border-white/10 flex items-center justify-center text-xs text-foreground/40 font-bold uppercase tracking-wider text-center">
+                            No allocations set
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            <div className="col-span-1 md:col-span-3 xl:col-span-4 flex overflow-x-auto sm:overflow-visible snap-x snap-mandatory pb-6 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0 sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 sm:gap-6 hide-scrollbar mt-2">
                 {/* Win Rate KPI */}
                 <div className="min-w-[85vw] sm:min-w-0 flex-shrink-0 snap-center bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-6 flex flex-col justify-between relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
@@ -277,48 +353,6 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
 
             </div>
 
-            {/* Allocation Donut */}
-            <div className="col-span-1 xl:col-span-1 bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-6 flex flex-col relative overflow-hidden">
-                <div className="flex items-center gap-2 mb-4">
-                    <PieChartIcon className="w-4 h-4 text-cyan-500" />
-                    <h3 className="text-sm font-semibold tracking-tight text-foreground/70 uppercase">Capital Allocation</h3>
-                </div>
-                <div className="flex-1 min-h-[160px] w-full relative">
-                    {donutData.length > 0 ? (
-                        <ResponsiveContainer width="100%" height="100%" minHeight={200}>
-                            <PieChart margin={{ top: 10, right: 0, bottom: 10, left: 0 }} style={{ overflow: 'visible' }}>
-                                <Pie
-                                    data={donutData}
-                                    cx="50%"
-                                    cy="45%"
-                                    innerRadius={50}
-                                    outerRadius={70}
-                                    paddingAngle={2}
-                                    dataKey="value"
-                                    stroke="none"
-                                >
-                                    {donutData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={entry.name === 'Idle Capital' ? '#3f3f46' : COLORS[index % COLORS.length]} />
-                                    ))}
-                                </Pie>
-                                <RechartsTooltip
-                                    formatter={(value: any) => [`$${value.toLocaleString()}`, 'Capital']}
-                                    contentStyle={{ borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', backgroundColor: 'rgba(0,0,0,0.8)', color: '#fff' }}
-                                />
-                                <Legend 
-                                    verticalAlign="bottom" 
-                                    height={40} 
-                                    iconType="circle" 
-                                    wrapperStyle={{ fontSize: '11px', fontWeight: '600', paddingTop: '0px', bottom: '0px' }} 
-                                />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    ) : (
-                        <div className="absolute inset-0 m-6 rounded-[50%] border-2 border-dashed border-black/10 dark:border-white/10 flex items-center justify-center text-xs text-foreground/40 font-bold uppercase tracking-wider text-center">
-                            No allocations set
-                        </div>
-                    )}
-                </div>
             </div>
         </div>
     );

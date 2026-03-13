@@ -163,12 +163,11 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
                             href={item.href}
                             onClick={() => setIsMobileMenuOpen(false)}
                             className={cn(
-                                "relative flex flex-col items-center justify-center w-[var(--mobile-icon-width)] h-12 rounded-2xl transition-all duration-300",
+                                "relative flex flex-col items-center justify-center w-[calc(20vw-12px)] h-12 rounded-2xl transition-all duration-300",
                                 isActive
                                     ? "text-cyan-500 bg-cyan-500/10 dark:bg-cyan-500/20"
                                     : "text-foreground/40 hover:text-foreground/70 active:scale-95"
                             )}
-                            style={{ "--mobile-icon-width": "calc(20vw - 12px)" } as any}
                         >
                             <Icon className={cn("w-5.5 h-5.5 transition-transform duration-300", isActive ? "scale-110 drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]" : "")} />
                             {isActive && (
@@ -185,12 +184,11 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
                 <button
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                     className={cn(
-                        "relative flex flex-col items-center justify-center w-[var(--mobile-icon-width)] h-12 rounded-2xl transition-all duration-300",
+                        "relative flex flex-col items-center justify-center w-[calc(20vw-12px)] h-12 rounded-2xl transition-all duration-300",
                         isMobileMenuOpen
                             ? "text-cyan-500 bg-cyan-500/10 dark:bg-cyan-500/20"
                             : "text-foreground/40 hover:text-foreground/70 active:scale-95"
                     )}
-                    style={{ "--mobile-icon-width": "calc(20vw - 12px)" } as any}
                     aria-label="Menu"
                 >
                     <Menu className={cn("w-5.5 h-5.5 transition-transform duration-300", isMobileMenuOpen ? "scale-110 drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]" : "")} />

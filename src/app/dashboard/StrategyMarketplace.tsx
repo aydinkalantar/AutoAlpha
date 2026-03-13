@@ -121,7 +121,7 @@ export default function StrategyMarketplace({ strategies, subscriptions, userId,
                                                 onClick={() => setSelectedStrategy(strategy)}
                                                 className="w-full h-auto py-2.5 flex items-center justify-center bg-gradient-to-br from-cyan-400/10 to-purple-600/10 hover:from-cyan-400/20 hover:to-purple-600/20 text-foreground dark:text-white rounded-xl text-sm font-bold transition-all border border-purple-500/30"
                                             >
-                                                + Exchange
+                                                Manage Allocation
                                             </Button>
                                         </div>
                                     </div>
@@ -140,7 +140,7 @@ export default function StrategyMarketplace({ strategies, subscriptions, userId,
                                             onClick={() => setSelectedStrategy(strategy)}
                                             className="w-full h-auto py-4 bg-gradient-to-br from-cyan-400 to-purple-600 shadow-lg shadow-purple-500/20 text-white rounded-xl font-bold hover:opacity-90 transition-opacity"
                                         >
-                                            Subscribe
+                                            Manage Allocation
                                         </Button>
                                     </div>
                                 );
@@ -246,7 +246,7 @@ function SubscriptionCard({ sub, strategy, setEditingAllocation }: { sub: any, s
                 onClick={() => setEditingAllocation({ sub, strategy })}
                 className="w-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-lg font-bold transition-all"
             >
-                Manage Capital
+                Manage Allocation
             </Button>
         </div>
     );

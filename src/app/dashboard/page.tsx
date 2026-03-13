@@ -81,7 +81,7 @@ export default async function DashboardPage() {
     return (
         <div className="p-4 pt-10 pb-32 md:p-10 md:pt-12 md:pb-32 max-w-7xl mx-auto space-y-8 md:space-y-12">
             <WelcomeModal userId={user.id} hasCompletedOnboarding={user.hasCompletedOnboarding ?? false} />
-            <div className="flex flex-col md:flex-row justify-between md:items-start gap-6">
+            <div className="flex flex-col md:flex-row justify-between md:items-center gap-6">
                 <div>
                     <div className="flex flex-wrap items-center gap-3">
                         <h1 className="text-4xl font-bold text-foreground tracking-tight">Investor Dashboard</h1>
@@ -99,45 +99,23 @@ export default async function DashboardPage() {
                         </Link>
                     </div>
                     <p className="text-foreground/60 mt-2 text-lg">Manage your capital and monitor active positions.</p>
-                    <div className="mt-6">
-                        <TestnetToggle initialMode={user.isTestnetMode} userId={user.id} />
-                    </div>
                 </div>
 
-                <div className="flex flex-col gap-3 md:items-end w-full md:w-auto">
-                    <div className="w-full md:w-auto bg-white/50 dark:bg-white/5 backdrop-blur-2xl inline-flex flex-col py-4 px-8 rounded-[1.5rem] border border-black/5 dark:border-white/10 shadow-xl relative overflow-hidden">
-                        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/20 to-transparent" />
-                        <span className="text-sm font-bold tracking-wider uppercase mb-1 relative z-10 text-cyan-600 dark:text-cyan-400">
-                            {isPaperMode ? 'Paper Capital' : 'Connected Exchange Balance'}
-                        </span>
-                        <div className="flex items-baseline space-x-1 relative z-10">
-                            <span className="text-2xl font-bold text-foreground/50">$</span>
-                            <span className="text-4xl font-black text-foreground tracking-tight">{totalBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                        </div>
-                    </div>
-
-                    {/* Gas Tank Widget */}
-                    <div className="w-full md:w-auto bg-white/50 dark:bg-white/5 backdrop-blur-xl flex items-center justify-between gap-6 py-3 px-6 rounded-xl border border-black/5 dark:border-white/10 shadow-md">
-                        <div className="flex flex-col">
-                            <span className="text-xs font-bold tracking-wider uppercase text-foreground/50">Gas Tank Balance</span>
-                            <span className="text-base font-bold text-foreground">
-                                ${(user.usdtBalance + user.usdcBalance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USDC
-                            </span>
-                        </div>
-                        <Link href="/dashboard/deposit" className="text-xs font-bold tracking-wider uppercase text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 bg-cyan-500/10 hover:bg-cyan-500/20 px-3 py-1.5 rounded-lg transition-colors border border-cyan-500/20">
-                            Top Up
-                        </Link>
-                    </div>
+                <div className="mt-2 md:mt-0 flex w-full md:w-auto justify-end">
+                    <TestnetToggle initialMode={user.isTestnetMode} userId={user.id} />
                 </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                {/* Top Row: Analytics (KPIs + Donut) */}
+                {/* Top Row: Analytics (KPIs + Donut + Capital + Gas Tank) */}
                 <div className="col-span-1 lg:col-span-4">
                     <AnalyticsRow
                         positions={modePositions}
                         subscriptions={modeSubscriptions}
                         totalBalance={totalBalance}
+                        isPaperMode={isPaperMode}
+                        usdtBalance={user.usdtBalance}
+                        usdcBalance={user.usdcBalance}
                     />
                 </div>
 

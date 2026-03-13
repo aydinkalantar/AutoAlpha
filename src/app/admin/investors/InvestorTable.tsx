@@ -58,12 +58,12 @@ export default function InvestorTable({ users }: InvestorTableProps) {
                                         </td>
                                         <td className="px-8 py-6">
                                             {hasValidKeys ? (
-                                                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-50 text-green-600">
-                                                    Connected
+                                                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-50 text-green-600 gap-1.5 border border-green-200">
+                                                    🟢 API Connected
                                                 </span>
                                             ) : (
-                                                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-black/5 dark:bg-white/5 text-foreground/40">
-                                                    None
+                                                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-red-50 text-red-600 gap-1.5 border border-red-200">
+                                                    🔴 API Disconnected
                                                 </span>
                                             )}
                                         </td>

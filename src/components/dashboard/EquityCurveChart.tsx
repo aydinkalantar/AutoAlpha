@@ -65,8 +65,8 @@ export default function EquityCurveChart({ strategyId, expectedRoiPercentage }: 
                 <AreaChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 0 }}>
                     <defs>
                         <linearGradient id="colorEquity" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.3} />
-                            <stop offset="95%" stopColor="#a855f7" stopOpacity={0} />
+                            <stop offset="5%" stopColor={(expectedRoiPercentage || 15) >= 0 ? "#10b981" : "#f43f5e"} stopOpacity={0.3} />
+                            <stop offset="95%" stopColor={(expectedRoiPercentage || 15) >= 0 ? "#10b981" : "#f43f5e"} stopOpacity={0} />
                         </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
@@ -92,7 +92,7 @@ export default function EquityCurveChart({ strategyId, expectedRoiPercentage }: 
                             color: '#fff',
                             boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.5)'
                         }}
-                        itemStyle={{ color: '#00e7ff', fontWeight: 'bold' }}
+                        itemStyle={{ color: (expectedRoiPercentage || 15) >= 0 ? "#10b981" : "#f43f5e", fontWeight: 'bold' }}
                         formatter={(value: any) => {
                             if (typeof value === 'number') {
                                 return [`$${value.toFixed(2)}`, 'Simulated Equity']
@@ -103,7 +103,7 @@ export default function EquityCurveChart({ strategyId, expectedRoiPercentage }: 
                     <Area
                         type="monotone"
                         dataKey="equity"
-                        stroke="url(#colorEquity)"
+                        stroke={(expectedRoiPercentage || 15) >= 0 ? "#10b981" : "#f43f5e"}
                         strokeWidth={3}
                         fillOpacity={1}
                         fill="url(#colorEquity)"

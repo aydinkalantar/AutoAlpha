@@ -76,7 +76,7 @@ export default function StrategyProfileClient({
                     onClick={() => setIsSubscribeOpen(true)}
                     className="hidden lg:inline-flex items-center justify-center bg-gradient-to-br from-cyan-400 to-purple-600 text-white font-bold rounded-xl shadow-lg shadow-purple-500/30 hover:-translate-y-0.5 hover:shadow-purple-500/40 transition-all flex-shrink-0"
                 >
-                    Allocate Capital
+                    Manage Allocation
                 </Button>
             </div>
 
@@ -144,7 +144,7 @@ export default function StrategyProfileClient({
                                 onClick={() => setIsSubscribeOpen(true)}
                                 className="w-full bg-gradient-to-br from-cyan-400 to-purple-600 shadow-lg shadow-purple-500/30 text-white rounded-xl font-bold text-lg hover:-translate-y-0.5 transition-all hover:shadow-purple-500/40"
                             >
-                                Subscribe Now
+                                Manage Allocation
                             </Button>
                         )}
                     </div>
@@ -169,8 +169,8 @@ export default function StrategyProfileClient({
                                     <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                                         <defs>
                                             <linearGradient id="colorEquity" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-                                                <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                                                <stop offset="5%" stopColor={(strategy.expectedRoiPercentage || 1) >= 0 ? "#10b981" : "#f43f5e"} stopOpacity={0.3}/>
+                                                <stop offset="95%" stopColor={(strategy.expectedRoiPercentage || 1) >= 0 ? "#10b981" : "#f43f5e"} stopOpacity={0}/>
                                             </linearGradient>
                                         </defs>
                                         <XAxis 
@@ -191,10 +191,11 @@ export default function StrategyProfileClient({
                                         <RechartsTooltip 
                                             content={({ active, payload }) => {
                                                 if (active && payload && payload.length) {
+                                                    const isProfit = (strategy.expectedRoiPercentage || 1) >= 0;
                                                     return (
                                                         <div className="bg-white/90 dark:bg-[#1C1C1E]/90 backdrop-blur-md border border-black/10 dark:border-white/10 p-3 rounded-xl shadow-xl">
                                                             <p className="text-foreground/60 text-xs mb-1 font-bold">{payload[0].payload.date}</p>
-                                                            <p className="text-emerald-500 font-bold text-lg">${Number(payload[0].value).toFixed(2)}</p>
+                                                            <p className={`${isProfit ? 'text-emerald-500' : 'text-rose-500'} font-bold text-lg`}>${Number(payload[0].value).toFixed(2)}</p>
                                                         </div>
                                                     );
                                                 }
@@ -204,7 +205,7 @@ export default function StrategyProfileClient({
                                         <Area 
                                             type="monotone" 
                                             dataKey="equity" 
-                                            stroke="#10b981" 
+                                            stroke={(strategy.expectedRoiPercentage || 1) >= 0 ? "#10b981" : "#f43f5e"}
                                             strokeWidth={3}
                                             fillOpacity={1} 
                                             fill="url(#colorEquity)" 
@@ -367,7 +368,7 @@ function ProfileSubscriptionCard({ sub, strategy, setEditingAllocation }: { sub:
                     onClick={() => setEditingAllocation(sub)}
                     className="bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-xl font-bold transition-all"
                 >
-                    Edit Capital
+                    Manage Allocation
                 </Button>
             </div>
         </div>
