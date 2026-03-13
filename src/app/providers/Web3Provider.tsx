@@ -1,7 +1,7 @@
 "use client";
 
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi/react';
-import { WagmiProvider } from 'wagmi';
+import { WagmiProvider, cookieStorage, createStorage } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { mainnet, arbitrum, polygon, optimism, base, sepolia } from 'wagmi/chains';
 import { ReactNode } from 'react';
@@ -26,6 +26,9 @@ export const wagmiConfig = defaultWagmiConfig({
   projectId,
   metadata,
   ssr: true,
+  storage: createStorage({
+    storage: cookieStorage
+  }),
 });
 
 if (typeof window !== 'undefined') {

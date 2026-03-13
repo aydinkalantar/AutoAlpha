@@ -40,6 +40,9 @@ COPY --from=builder /app/package.json ./package.json
 # Automatically leverage output traces to reduce image size
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 
+# Explicitly copy the Prisma schema so the runtime container can execute migrations and use the query engine
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+
 # Explicitly copy complete node_modules to restore external worker dependencies (ccxt, bullmq)
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 
