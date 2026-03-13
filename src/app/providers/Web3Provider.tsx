@@ -28,11 +28,13 @@ export const wagmiConfig = defaultWagmiConfig({
   ssr: true,
 });
 
-createWeb3Modal({
-  wagmiConfig,
-  projectId,
-  enableAnalytics: false,
-});
+if (typeof window !== 'undefined') {
+  createWeb3Modal({
+    wagmiConfig,
+    projectId,
+    enableAnalytics: false,
+  });
+}
 
 export function Web3Provider({ children }: { children: ReactNode }) {
   return (
