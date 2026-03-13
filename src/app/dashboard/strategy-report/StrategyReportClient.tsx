@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import StrategyPerformance from '../StrategyPerformance';
 import { Activity } from 'lucide-react';
+import Link from 'next/link';
 
 export default function StrategyReportClient({ subscriptions, positions, totalBalance }: { subscriptions: any[], positions: any[], totalBalance: number }) {
     
@@ -22,6 +23,16 @@ export default function StrategyReportClient({ subscriptions, positions, totalBa
 
     const activeSubscription = subscriptions.find(s => s.strategyId === selectedStrategyId);
     
+    // Deduplicate Strategy Tabs (If user is subscribed 3x to same strategy, only show 1 tab)
+    const uniqueStrategies = useMemo(() => {
+        const seen = new Set();
+        return subscriptions.filter(sub => {
+            if (seen.has(sub.strategyId)) return false;
+            seen.add(sub.strategyId);
+            return true;
+        });
+    }, [subscriptions]);
+
     // Ensure we ONLY pass historical closed trades pertaining to the exact strategy the user clicked on
     const strategyPositions = useMemo(() => {
         return positions.filter(p => p.strategyId === selectedStrategyId);
@@ -31,7 +42,7 @@ export default function StrategyReportClient({ subscriptions, positions, totalBa
         <div className="space-y-8 animate-in fade-in duration-500">
             {/* Multi-Strategy Glassmorphism Tab Selector Component */}
             <div className="flex overflow-x-auto pb-2 gap-3 hide-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
-                {subscriptions.map((sub) => (
+                {uniqueStrategies.map((sub) => (
                     <button
                         key={sub.id}
                         onClick={() => setSelectedStrategyId(sub.strategyId)}
@@ -46,11 +57,21 @@ export default function StrategyReportClient({ subscriptions, positions, totalBa
                 ))}
             </div>
 
-            <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-black/5 dark:border-white/10 rounded-2xl p-6 relative overflow-hidden">
-                <div className="relative z-10">
+            <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-black/5 dark:border-white/10 rounded-2xl p-6 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="relative z-10 w-full md:max-w-xl">
                     <h2 className="text-2xl font-black text-foreground tracking-tight">{activeSubscription?.strategy?.name || "Strategy"} Report</h2>
-                    <p className="text-foreground/60 text-sm mt-1 max-w-2xl">{activeSubscription?.strategy?.description || "Performance metrics, drawdown mappings, and historical trade logs strictly isolated to this algorithmic vault."}</p>
+                    <p className="text-foreground/60 text-sm mt-1">{activeSubscription?.strategy?.description || "Performance metrics, drawdown mappings, and historical trade logs strictly isolated to this algorithmic vault."}</p>
                 </div>
+                {activeSubscription && (
+                    <div className="relative z-10 flex items-center gap-3 w-full md:w-auto shrink-0">
+                        <Link 
+                            href={`/dashboard/market/${activeSubscription.strategyId}`} 
+                            className="w-full md:w-auto text-center px-6 py-2.5 bg-foreground text-background text-sm font-bold border border-black/5 dark:border-white/10 rounded-xl transition-all shadow-lg hover:scale-105 active:scale-95"
+                        >
+                            Manage Allocation
+                        </Link>
+                    </div>
+                )}
                 <div className="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-white/20 dark:from-white/5 to-transparent skew-x-12 translate-x-10 pointer-events-none" />
             </div>
 

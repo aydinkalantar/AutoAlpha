@@ -259,8 +259,8 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                                         <AreaChart data={equityData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                                             <defs>
                                                 <linearGradient id="colorEquity" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="5%" stopColor="#2563eb" stopOpacity={0.3} />
-                                                    <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
+                                                    <stop offset="5%" stopColor={stats.netPnl >= 0 ? "#10b981" : "#f43f5e"} stopOpacity={0.3} />
+                                                    <stop offset="95%" stopColor={stats.netPnl >= 0 ? "#10b981" : "#f43f5e"} stopOpacity={0} />
                                                 </linearGradient>
                                             </defs>
                                             <XAxis 
@@ -269,6 +269,7 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                                                 tickLine={false} 
                                                 tick={{ fill: '#6b7280', fontSize: 12 }} 
                                                 dy={10}
+                                                minTickGap={30}
                                             />
                                             <YAxis 
                                                 axisLine={false} 
@@ -278,14 +279,14 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                                                 domain={['dataMin - 100', 'dataMax + 100']}
                                             />
                                             <RechartsTooltip
-                                    formatter={(value: any) => [`$${Number(value).toLocaleString()}`, 'Equity']}
-                                    labelFormatter={(label: any) => `Date: ${label}`}
-                                    contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff' }}
-                                />
+                                                formatter={(value: any) => [`$${Number(value).toLocaleString()}`, 'Equity']}
+                                                labelFormatter={(label: any) => `Date: ${label}`}
+                                                contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff' }}
+                                            />
                                             <Area 
                                                 type="monotone" 
                                                 dataKey="equity" 
-                                                stroke="#2563eb" 
+                                                stroke={stats.netPnl >= 0 ? "#10b981" : "#f43f5e"} 
                                                 strokeWidth={3}
                                                 fillOpacity={1} 
                                                 fill="url(#colorEquity)" 
