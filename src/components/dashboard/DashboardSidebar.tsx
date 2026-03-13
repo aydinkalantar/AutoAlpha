@@ -11,6 +11,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
 import { useRealtime } from '@/components/dashboard/RealtimeProvider';
+import { Button } from '@/components/ui/button';
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -139,7 +140,7 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                     <div className="w-full flex flex-col gap-2 mb-2">
                         <Link href="/dashboard/deposit" className={cn("flex items-center justify-center gap-2 py-3 text-sm font-bold bg-gradient-to-br from-cyan-400 to-purple-600 text-white rounded-xl shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:opacity-90 transition-all w-full", isCollapsed ? "px-0" : "px-3")}>
                             <Wallet className="w-5 h-5 flex-shrink-0" />
-                            {!isCollapsed && <span className="whitespace-nowrap">Deposit</span>}
+                            {!isCollapsed && <span className="whitespace-nowrap">Fund Gas Tank</span>}
                         </Link>
                     </div>
 
@@ -150,19 +151,19 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                             <ChevronLeft className="w-5 h-5 flex-shrink-0" />
                             {!isCollapsed && <span className="whitespace-nowrap">Home</span>}
                         </Link>
-                        <button onClick={() => signOut({ callbackUrl: '/login' })} className={cn("flex items-center gap-3 py-3 text-sm font-bold text-red-500/80 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
+                        <Button variant="ghost" onClick={() => signOut({ callbackUrl: '/login' })} className={cn("flex items-center justify-start gap-3 py-6 h-auto text-sm font-bold text-red-500/80 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
                             <LogOut className="w-5 h-5 flex-shrink-0" />
-                            {!isCollapsed && <span className="whitespace-nowrap">Log Out</span>}
-                        </button>
-                        <button onClick={toggleSound} className={cn("flex items-center gap-3 py-3 text-sm font-bold text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
+                            {!isCollapsed && <span className="whitespace-nowrap font-bold">Log Out</span>}
+                        </Button>
+                        <Button variant="ghost" onClick={toggleSound} className={cn("flex items-center justify-start gap-3 py-6 h-auto text-sm font-bold text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
                             {isSoundEnabled ? <Volume2 className="w-5 h-5 flex-shrink-0" /> : <VolumeX className="w-5 h-5 flex-shrink-0 opacity-50" />}
-                            {!isCollapsed && <span className="whitespace-nowrap">{isSoundEnabled ? "Sound On" : "Sound Off"}</span>}
-                        </button>
+                            {!isCollapsed && <span className="whitespace-nowrap font-bold">{isSoundEnabled ? "Sound On" : "Sound Off"}</span>}
+                        </Button>
                         {mounted && (
-                            <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className={cn("flex items-center gap-3 py-3 text-sm font-bold text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
+                            <Button variant="ghost" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className={cn("flex items-center justify-start gap-3 py-6 h-auto text-sm font-bold text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
                                 {theme === 'dark' ? <Sun className="w-5 h-5 flex-shrink-0 text-amber-400" /> : <Moon className="w-5 h-5 flex-shrink-0 text-blue-500" />}
-                                {!isCollapsed && <span className="whitespace-nowrap">{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>}
-                            </button>
+                                {!isCollapsed && <span className="whitespace-nowrap font-bold">{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>}
+                            </Button>
                         )}
                     </div>
                     
@@ -353,18 +354,19 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                                                     {theme === 'dark' ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-blue-500" />}
                                                 </div>
                                                 <span className="text-xs font-bold">{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
-                                            </button>
+                                            </Button>
                                         )}
                                     </div>
 
-                                    <button 
-                                        onClick={() => signOut({ callbackUrl: '/login' })} 
-                                        className="w-full flex items-center justify-center gap-3 py-4 text-sm font-bold text-red-500 bg-red-50 dark:bg-red-500/10 active:bg-red-100 dark:active:bg-red-500/20 rounded-2xl transition-colors mt-2"
-                                    >
-                                        <LogOut className="w-5 h-5" />
-                                        Log Out
-                                    </button>
-                                </div>
+                                        <Button 
+                                            variant="ghost"
+                                            onClick={() => signOut({ callbackUrl: '/login' })} 
+                                            className="w-full flex items-center h-auto justify-center gap-3 py-4 text-sm font-bold text-red-500 bg-red-50 dark:bg-red-500/10 active:bg-red-100 dark:active:bg-red-500/20 rounded-2xl transition-colors mt-2"
+                                        >
+                                            <LogOut className="w-5 h-5" />
+                                            Log Out
+                                        </Button>
+                                    </div>
 
                                 <div className="flex flex-col items-center gap-2 pb-4 pt-4 border-t border-black/5 dark:border-white/10">
                                     <div className="flex justify-center gap-4 text-[11px] font-bold tracking-widest uppercase text-foreground/40">

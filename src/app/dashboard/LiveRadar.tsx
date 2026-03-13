@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import type { UTCTimestamp } from 'lightweight-charts';
 import { Activity, XCircle, TrendingUp, TrendingDown, RefreshCw, Search } from "lucide-react";
 import Link from 'next/link';
+import { Button } from "@/components/ui/button";
 
 type Position = {
     id: string;
@@ -211,14 +212,16 @@ export default function LiveRadar({ openPositions: initialPositions, isPaperMode
                                             )}
                                         </td>
                                         <td className="py-4 px-4 text-right">
-                                            <button
+                                            <Button
+                                                variant="destructive"
+                                                size="sm"
                                                 disabled={loadingCloseId === pos.id}
                                                 onClick={() => handleForceClose(pos.id)}
-                                                className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-rose-500 bg-rose-500/10 hover:bg-rose-500/20 rounded-md transition-colors disabled:opacity-50"
+                                                className="inline-flex items-center gap-1 bg-rose-500/10 text-rose-500 hover:bg-rose-500/20"
                                             >
                                                 {loadingCloseId === pos.id ? <RefreshCw className="w-3 h-3 animate-spin" /> : <XCircle className="w-3 h-3" />}
                                                 Close
-                                            </button>
+                                            </Button>
                                         </td>
                                     </tr>
                                 );
@@ -227,7 +230,7 @@ export default function LiveRadar({ openPositions: initialPositions, isPaperMode
                     </table>
 
                     {/* Mobile Card View */}
-                    <div className="md:hidden flex flex-col gap-4 mt-2">
+                    <div className="md:hidden flex flex-col gap-4 mt-2 pb-32">
                         {openPositions.map((pos) => {
                             const livePrice = prices[pos.symbol];
                             const isLong = pos.side === "LONG" || pos.side === "BUY";
@@ -285,14 +288,16 @@ export default function LiveRadar({ openPositions: initialPositions, isPaperMode
                                         <div className={`text-sm font-bold opacity-80 ${pnlColor}`}>
                                             {pnlPerc !== null ? `${pnlPerc > 0 ? '+' : ''}${pnlPerc.toFixed(2)}% ROI` : ''}
                                         </div>
-                                        <button
+                                        <Button
+                                            variant="destructive"
+                                            size="sm"
                                             disabled={loadingCloseId === pos.id}
                                             onClick={() => handleForceClose(pos.id)}
-                                            className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-rose-500 bg-rose-500/10 hover:bg-rose-500/20 active:bg-rose-500/30 rounded-lg transition-colors disabled:opacity-50"
+                                            className="inline-flex items-center gap-1.5 bg-rose-500/10 text-rose-500 hover:bg-rose-500/20"
                                         >
                                             {loadingCloseId === pos.id ? <RefreshCw className="w-4 h-4 animate-spin" /> : <XCircle className="w-4 h-4" />}
                                             Close
-                                        </button>
+                                        </Button>
                                     </div>
                                 </div>
                             );

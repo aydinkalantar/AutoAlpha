@@ -3,6 +3,7 @@
 import React, { useMemo } from 'react';
 import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Target, TrendingUp, ShieldAlert, PieChart as PieChartIcon, Info } from 'lucide-react';
+import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface AnalyticsRowProps {
@@ -148,9 +149,9 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
                             <h4 className="text-sm font-medium text-foreground/50">Profit Factor</h4>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <button className="text-foreground/30 hover:text-cyan-500 cursor-help transition-colors focus:outline-none">
+                                    <Button variant="ghost" size="icon" className="h-4 w-4 text-foreground/30 hover:bg-transparent hover:text-cyan-500 cursor-help p-0">
                                         <Info className="w-4 h-4" />
-                                    </button>
+                                    </Button>
                                 </TooltipTrigger>
                                 <TooltipContent className="max-w-[250px] bg-white dark:bg-[#1C1C1E] border border-black/10 dark:border-white/10 text-foreground p-3 rounded-xl shadow-2xl backdrop-blur-xl font-medium leading-relaxed">
                                     <p>Gross Profit divided by Gross Loss. A Profit Factor greater than 1.0 indicates a profitable system. Above 1.5 is generally considered mathematically excellent.</p>
