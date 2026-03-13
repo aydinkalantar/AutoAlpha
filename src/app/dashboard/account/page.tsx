@@ -72,8 +72,8 @@ export default async function AccountHubPage() {
 
     return (
         <div className="p-8 pt-[104px] md:p-12 max-w-7xl mx-auto space-y-12">
-            <div className="flex flex-col md:flex-row justify-between md:items-end gap-6 relative z-10 pr-16 md:pr-0">
-                <div className="space-y-6">
+            <div className="flex flex-col md:flex-row justify-between md:items-end gap-6 relative z-10">
+                <div className="space-y-6 pr-16 md:pr-0">
                     <div>
                         <h1 className="text-4xl font-bold text-foreground tracking-tight">Account Hub</h1>
                         <p className="text-foreground/60 mt-2 text-lg">Manage your personal profile and security configurations.</p>
