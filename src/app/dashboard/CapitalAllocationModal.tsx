@@ -10,6 +10,7 @@ interface CapitalAllocationModalProps {
     totalMasterBalance: number;
     currentAllocation: number;
     onSave: (amount: number) => Promise<void>;
+    onRemove?: () => Promise<void>;
 }
 
 export default function CapitalAllocationModal({
@@ -18,10 +19,13 @@ export default function CapitalAllocationModal({
     strategy,
     totalMasterBalance,
     currentAllocation,
-    onSave
+    onSave,
+    onRemove
 }: CapitalAllocationModalProps) {
     const [allocationAmount, setAllocationAmount] = useState(currentAllocation);
     const [isSaving, setIsSaving] = useState(false);
+    const [isRemoving, setIsRemoving] = useState(false);
+    const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
 
     // Sync state when opened
     useEffect(() => {
@@ -59,6 +63,19 @@ export default function CapitalAllocationModal({
         } finally {
             setIsSaving(false);
             onClose(); // Optional: Usually you want to close after saving
+        }
+    };
+
+    const handleRemove = async () => {
+        if (!onRemove) return;
+        setIsRemoving(true);
+        try {
+            await onRemove();
+        } catch (error) {
+            console.error("Failed to remove subscription", error);
+        } finally {
+            setIsRemoving(false);
+            onClose();
         }
     };
 
@@ -152,28 +169,64 @@ export default function CapitalAllocationModal({
                 </div>
 
                 {/* Footer */}
-                <div className="px-6 py-5 border-t border-black/5 dark:border-white/10 bg-gray-50/80 dark:bg-white/5 flex items-center justify-end gap-3">
-                    <button
-                        onClick={onClose}
-                        disabled={isSaving}
-                        className="px-5 py-2.5 text-sm font-bold tracking-wide text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/10 rounded-xl transition-all"
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        onClick={handleSave}
-                        disabled={!hasChanged || isSaving}
-                        className="flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 disabled:from-gray-300 disabled:to-gray-200 dark:disabled:from-white/10 dark:disabled:to-white/5 disabled:text-foreground/40 text-white text-md font-bold tracking-wide rounded-xl shadow-lg shadow-cyan-500/20 disabled:shadow-none transition-all w-full sm:w-auto"
-                    >
-                        {isSaving ? (
-                            <>
-                                <Loader2 className="w-4 h-4 animate-spin" />
-                                Saving...
-                            </>
-                        ) : (
-                            'Confirm Allocation'
-                        )}
-                    </button>
+                <div className="px-6 py-5 border-t border-black/5 dark:border-white/10 bg-gray-50/80 dark:bg-white/5 flex flex-col sm:flex-row items-center justify-between gap-3">
+                    {onRemove ? (
+                        <div className="w-full sm:w-auto">
+                            {!showRemoveConfirm ? (
+                                <button
+                                    onClick={() => setShowRemoveConfirm(true)}
+                                    disabled={isSaving || isRemoving}
+                                    className="flex items-center justify-center gap-2 px-4 py-2.5 text-rose-500 hover:bg-rose-500/10 hover:text-rose-600 rounded-xl font-bold transition-all w-full sm:w-auto"
+                                    title="Disconnect API completely"
+                                >
+                                    Disconnect Strategy
+                                </button>
+                            ) : (
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={handleRemove}
+                                        disabled={isRemoving}
+                                        className="flex items-center justify-center gap-2 px-4 py-2.5 bg-rose-500 text-white hover:bg-rose-600 rounded-xl font-bold shadow-lg shadow-rose-500/20 transition-all w-full sm:w-auto"
+                                    >
+                                        {isRemoving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Yes, Disconnect'}
+                                    </button>
+                                    <button
+                                        onClick={() => setShowRemoveConfirm(false)}
+                                        disabled={isRemoving}
+                                        className="px-3 py-2.5 text-sm font-bold text-foreground/50 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/10 rounded-xl transition-all"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div />
+                    )}
+
+                    <div className="flex items-center justify-end gap-3 w-full sm:w-auto">
+                        <button
+                            onClick={onClose}
+                            disabled={isSaving || isRemoving}
+                            className="px-5 py-2.5 text-sm font-bold tracking-wide text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/10 rounded-xl transition-all w-full sm:w-auto"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={handleSave}
+                            disabled={!hasChanged || isSaving || isRemoving || showRemoveConfirm}
+                            className="flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 disabled:from-gray-300 disabled:to-gray-200 dark:disabled:from-white/10 dark:disabled:to-white/5 disabled:text-foreground/40 text-white text-md font-bold tracking-wide rounded-xl shadow-lg shadow-cyan-500/20 disabled:shadow-none transition-all w-full sm:w-auto"
+                        >
+                            {isSaving ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                    Saving...
+                                </>
+                            ) : (
+                                'Confirm Allocation'
+                            )}
+                        </button>
+                    </div>
                 </div>
 
             </div>

@@ -301,6 +301,15 @@ export default function StrategyProfileClient({
                         setEditingAllocation(null);
                         window.location.reload();
                     }}
+                    onRemove={async () => {
+                        const res = await fetch(`/api/user/subscriptions/${editingAllocation.id}`, { method: 'DELETE' });
+                        if (res.ok) {
+                            setEditingAllocation(null);
+                            window.location.reload();
+                        } else {
+                            throw new Error("Failed to delete subscription");
+                        }
+                    }}
                 />
             )}
         </div>
