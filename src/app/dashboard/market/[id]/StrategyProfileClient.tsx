@@ -113,8 +113,9 @@ export default function StrategyProfileClient({
                                     <span>Allocated: {subscription.allocatedCapital} {strategy.settlementCurrency}</span>
                                 </div>
                                 <div className="grid grid-cols-2 gap-3">
-                                    <label className="relative inline-flex items-center cursor-pointer justify-center py-3 bg-black/5 dark:bg-white/5 rounded-xl border border-black/5 dark:border-white/10 hover:bg-black/10 dark:hover:bg-white/10 transition-colors">
+                                    <label htmlFor={`profile-toggle-${subscription.id}`} className="relative inline-flex items-center cursor-pointer justify-center py-3 bg-black/5 dark:bg-white/5 rounded-xl border border-black/5 dark:border-white/10 hover:bg-black/10 dark:hover:bg-white/10 transition-colors">
                                         <input
+                                            id={`profile-toggle-${subscription.id}`}
                                             type="checkbox"
                                             className="sr-only peer"
                                             checked={subscription.isActive}
