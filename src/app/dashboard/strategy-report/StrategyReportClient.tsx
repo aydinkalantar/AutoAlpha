@@ -19,40 +19,35 @@ export default function StrategyReportClient({ subscriptions, positions, totalBa
     }
 
     // Default to initializing the first actively subscribed algorithmic vault
-    const [selectedStrategyId, setSelectedStrategyId] = useState(subscriptions[0].strategyId);
+    const [selectedSubscriptionId, setSelectedSubscriptionId] = useState(subscriptions[0].id);
 
-    const activeSubscription = subscriptions.find(s => s.strategyId === selectedStrategyId);
+    const activeSubscription = subscriptions.find(s => s.id === selectedSubscriptionId);
     
-    // Deduplicate Strategy Tabs (If user is subscribed 3x to same strategy, only show 1 tab)
-    const uniqueStrategies = useMemo(() => {
-        const seen = new Set();
-        return subscriptions.filter(sub => {
-            if (seen.has(sub.strategyId)) return false;
-            seen.add(sub.strategyId);
-            return true;
-        });
-    }, [subscriptions]);
-
-    // Ensure we ONLY pass historical closed trades pertaining to the exact strategy the user clicked on
+    // Ensure we ONLY pass historical closed trades pertaining to the exact API connection the user clicked on
     const strategyPositions = useMemo(() => {
-        return positions.filter(p => p.strategyId === selectedStrategyId);
-    }, [positions, selectedStrategyId]);
+        // Find the subscription object to know which strategy AND exchange to filter by
+        const sub = subscriptions.find(s => s.id === selectedSubscriptionId);
+        if (!sub) return [];
+        // Filter trades where both strategyId AND exchange match (or fallback to matching strategyId if exchange missing from older fills)
+        return positions.filter(p => p.strategyId === sub.strategyId && (!p.exchange || p.exchange === sub.exchange));
+    }, [positions, selectedSubscriptionId, subscriptions]);
 
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
             {/* Multi-Strategy Glassmorphism Tab Selector Component */}
             <div className="flex overflow-x-auto pb-2 gap-3 hide-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
-                {uniqueStrategies.map((sub) => (
+                {subscriptions.map((sub) => (
                     <button
                         key={sub.id}
-                        onClick={() => setSelectedStrategyId(sub.strategyId)}
+                        onClick={() => setSelectedSubscriptionId(sub.id)}
                         className={`shrink-0 px-6 py-3 rounded-xl font-bold transition-all text-sm border flex items-center gap-2 ${
-                            selectedStrategyId === sub.strategyId
+                            selectedSubscriptionId === sub.id
                                 ? "bg-foreground text-background shadow-lg dark:shadow-white/5"
                                 : "bg-white/50 dark:bg-white/5 backdrop-blur-md text-foreground/70 border-black/5 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5"
                         }`}
                     >
-                        {sub.strategy?.name || "Algorithm Engine"}
+                        <span className={`w-2 h-2 rounded-full ${sub.isActive ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`}></span>
+                        {sub.exchange || sub.strategy?.targetExchange}
                     </button>
                 ))}
             </div>
