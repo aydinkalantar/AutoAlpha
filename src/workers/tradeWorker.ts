@@ -238,11 +238,14 @@ const worker = new Worker('qa-test-queue', async (job: Job) => {
         let privateKey = undefined;
 
         // 2. Decrypt keys
+        const secretKey = process.env.MASTER_ENCRYPTION_KEY;
+        if (!secretKey) throw new Error("MASTER_ENCRYPTION_KEY is missing from environment variables.");
+
         if (encryptedApiKey && encryptedSecret) {
-            apiKey = decryptKey(encryptedApiKey, iv);
-            apiSecret = decryptKey(encryptedSecret, iv);
+            apiKey = decryptKey(encryptedApiKey, secretKey);
+            apiSecret = decryptKey(encryptedSecret, secretKey);
             if (encryptedPrivateKey) {
-                privateKey = decryptKey(encryptedPrivateKey, iv);
+                privateKey = decryptKey(encryptedPrivateKey, secretKey);
             }
         } else {
             throw new Error('Exchange key missing encrypted payload');
@@ -318,7 +321,8 @@ const worker = new Worker('qa-test-queue', async (job: Job) => {
 
                 // 3. Fee Routing (If Profitable)
                 if (netPnl > 0) {
-                    const platformFee = netPnl * (performanceFeePercentage / 100);
+                    const platformFeeRaw = netPnl * (performanceFeePercentage / 100);
+                    const platformFee = Math.round(platformFeeRaw * 100) / 100; // Fix floating point precision
                     let user;
 
                     if (settlementCurrency === 'USDT') {
@@ -381,6 +385,17 @@ const worker = new Worker('qa-test-queue', async (job: Job) => {
 
         } else {
             // Logic for Entry (Existing code)
+            
+            // Gas Tank Verification Shield
+            const userRecord = await prisma.user.findUnique({ 
+                where: { id: userId }, 
+                select: { usdtBalance: true, usdcBalance: true }
+            });
+            if (!userRecord || (userRecord.usdtBalance <= 0 && userRecord.usdcBalance <= 0)) {
+                 console.warn(`[Shield] Bypassing entry trade for User ${userId}. Negative or zero Gas Tank.`);
+                 return; // Drop the job silently 
+            }
+
             const _leverage = leverage || 1;
             const totalNotionalExposure = virtualBalance * _leverage;
 

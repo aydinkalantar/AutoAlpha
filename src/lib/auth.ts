@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
+import { checkRateLimit } from "@/lib/rateLimit";
 
 
 
@@ -20,9 +21,15 @@ export const authOptions: AuthOptions = {
                 username: { label: "Email", type: "text", placeholder: "info@autoalpha.trade" },
                 password: { label: "Password", type: "password" }
             },
-            async authorize(credentials) {
+            async authorize(credentials, req) {
                 if (!credentials?.username || !credentials?.password) {
                     return null;
+                }
+
+                // 1) Rate Limit by Email to prevent brute force (Max 5 attempts per 60 seconds)
+                const isAllowed = await checkRateLimit(credentials.username, 'login_attempt', 5, 60);
+                if (!isAllowed) {
+                    throw new Error("Too many login attempts. Please try again later.");
                 }
 
                 // Temporary insecure fallback for a dummy admin user if their password isn't hashed yet

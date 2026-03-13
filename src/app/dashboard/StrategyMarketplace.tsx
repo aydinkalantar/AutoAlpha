@@ -7,6 +7,7 @@ import { updateSubscriptionCapital } from './subscriptionActions';
 import { Strategy, MarketType } from "@prisma/client";
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useRouter } from "next/navigation";
 
 interface StrategyMarketplaceProps {
     strategies: Strategy[];
@@ -98,40 +99,12 @@ export default function StrategyMarketplace({ strategies, subscriptions, userId,
                                     <div className="w-full relative z-10 flex flex-col gap-3 mt-2">
                                         <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1 custom-scrollbar">
                                             {activeSubs.map(sub => (
-                                                <div key={sub.id} className="py-3 border border-black/5 dark:border-white/10 rounded-xl px-4 flex flex-col gap-3 shadow-sm bg-white/40 dark:bg-white/5 backdrop-blur-md">
-                                                    <div className="flex items-center justify-between">
-                                                        <span className="text-sm font-bold tracking-tight flex items-center gap-2">
-                                                            <span className={`w-2 h-2 rounded-full ${sub.isActive ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)]'}`}></span>
-                                                            {sub.exchange || strategy.targetExchange}
-                                                        </span>
-                                                        <label htmlFor={`toggle-strat-${strategy.id}-sub-${sub.id}`} className="relative inline-flex items-center cursor-pointer">
-                                                            <input
-                                                                id={`toggle-strat-${strategy.id}-sub-${sub.id}`}
-                                                                type="checkbox"
-                                                                className="sr-only peer"
-                                                                title="Toggle Strategy Subscription"
-                                                                checked={sub.isActive}
-                                                                onChange={async () => {
-                                                                    const res = await fetch(`/api/user/subscriptions/${sub.id}/toggle`, { method: "POST" });
-                                                                    if (res.ok) window.location.reload();
-                                                                }}
-                                                            />
-                                                            <div className="w-9 h-5 bg-rose-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
-                                                        </label>
-                                                    </div>
-                                                    <div className="flex items-center justify-between">
-                                                        <span className="text-xs font-semibold text-foreground/60">Allocated</span>
-                                                        <span className="text-xs font-bold text-foreground">
-                                                            ${sub.allocatedCapital.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                        </span>
-                                                    </div>
-                                                    <button
-                                                        onClick={() => setEditingAllocation({ sub, strategy })}
-                                                        className="w-full py-2 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-lg text-xs font-bold transition-all"
-                                                    >
-                                                        Manage Capital
-                                                    </button>
-                                                </div>
+                                                <SubscriptionCard 
+                                                    key={sub.id} 
+                                                    sub={sub} 
+                                                    strategy={strategy} 
+                                                    setEditingAllocation={setEditingAllocation} 
+                                                />
                                             ))}
                                         </div>
                                         <div className="grid grid-cols-2 gap-3 mt-1 pt-2 border-t border-black/5 dark:border-white/5">
@@ -208,6 +181,66 @@ export default function StrategyMarketplace({ strategies, subscriptions, userId,
                     }}
                 />
             )}
+        </div>
+}
+
+function SubscriptionCard({ sub, strategy, setEditingAllocation }: { sub: any, strategy: Strategy, setEditingAllocation: any }) {
+    const [isActive, setIsActive] = useState(sub.isActive);
+    const [isToggling, setIsToggling] = useState(false);
+    const router = useRouter();
+
+    const handleToggle = async () => {
+        if (isToggling) return;
+        setIsToggling(true);
+        const nextState = !isActive;
+        setIsActive(nextState);
+
+        try {
+            const res = await fetch(`/api/user/subscriptions/${sub.id}/toggle`, { method: "POST" });
+            if (res.ok) {
+                router.refresh();
+            } else {
+                setIsActive(!nextState); // Rollback optimistic update
+            }
+        } catch (e) {
+            setIsActive(!nextState);
+        } finally {
+            setIsToggling(false);
+        }
+    };
+
+    return (
+        <div className="py-3 border border-black/5 dark:border-white/10 rounded-xl px-4 flex flex-col gap-3 shadow-sm bg-white/40 dark:bg-white/5 backdrop-blur-md">
+            <div className="flex items-center justify-between">
+                <span className="text-sm font-bold tracking-tight flex items-center gap-2">
+                    <span className={`w-2 h-2 rounded-full ${isActive ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)]'}`}></span>
+                    {sub.exchange || strategy.targetExchange}
+                </span>
+                <label htmlFor={`toggle-strat-${strategy.id}-sub-${sub.id}`} className={`relative inline-flex items-center cursor-pointer ${isToggling ? 'opacity-50 pointer-events-none' : ''}`}>
+                    <input
+                        id={`toggle-strat-${strategy.id}-sub-${sub.id}`}
+                        type="checkbox"
+                        className="sr-only peer"
+                        title="Toggle Strategy Subscription"
+                        checked={isActive}
+                        onChange={handleToggle}
+                        disabled={isToggling}
+                    />
+                    <div className="w-9 h-5 bg-rose-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+                </label>
+            </div>
+            <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-foreground/60">Allocated</span>
+                <span className="text-xs font-bold text-foreground">
+                    ${sub.allocatedCapital.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </span>
+            </div>
+            <button
+                onClick={() => setEditingAllocation({ sub, strategy })}
+                className="w-full py-2 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-lg text-xs font-bold transition-all"
+            >
+                Manage Capital
+            </button>
         </div>
     );
 }

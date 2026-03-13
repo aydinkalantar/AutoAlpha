@@ -105,20 +105,6 @@ export default function ApiKeyForm({ userId, existingKeys }: ApiKeyFormProps) {
                 </div>
 
                 <div className="md:col-span-4 mt-6">
-                    <div className="flex items-center gap-3 mb-6 p-4 rounded-xl bg-blue-500/10 border border-blue-500/20">
-                        <input
-                            type="checkbox"
-                            name="isTestnet"
-                            id="isTestnetCheckbox"
-                            className="w-5 h-5 rounded border-black/10 dark:border-white/10 text-blue-600 focus:ring-blue-500/50"
-                        />
-                        <div className="flex flex-col">
-                            <label htmlFor="isTestnetCheckbox" className="text-sm font-bold text-blue-700 dark:text-blue-400 cursor-pointer">
-                                Connect to Testnet (Simulated Trading)
-                            </label>
-                            <span className="text-xs text-blue-600/70 dark:text-blue-400/70 mt-0.5">Check this if these API keys belong to a testnet/sandbox exchange account.</span>
-                        </div>
-                    </div>
 
                     <div className="bg-orange-500/10 border border-orange-500/20 rounded-[1rem] p-5 mb-6">
                         <h4 className="flex items-center gap-2 text-sm font-bold text-orange-600 dark:text-orange-400 mb-2">

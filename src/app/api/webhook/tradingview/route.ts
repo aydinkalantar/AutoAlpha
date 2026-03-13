@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import Redis from 'ioredis';
 import { sendTradeNotificationEmail } from "@/lib/emails";
+import { checkRateLimit } from "@/lib/rateLimit";
 
 
 
@@ -33,11 +34,23 @@ export async function POST(req: Request) {
 
         let { webhookToken, symbol, side, action, order_id, price } = payload;
 
+        const expectedToken = process.env.TRADINGVIEW_SECRET;
+        const authHeader = req.headers.get('authorization');
+        if (expectedToken && authHeader !== `Bearer ${expectedToken}`) {
+            return new Response('Unauthorized Signal Source', { status: 401 });
+        }
+
         // Support TradingView's {{strategy.order.action}} dynamic variable
         let rawAction = side || action;
 
         if (!webhookToken || !symbol || !rawAction) {
             return new Response('Missing required fields', { status: 400 });
+        }
+
+        // 2) Rate Limit per Strategy (Max 20 signals per 60 seconds)
+        const isAllowed = await checkRateLimit(webhookToken, 'webhook_signal', 20, 60);
+        if (!isAllowed) {
+            return new Response('Rate Limit Exceeded for this Strategy', { status: 429 });
         }
 
         // --- PHASE 1 QA AUDIT FIX: 2-Second Duplicate Payload Prevention ---

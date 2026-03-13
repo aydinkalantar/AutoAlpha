@@ -6,6 +6,7 @@ import SubscribeModal from "../../SubscribeModal";
 import CapitalAllocationModal from "../../CapitalAllocationModal";
 import { updateSubscriptionCapital } from "../../subscriptionActions";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
     Area,
     AreaChart,
@@ -17,7 +18,7 @@ import {
 
 interface Props {
     strategy: any; // Strategy with JSON fields
-    subscription: any | null;
+    subscriptions: any[];
     userId: string;
     usdtBalance: number;
     usdcBalance: number;
@@ -27,7 +28,7 @@ interface Props {
 
 export default function StrategyProfileClient({
     strategy,
-    subscription,
+    subscriptions = [],
     userId,
     usdtBalance,
     usdcBalance,
@@ -35,7 +36,7 @@ export default function StrategyProfileClient({
     connectedExchanges
 }: Props) {
     const [isSubscribeOpen, setIsSubscribeOpen] = useState(false);
-    const [isCapitalOpen, setIsCapitalOpen] = useState(false);
+    const [editingAllocation, setEditingAllocation] = useState<any | null>(null);
 
     // Format Backtest Data for Chart
     const rawBacktestData = strategy.backtestData || [];
@@ -105,36 +106,27 @@ export default function StrategyProfileClient({
                         </div>
                     </div>
 
-                    <div className="pt-6 border-t border-black/5 dark:border-white/10">
-                        {subscription ? (
-                            <div className="space-y-3">
-                                <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-600 dark:text-emerald-400 font-bold flex items-center justify-between">
-                                    <span>Subscribed</span>
-                                    <span>Allocated: {subscription.allocatedCapital} {strategy.settlementCurrency}</span>
-                                </div>
-                                <div className="grid grid-cols-2 gap-3">
-                                    <label htmlFor={`profile-toggle-${subscription.id}`} className="relative inline-flex items-center cursor-pointer justify-center py-3 bg-black/5 dark:bg-white/5 rounded-xl border border-black/5 dark:border-white/10 hover:bg-black/10 dark:hover:bg-white/10 transition-colors">
-                                        <input
-                                            id={`profile-toggle-${subscription.id}`}
-                                            type="checkbox"
-                                            className="sr-only peer"
-                                            checked={subscription.isActive}
-                                            onChange={async () => {
-                                                const res = await fetch(`/api/user/subscriptions/${subscription.id}/toggle`, { method: "POST" });
-                                                if (res.ok) window.location.reload();
-                                            }}
+                    <div className="pt-6 border-t border-black/5 dark:border-white/10 space-y-4">
+                        {subscriptions.length > 0 ? (
+                            <>
+                                <h3 className="text-sm font-bold text-foreground/60 uppercase tracking-wider mb-2">Active Connections</h3>
+                                <div className="space-y-6">
+                                    {subscriptions.map((sub: any) => (
+                                        <ProfileSubscriptionCard 
+                                            key={sub.id} 
+                                            sub={sub} 
+                                            strategy={strategy} 
+                                            setEditingAllocation={setEditingAllocation} 
                                         />
-                                        <div className="w-9 h-5 bg-rose-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[14px] after:left-[calc(50%-18px)] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
-                                        <span className="ml-3 text-sm font-bold text-foreground">Active</span>
-                                    </label>
-                                    <button
-                                        onClick={() => setIsCapitalOpen(true)}
-                                        className="py-3 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-xl text-sm font-bold transition-all"
-                                    >
-                                        Edit Capital
-                                    </button>
+                                    ))}
                                 </div>
-                            </div>
+                                <button
+                                    onClick={() => setIsSubscribeOpen(true)}
+                                    className="w-full py-3 mt-2 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-xl text-sm font-bold transition-all"
+                                >
+                                    + Add Another Exchange
+                                </button>
+                            </>
                         ) : (
                             <button
                                 onClick={() => setIsSubscribeOpen(true)}
@@ -284,16 +276,16 @@ export default function StrategyProfileClient({
                 />
             )}
 
-            {isCapitalOpen && subscription && (
+            {editingAllocation && (
                 <CapitalAllocationModal
-                    isOpen={isCapitalOpen}
-                    onClose={() => setIsCapitalOpen(false)}
+                    isOpen={true}
+                    onClose={() => setEditingAllocation(null)}
                     strategy={strategy}
-                    totalMasterBalance={subscription.allocatedCapital + (strategy.settlementCurrency === 'USDT' ? usdtBalance : usdcBalance)}
-                    currentAllocation={subscription.allocatedCapital}
+                    totalMasterBalance={editingAllocation.allocatedCapital + (strategy.settlementCurrency === 'USDT' ? usdtBalance : usdcBalance)}
+                    currentAllocation={editingAllocation.allocatedCapital}
                     onSave={async (amount) => {
-                        await updateSubscriptionCapital(subscription.id, amount);
-                        setIsCapitalOpen(false);
+                        await updateSubscriptionCapital(editingAllocation.id, amount);
+                        setEditingAllocation(null);
                         window.location.reload();
                     }}
                 />
@@ -307,6 +299,64 @@ function MetricCard({ title, value, color }: { title: string, value: string, col
         <div className="border border-black/5 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-xl rounded-2xl p-5 shadow-sm">
             <p className="text-xs uppercase tracking-wider font-bold text-foreground/40 mb-2">{title}</p>
             <p className={`text-2xl font-black tracking-tight ${color}`}>{value}</p>
+        </div>
+    );
+}
+
+function ProfileSubscriptionCard({ sub, strategy, setEditingAllocation }: { sub: any, strategy: any, setEditingAllocation: any }) {
+    const [isActive, setIsActive] = useState(sub.isActive);
+    const [isToggling, setIsToggling] = useState(false);
+    const router = useRouter();
+
+    const handleToggle = async () => {
+        if (isToggling) return;
+        setIsToggling(true);
+        const nextState = !isActive;
+        setIsActive(nextState);
+
+        try {
+            const res = await fetch(`/api/user/subscriptions/${sub.id}/toggle`, { method: "POST" });
+            if (res.ok) {
+                router.refresh();
+            } else {
+                setIsActive(!nextState); // Rollback
+            }
+        } catch (e) {
+            setIsActive(!nextState);
+        } finally {
+            setIsToggling(false);
+        }
+    };
+
+    return (
+        <div className="space-y-3">
+            <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-600 dark:text-emerald-400 font-bold flex items-center justify-between">
+                <span className="flex items-center gap-2">
+                    <span className={`w-2 h-2 rounded-full ${isActive ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
+                    {sub.exchange || strategy.targetExchange}
+                </span>
+                <span>Allocated: ${sub.allocatedCapital.toLocaleString()}</span>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+                <label htmlFor={`profile-toggle-${sub.id}`} className={`relative inline-flex items-center cursor-pointer justify-center py-3 bg-black/5 dark:bg-white/5 rounded-xl border border-black/5 dark:border-white/10 hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${isToggling ? 'opacity-50 pointer-events-none' : ''}`}>
+                    <input
+                        id={`profile-toggle-${sub.id}`}
+                        type="checkbox"
+                        className="sr-only peer"
+                        checked={isActive}
+                        onChange={handleToggle}
+                        disabled={isToggling}
+                    />
+                    <div className="w-9 h-5 bg-rose-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[14px] after:left-[calc(50%-36px)] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+                    <span className="ml-[34px] text-sm font-bold text-foreground">{isActive ? 'Active' : 'Paused'}</span>
+                </label>
+                <button
+                    onClick={() => setEditingAllocation(sub)}
+                    className="py-3 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-xl text-sm font-bold transition-all"
+                >
+                    Edit Capital
+                </button>
+            </div>
         </div>
     );
 }

@@ -54,6 +54,7 @@ async function executeCexTrade(
         apiKey,
         secret: apiSecret,
         enableRateLimit: true,
+        timeout: 30000,
         options: {
             defaultType: marketType === 'FUTURES' ? 'future' : 'spot',
         }

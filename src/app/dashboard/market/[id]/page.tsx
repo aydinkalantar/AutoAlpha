@@ -43,7 +43,7 @@ export default async function StrategyProfilePage({ params }: { params: Promise<
     const isPaperMode = user.isTestnetMode;
     const usdtBalance = isPaperMode ? user.paperUsdtBalance : user.usdtBalance;
     const usdcBalance = isPaperMode ? user.paperUsdcBalance : user.usdcBalance;
-    const activeSubscription = user.subscriptions.length > 0 ? user.subscriptions[0] : null;
+    const modeSubscriptions = user.subscriptions.filter((s: any) => s.isPaper === isPaperMode);
 
     const connectedExchanges = user.exchangeKeys
         .filter((key: any) => key.isTestnet === isPaperMode && key.isValid)
@@ -55,7 +55,7 @@ export default async function StrategyProfilePage({ params }: { params: Promise<
         <div className="p-8 pt-20 md:p-12 md:pt-20 max-w-7xl mx-auto space-y-12">
             <StrategyProfileClient 
                 strategy={serializedStrategy} 
-                subscription={activeSubscription}
+                subscriptions={modeSubscriptions}
                 userId={user.id}
                 usdtBalance={usdtBalance}
                 usdcBalance={usdcBalance}

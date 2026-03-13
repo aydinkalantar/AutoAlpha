@@ -24,8 +24,11 @@ cron.schedule('*/5 * * * *', async () => {
 
                 if (!exchangeKey || !exchangeKey.encryptedApiKey || !exchangeKey.encryptedSecret) continue;
 
-                const apiKey = decryptKey(exchangeKey.encryptedApiKey, exchangeKey.iv);
-                const apiSecret = decryptKey(exchangeKey.encryptedSecret, exchangeKey.iv);
+                const secretKey = process.env.MASTER_ENCRYPTION_KEY;
+                if (!secretKey) throw new Error("MASTER_ENCRYPTION_KEY is missing from environment variables.");
+
+                const apiKey = decryptKey(exchangeKey.encryptedApiKey, secretKey);
+                const apiSecret = decryptKey(exchangeKey.encryptedSecret, secretKey);
 
                 const ccxtClass = (ccxt as any)[pos.strategy.targetExchange.toLowerCase()] || (ccxt as any)[pos.strategy.targetExchange.toLowerCase().replace('io', '')];
 
@@ -151,8 +154,11 @@ cron.schedule('0 0 * * *', async () => {
             try {
                 if (!key.encryptedApiKey || !key.encryptedSecret) continue; // Skip web3 stub keys
 
-                const apiKey = decryptKey(key.encryptedApiKey, key.iv);
-                const apiSecret = decryptKey(key.encryptedSecret, key.iv);
+                const secretKey = process.env.MASTER_ENCRYPTION_KEY;
+                if (!secretKey) throw new Error("MASTER_ENCRYPTION_KEY is missing from environment variables.");
+
+                const apiKey = decryptKey(key.encryptedApiKey, secretKey);
+                const apiSecret = decryptKey(key.encryptedSecret, secretKey);
 
                 const ccxtClass = (ccxt as any)[key.exchange.toLowerCase()] || (ccxt as any)[key.exchange.toLowerCase().replace('io', '')];
                 if (!ccxtClass) continue;

@@ -11,7 +11,6 @@ export async function saveApiKey(formData: FormData) {
     const exchange = formData.get('exchange') as SupportedExchange;
     const apiKey = formData.get('apiKey') as string;
     const apiSecret = formData.get('apiSecret') as string;
-    const isTestnet = formData.get('isTestnet') === 'on';
 
     if (!userId || !exchange || !apiKey || !apiSecret) {
         throw new Error('Missing required fields');
@@ -34,7 +33,7 @@ export async function saveApiKey(formData: FormData) {
             encryptedSecret: encryptedSecretRaw,
             iv: encryptedKeyRaw.split(':')[0],  // Store GCM IV strictly to satisfy Prisma schema
             isValid: true,
-            isTestnet
+            isTestnet: false
         }
     });
 
