@@ -145,20 +145,26 @@ export default function DepositPage() {
                             className="w-full bg-white/50 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-[1.5rem] pl-14 pr-28 py-6 text-4xl font-bold text-foreground placeholder:text-foreground/20 focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner transition-all"
                             placeholder="0.00"
                         />
-                        <div className="absolute right-3 flex bg-black/5 dark:bg-white/5 rounded-xl p-1 border border-black/5 dark:border-white/5">
-                            <button
-                                onClick={() => setCurrency('USDT')}
-                                className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${currency === 'USDT' ? 'bg-gradient-to-br from-cyan-400 to-purple-600 text-white shadow-sm' : 'text-foreground/60 hover:text-foreground'}`}
-                            >
-                                USDT
-                            </button>
-                            <button
-                                onClick={() => setCurrency('USDC')}
-                                className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${currency === 'USDC' ? 'bg-gradient-to-br from-cyan-400 to-purple-600 text-white shadow-sm' : 'text-foreground/60 hover:text-foreground'}`}
-                            >
-                                USDC
-                            </button>
-                        </div>
+                        {method === 'web3' ? (
+                            <div className="absolute right-3 flex bg-black/5 dark:bg-white/5 rounded-xl p-1 border border-black/5 dark:border-white/5">
+                                <button
+                                    onClick={() => setCurrency('USDT')}
+                                    className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${currency === 'USDT' ? 'bg-gradient-to-br from-cyan-400 to-purple-600 text-white shadow-sm' : 'text-foreground/60 hover:text-foreground'}`}
+                                >
+                                    USDT
+                                </button>
+                                <button
+                                    onClick={() => setCurrency('USDC')}
+                                    className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${currency === 'USDC' ? 'bg-gradient-to-br from-cyan-400 to-purple-600 text-white shadow-sm' : 'text-foreground/60 hover:text-foreground'}`}
+                                >
+                                    USDC
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="absolute right-3 flex items-center pr-4">
+                                <span className="text-sm font-bold text-foreground/40 uppercase tracking-widest">USD</span>
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -256,7 +262,7 @@ export default function DepositPage() {
                         <div className="p-6 bg-white/50 dark:bg-white/5 rounded-2xl border border-black/5 dark:border-white/10 space-y-4">
                             <div className="flex justify-between items-center text-base">
                                 <span className="text-foreground/60 font-medium">Deposit Amount</span>
-                                <span className="font-bold">${numAmount.toFixed(2)} {currency}</span>
+                                <span className="font-bold">${numAmount.toFixed(2)} USD</span>
                             </div>
                             <div className="flex justify-between items-center text-base">
                                 <span className="text-foreground/60 font-medium">Processing Fee (2.9% + 30¢)</span>
