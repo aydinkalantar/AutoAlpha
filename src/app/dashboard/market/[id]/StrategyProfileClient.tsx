@@ -296,6 +296,7 @@ export default function StrategyProfileClient({
                     strategy={strategy}
                     totalMasterBalance={editingAllocation.allocatedCapital + (strategy.settlementCurrency === 'USDT' ? usdtBalance : usdcBalance)}
                     currentAllocation={editingAllocation.allocatedCapital}
+                    isActive={editingAllocation.isActive}
                     onSave={async (amount) => {
                         await updateSubscriptionCapital(editingAllocation.id, amount);
                         setEditingAllocation(null);

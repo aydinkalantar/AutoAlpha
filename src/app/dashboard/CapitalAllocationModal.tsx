@@ -9,6 +9,7 @@ interface CapitalAllocationModalProps {
     strategy: { id: string; name: string };
     totalMasterBalance: number;
     currentAllocation: number;
+    isActive?: boolean;
     onSave: (amount: number) => Promise<void>;
     onRemove?: () => Promise<void>;
 }
@@ -19,6 +20,7 @@ export default function CapitalAllocationModal({
     strategy,
     totalMasterBalance,
     currentAllocation,
+    isActive = false,
     onSave,
     onRemove
 }: CapitalAllocationModalProps) {
@@ -175,9 +177,9 @@ export default function CapitalAllocationModal({
                             {!showRemoveConfirm ? (
                                 <button
                                     onClick={() => setShowRemoveConfirm(true)}
-                                    disabled={isSaving || isRemoving}
-                                    className="flex items-center justify-center gap-2 px-4 py-2.5 text-rose-500 hover:bg-rose-500/10 hover:text-rose-600 rounded-xl font-bold transition-all w-full sm:w-auto"
-                                    title="Disconnect API completely"
+                                    disabled={isActive || isSaving || isRemoving}
+                                    className="flex items-center justify-center gap-2 px-4 py-2.5 text-rose-500 hover:bg-rose-500/10 hover:text-rose-600 disabled:opacity-50 disabled:hover:bg-transparent disabled:cursor-not-allowed rounded-xl font-bold transition-all w-full sm:w-auto"
+                                    title={isActive ? "Please toggle off the exchange connection first to disconnect" : "Disconnect API completely"}
                                 >
                                     Disconnect Strategy
                                 </button>

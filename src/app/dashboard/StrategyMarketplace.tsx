@@ -170,7 +170,7 @@ export default function StrategyMarketplace({ strategies, subscriptions, userId,
             )}
             {editingAllocation && (
                 <CapitalAllocationModal
-                    isOpen={true}
+                    isOpen={!!editingAllocation}
                     onClose={() => setEditingAllocation(null)}
                     strategy={editingAllocation.strategy}
                     totalMasterBalance={
@@ -178,6 +178,7 @@ export default function StrategyMarketplace({ strategies, subscriptions, userId,
                         (editingAllocation.strategy.settlementCurrency === 'USDT' ? usdtBalance : usdcBalance)
                     }
                     currentAllocation={editingAllocation.sub.allocatedCapital}
+                    isActive={editingAllocation.sub.isActive}
                     onSave={async (amount) => {
                         await updateSubscriptionCapital(editingAllocation.sub.id, amount);
                         setEditingAllocation(null);
