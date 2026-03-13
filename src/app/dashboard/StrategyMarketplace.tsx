@@ -8,6 +8,7 @@ import { Strategy, MarketType } from "@prisma/client";
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 interface StrategyMarketplaceProps {
     strategies: Strategy[];
@@ -34,10 +35,11 @@ export default function StrategyMarketplace({ strategies, subscriptions, userId,
                 {/* iOS Style Segmented Control */}
                 <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl p-1.5 rounded-2xl flex border border-black/5 dark:border-white/10 relative">
                     {['SPOT', 'FUTURES'].map((tab) => (
-                        <button
+                        <Button
+                            variant="ghost"
                             key={tab}
                             onClick={() => setActiveTab(tab as MarketType)}
-                            className={`relative px-8 py-2.5 rounded-xl text-sm font-bold z-10 transition-colors duration-300 ${activeTab === tab ? 'text-foreground' : 'text-foreground/50 hover:text-foreground'}`}
+                            className={`relative px-8 py-2.5 rounded-xl text-sm font-bold z-10 transition-colors duration-300 ${activeTab === tab ? 'text-foreground hover:bg-transparent' : 'text-foreground/50 hover:text-foreground hover:bg-transparent'}`}
                         >
                             {activeTab === tab && (
                                 <motion.div
@@ -47,7 +49,7 @@ export default function StrategyMarketplace({ strategies, subscriptions, userId,
                                 />
                             )}
                             {tab.charAt(0) + tab.slice(1).toLowerCase()}
-                        </button>
+                        </Button>
                     ))}
                 </div>
             </div>
@@ -114,12 +116,13 @@ export default function StrategyMarketplace({ strategies, subscriptions, userId,
                                             >
                                                 Details
                                             </Link>
-                                            <button
+                                            <Button
+                                                variant="secondary"
                                                 onClick={() => setSelectedStrategy(strategy)}
-                                                className="w-full py-2.5 flex items-center justify-center bg-gradient-to-br from-cyan-400/10 to-purple-600/10 hover:from-cyan-400/20 hover:to-purple-600/20 text-foreground dark:text-white rounded-xl text-sm font-bold transition-all border border-purple-500/30"
+                                                className="w-full h-auto py-2.5 flex items-center justify-center bg-gradient-to-br from-cyan-400/10 to-purple-600/10 hover:from-cyan-400/20 hover:to-purple-600/20 text-foreground dark:text-white rounded-xl text-sm font-bold transition-all border border-purple-500/30"
                                             >
                                                 + Exchange
-                                            </button>
+                                            </Button>
                                         </div>
                                     </div>
                                 );
@@ -132,12 +135,13 @@ export default function StrategyMarketplace({ strategies, subscriptions, userId,
                                         >
                                             Details
                                         </Link>
-                                        <button
+                                        <Button
+                                            size="lg"
                                             onClick={() => setSelectedStrategy(strategy)}
-                                            className="w-full py-4 bg-gradient-to-br from-cyan-400 to-purple-600 shadow-lg shadow-purple-500/20 text-white rounded-xl font-bold hover:opacity-90 transition-opacity"
+                                            className="w-full h-auto py-4 bg-gradient-to-br from-cyan-400 to-purple-600 shadow-lg shadow-purple-500/20 text-white rounded-xl font-bold hover:opacity-90 transition-opacity"
                                         >
                                             Subscribe
-                                        </button>
+                                        </Button>
                                     </div>
                                 );
                             }
@@ -236,12 +240,14 @@ function SubscriptionCard({ sub, strategy, setEditingAllocation }: { sub: any, s
                     ${sub.allocatedCapital.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
             </div>
-            <button
+            <Button
+                variant="secondary"
+                size="sm"
                 onClick={() => setEditingAllocation({ sub, strategy })}
-                className="w-full py-2 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-lg text-xs font-bold transition-all"
+                className="w-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-lg font-bold transition-all"
             >
                 Manage Capital
-            </button>
+            </Button>
         </div>
     );
 }
