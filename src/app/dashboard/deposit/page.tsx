@@ -1,11 +1,45 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Wallet, CreditCard, ChevronRight, AlertCircle, RefreshCw } from 'lucide-react';
+import { ArrowRight, AlertCircle, CheckCircle2, Copy, ExternalLink, Wallet, CreditCard, Loader2, ChevronRight, RefreshCw } from 'lucide-react';
+import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from './CheckoutForm';
-import { getStripePublishableKey } from '@/app/actions/stripe';
+import { useAccount, useWriteContract, useWaitForTransactionReceipt, useSwitchChain } from 'wagmi';
+import { parseUnits } from 'viem';
+import { mainnet, arbitrum, optimism, base, polygon } from 'wagmi/chains';
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
+const ADMIN_WALLET = process.env.NEXT_PUBLIC_ADMIN_WALLET || '0x0000000000000000000000000000000000000000';
+
+const NETWORK_CHAINS: Record<string, number> = {
+    'ethereum': mainnet.id,
+    'arbitrum': arbitrum.id,
+    'optimism': optimism.id,
+    'base': base.id,
+    'polygon': polygon.id
+};
+
+const CONTRACT_ADDRESSES: Record<string, { USDT: string | null, USDC: string }> = {
+    'ethereum': { USDT: '0xdac17f958d2ee523a2206206994597c13d831ec7', USDC: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' },
+    'arbitrum': { USDT: '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9', USDC: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831' },
+    'optimism': { USDT: '0x94b008aa00579c1307b0ef2c499ad98a8ce58e58', USDC: '0x0b2c639c533813f4aa9d7837caf62653d097ff85' },
+    'base': { USDT: null, USDC: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913' },
+    'polygon': { USDT: '0xc2132d05d31c914a87c6611c10748aeb04b58e8f', USDC: '0x3c499c542cef5e3811e1192ce70d8cc03d5c3359' }
+};
+
+const erc20Abi = [
+    {
+        name: 'transfer',
+        type: 'function',
+        stateMutability: 'nonpayable',
+        inputs: [
+            { name: 'to', type: 'address' },
+            { name: 'amount', type: 'uint256' }
+        ],
+        outputs: [{ name: '', type: 'bool' }]
+    }
+] as const;
 import { Stripe } from '@stripe/stripe-js';
 import { useSession } from 'next-auth/react';
 
@@ -16,34 +50,46 @@ export default function DepositPage() {
     const [network, setNetwork] = useState<'ethereum' | 'arbitrum' | 'optimism' | 'base' | 'polygon'>('ethereum');
     const [saveCard, setSaveCard] = useState(false);
     const [amount, setAmount] = useState<string>('100');
-    const [txHash, setTxHash] = useState<string>('');
+    const [success, setSuccess] = useState<boolean>(false);
+
+    // Web3 Wagmi Hooks
+    const { address, isConnected, chainId } = useAccount();
+    const { switchChain } = useSwitchChain();
+    const { data: web3TxHash, writeContractAsync, isPending: isWalletPromptOpen } = useWriteContract();
+    const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash: web3TxHash });
+
+    useEffect(() => {
+        if (isConfirmed && web3TxHash) {
+            handleVerifyWeb3(web3TxHash);
+        }
+    }, [isConfirmed, web3TxHash]);
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     // Stripe State
     const [clientSecret, setClientSecret] = useState('');
     const [grossAmount, setGrossAmount] = useState(0);
-    const [stripePromise, setStripePromise] = useState<Promise<Stripe | null> | null>(null);
+    // const [stripePromise, setStripePromise] = useState<Promise<Stripe | null> | null>(null); // Removed as it's now a global constant
 
     const userId = (session?.user as any)?.id;
 
     useEffect(() => {
-        const fetchStripeKey = async () => {
-            try {
-                // Fetch dynamic Stripe key from Admin Config
-                const pubKey = await getStripePublishableKey();
-                if (pubKey) {
-                    setStripePromise(loadStripe(pubKey));
-                }
-            } catch (err) {
-                console.error("Failed to load Stripe key");
-            }
-        };
-        fetchStripeKey();
+        // const fetchStripeKey = async () => { // Removed as stripePromise is now a global constant
+        //     try {
+        //         // Fetch dynamic Stripe key from Admin Config
+        //         const pubKey = await getStripePublishableKey();
+        //         if (pubKey) {
+        //             setStripePromise(loadStripe(pubKey));
+        //         }
+        //     } catch (err) {
+        //         console.error("Failed to load Stripe key");
+        //     }
+        // };
+        // fetchStripeKey();
     }, []);
 
     // Provide a dummy web3 wallet address for demonstration
-    const ADMIN_WALLET = process.env.NEXT_PUBLIC_ADMIN_WALLET || '0xYourAdminWalletAddress...';
+    // const ADMIN_WALLET = process.env.NEXT_PUBLIC_ADMIN_WALLET || '0xYourAdminWalletAddress...'; // Removed as it's now a global constant
 
     // Calculate Stripe Fee: (Amount + 0.30) / (1 - 0.029)
     const calculateTotalWithFee = (baseAmount: number) => {
@@ -55,35 +101,72 @@ export default function DepositPage() {
     const totalCharge = method === 'card' ? calculateTotalWithFee(numAmount) : numAmount;
     const feeAmount = totalCharge - numAmount;
 
-    const handleWeb3Submit = async () => {
-        if (!txHash) {
-            setError("Please provide a valid transaction hash.");
+    const handleVerifyWeb3 = async (hashToVerify: string) => {
+        if (!hashToVerify) {
+            setError("Missing transaction hash from wallet.");
             return;
         }
+
         setIsProcessing(true);
         setError(null);
 
         try {
-            const res = await fetch('/api/payments/verify-web3', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ txHash, currency, amount: numAmount, network })
+            const numAmount = parseFloat(amount || '0');
+            const res = await fetch("/api/payments/verify-web3", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ txHash: hashToVerify, currency, amount: numAmount, network })
             });
 
             if (!res.ok) {
                 const data = await res.json();
-                throw new Error(data.message || 'Verification failed.');
+                throw new Error(data.message || "Failed to verify transaction. It may be pending or invalid.");
             }
 
-            alert('Deposit verified successfully!');
-            // Reset form or navigate away
-            setTxHash('');
-            setAmount('100');
-
+            setSuccess(true);
         } catch (err: any) {
             setError(err.message);
         } finally {
             setIsProcessing(false);
+        }
+    };
+
+    const handleWeb3Pay = async () => {
+        if (!amount || parseFloat(amount) <= 0) {
+            setError("Please enter a valid amount.");
+            return;
+        }
+        
+        setError(null);
+        
+        const targetChainId = NETWORK_CHAINS[network];
+        if (chainId !== targetChainId) {
+            try {
+                switchChain({ chainId: targetChainId });
+                return; // Wait for them to switch
+            } catch (e: any) {
+                setError("Failed to switch network in wallet. Please switch manually.");
+                return;
+            }
+        }
+
+        const tokenAddress = CONTRACT_ADDRESSES[network]?.[currency as 'USDT' | 'USDC'];
+        if (!tokenAddress) {
+            setError(`${currency} is not natively supported on ${network}. Please switch to USDC or use a different network.`);
+            return;
+        }
+
+        try {
+            const parsedAmount = parseUnits(amount, 6); // USDT/USDC generally use 6 decimals
+            
+            await writeContractAsync({
+                address: tokenAddress as `0x${string}`,
+                abi: erc20Abi,
+                functionName: 'transfer',
+                args: [ADMIN_WALLET as `0x${string}`, parsedAmount],
+            });
+        } catch (e: any) {
+            setError(e.shortMessage || e.message || "Transaction failed or rejected by wallet.");
         }
     };
 
@@ -230,7 +313,8 @@ export default function DepositPage() {
                             </div>
                         </div>
 
-                        <div className="space-y-3">
+                        {/* Removed Transaction Hash input */}
+                        {/* <div className="space-y-3">
                             <label className="text-sm font-medium text-foreground/80">Transaction Hash</label>
                             <input
                                 type="text"
@@ -239,7 +323,7 @@ export default function DepositPage() {
                                 className="w-full bg-white/50 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-2xl px-5 py-4 text-base text-foreground placeholder:text-foreground/40 font-mono focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner"
                                 placeholder="0x..."
                             />
-                        </div>
+                        </div> */}
 
                         <div className="flex items-start gap-3 mt-4 bg-black/5 dark:bg-white/5 p-4 rounded-2xl border border-black/5 dark:border-white/5">
                             <AlertCircle className="w-5 h-5 text-foreground/40 shrink-0 mt-0.5" />
@@ -248,14 +332,44 @@ export default function DepositPage() {
                             </p>
                         </div>
 
-                        <button
-                            onClick={handleWeb3Submit}
-                            disabled={isProcessing}
-                            className="w-full py-5 rounded-2xl bg-gradient-to-br from-cyan-400 to-purple-600 shadow-xl shadow-purple-500/20 text-white font-bold text-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50 mt-4"
-                        >
-                            {isProcessing ? 'Verifying...' : 'Verify Transaction'}
-                            {!isProcessing && <ChevronRight className="w-5 h-5" />}
-                        </button>
+                        {/* Web3 Button Overrides & UI */}
+                        <div className="flex flex-col gap-4 mt-6">
+                            {!isConnected ? (
+                                <div className="w-full flex justify-center py-2">
+                                    {/* @ts-ignore - Custom Web3Modal Web Component */}
+                                    <w3m-button />
+                                </div>
+                            ) : chainId !== NETWORK_CHAINS[network] ? (
+                                <button
+                                    onClick={() => switchChain({ chainId: NETWORK_CHAINS[network] })}
+                                    className="w-full py-5 bg-gradient-to-r from-orange-500 to-rose-500 hover:from-orange-400 hover:to-rose-400 text-white rounded-[1.5rem] text-xl font-bold transition-all shadow-lg hover:shadow-orange-500/25 flex items-center justify-center gap-3 relative overflow-hidden active:scale-[0.98]"
+                                >
+                                    Switch Network to {network.charAt(0).toUpperCase() + network.slice(1)}
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={handleWeb3Pay}
+                                    disabled={isWalletPromptOpen || isConfirming || isProcessing}
+                                    className="w-full py-5 bg-gradient-to-r from-cyan-400 to-purple-600 hover:from-cyan-300 hover:to-purple-500 text-white rounded-[1.5rem] text-xl font-bold transition-all shadow-[0_10px_40px_rgba(168,85,247,0.3)] hover:shadow-[0_10px_50px_rgba(34,211,238,0.4)] disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-3 relative overflow-hidden active:scale-[0.98]"
+                                >
+                                    {isWalletPromptOpen ? (
+                                        <>
+                                            <Loader2 className="w-6 h-6 animate-spin" />
+                                            Approve in Wallet...
+                                        </>
+                                    ) : isConfirming || isProcessing ? (
+                                        <>
+                                            <Loader2 className="w-6 h-6 animate-spin" />
+                                            Confirming Block...
+                                        </>
+                                    ) : (
+                                        <>
+                                            Pay {amount || '0.00'} {currency} <ArrowRight className="w-6 h-6" />
+                                        </>
+                                    )}
+                                </button>
+                            )}
+                        </div>
                     </div>
                 ) : (
                     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 relative z-10">

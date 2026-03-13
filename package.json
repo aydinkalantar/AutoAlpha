@@ -17,6 +17,8 @@
         "@sentry/nextjs": "^10.42.0",
         "@stripe/react-stripe-js": "^5.6.1",
         "@stripe/stripe-js": "^8.9.0",
+        "@tanstack/react-query": "^5.90.21",
+        "@web3modal/wagmi": "^5.1.11",
         "bcryptjs": "^3.0.3",
         "bullmq": "^5.0.0",
         "ccxt": "^4.0.0",
@@ -38,7 +40,7 @@
         "resend": "^6.9.3",
         "stripe": "^14.25.0",
         "tailwind-merge": "^3.5.0",
-        "viem": "^2.47.1",
+        "viem": "^2.47.2",
         "wagmi": "^3.5.0"
     },
     "devDependencies": {
