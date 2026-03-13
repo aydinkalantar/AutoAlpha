@@ -182,6 +182,7 @@ export default function StrategyMarketplace({ strategies, subscriptions, userId,
                 />
             )}
         </div>
+    );
 }
 
 function SubscriptionCard({ sub, strategy, setEditingAllocation }: { sub: any, strategy: Strategy, setEditingAllocation: any }) {
