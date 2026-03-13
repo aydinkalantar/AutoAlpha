@@ -52,7 +52,7 @@ export default async function StrategyProfilePage({ params }: { params: Promise<
     const serializedStrategy = JSON.parse(JSON.stringify(strategy));
 
     return (
-        <div className="p-8 pt-16 pb-32 md:p-12 md:pt-20 md:pb-12 max-w-7xl mx-auto space-y-12">
+        <div className="p-8 pt-[104px] pb-32 md:p-12 md:pb-12 max-w-7xl mx-auto space-y-12">
             <StrategyProfileClient 
                 strategy={serializedStrategy} 
                 subscriptions={modeSubscriptions}

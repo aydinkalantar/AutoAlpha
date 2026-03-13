@@ -79,9 +79,9 @@ export default async function DashboardPage() {
     const isApiConnected = user.exchangeKeys && user.exchangeKeys.length > 0;
 
     return (
-        <div className="p-4 pt-10 pb-32 md:p-10 md:pt-12 md:pb-32 max-w-7xl mx-auto space-y-8 md:space-y-12">
+        <div className="p-4 pt-[104px] pb-32 md:p-10 md:pb-32 max-w-7xl mx-auto space-y-8 md:space-y-12">
             <WelcomeModal userId={user.id} hasCompletedOnboarding={user.hasCompletedOnboarding ?? false} />
-            <div className="flex flex-col md:flex-row justify-between md:items-center gap-6">
+            <div className="flex flex-col md:flex-row justify-between md:items-center gap-6 pr-16 md:pr-0">
                 <div>
                     <div className="flex flex-wrap items-center gap-3">
                         <h1 className="text-4xl font-bold text-foreground tracking-tight">Investor Dashboard</h1>
