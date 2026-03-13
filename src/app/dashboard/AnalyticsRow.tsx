@@ -278,11 +278,11 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
                 <div className="flex-1 min-h-[160px] w-full relative">
                     {donutData.length > 0 ? (
                         <ResponsiveContainer width="100%" height="100%" minHeight={200}>
-                            <PieChart margin={{ top: 0, right: 0, bottom: 10, left: 0 }}>
+                            <PieChart margin={{ top: 10, right: 0, bottom: 10, left: 0 }}>
                                 <Pie
                                     data={donutData}
                                     cx="50%"
-                                    cy="45%"
+                                    cy="50%"
                                     innerRadius={50}
                                     outerRadius={70}
                                     paddingAngle={2}
