@@ -105,15 +105,15 @@ function DepositContent() {
     // Provide a dummy web3 wallet address for demonstration
     // const ADMIN_WALLET = process.env.NEXT_PUBLIC_ADMIN_WALLET || '0xYourAdminWalletAddress...'; // Removed as it's now a global constant
 
-    // Calculate Stripe Fee: (Amount + 0.30) / (1 - 0.029)
+    // AutoAlpha Absorbs Stripe Fee
     const calculateTotalWithFee = (baseAmount: number) => {
         if (baseAmount <= 0) return 0;
-        return (baseAmount + 0.30) / (1 - 0.029);
+        return baseAmount; // No extra fees charged to end user
     };
 
     const numAmount = parseFloat(amount) || 0;
-    const totalCharge = method === 'card' ? calculateTotalWithFee(numAmount) : numAmount;
-    const feeAmount = totalCharge - numAmount;
+    const totalCharge = numAmount;
+    const feeAmount = 0; // We absorb it
 
     const handleVerifyWeb3 = async (hashToVerify: string) => {
         if (!hashToVerify) {
@@ -393,8 +393,8 @@ function DepositContent() {
                                 <span className="font-bold">${numAmount.toFixed(2)} USD</span>
                             </div>
                             <div className="flex justify-between items-center text-base">
-                                <span className="text-foreground/60 font-medium">Processing Fee (2.9% + 30¢)</span>
-                                <span className="font-bold">${feeAmount.toFixed(2)}</span>
+                                <span className="text-foreground/60 font-medium">Processing Fee (Absorbed)</span>
+                                <span className="font-bold text-green-500">FREE</span>
                             </div>
                             <div className="h-px bg-black/5 dark:bg-white/10 w-full my-4" />
                             <div className="flex justify-between items-center">
@@ -406,7 +406,7 @@ function DepositContent() {
                         </div>
 
                         <p className="text-sm text-center text-foreground/40 font-medium">
-                            Payments are securely processed by Stripe. Fees are passed through directly.
+                            Payments are securely processed by Stripe. AutoAlpha absorbs all processing fees.
                         </p>
 
                         <div className="flex items-start gap-3 mt-4 bg-black/5 dark:bg-white/5 p-4 rounded-2xl border border-black/5 dark:border-white/5">

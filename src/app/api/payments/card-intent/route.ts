@@ -69,9 +69,9 @@ export async function POST(req: Request) {
 
         const requestedAmount = parseFloat(desiredAmount);
 
-        // Fee = 2.9% + $0.30
-        // Gross = (Desired + 0.30) / (1 - 0.029)
-        const grossAmount = (requestedAmount + 0.30) / 0.971;
+        // AutoAlpha Absorbs the Stripe fee
+        // Gross = Desired
+        const grossAmount = requestedAmount;
 
         // Stripe requires amount in minimum currency unit (cents)
         const amountInCents = Math.round(grossAmount * 100);
