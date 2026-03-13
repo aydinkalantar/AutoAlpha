@@ -353,7 +353,6 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
 
             </div>
 
-            </div>
         </div>
     );
 }
