@@ -192,7 +192,18 @@ export default function StrategyMarketplace({ strategies, subscriptions, userId,
 function SubscriptionCard({ sub, strategy, setEditingAllocation }: { sub: any, strategy: Strategy, setEditingAllocation: any }) {
     const [isActive, setIsActive] = useState(sub.isActive);
     const [isToggling, setIsToggling] = useState(false);
+    const [showWarning, setShowWarning] = useState(false);
     const router = useRouter();
+
+    const handleToggleClick = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // Prevent default toggle until confirmed if it's currently active
+        e.preventDefault();
+        if (isActive) {
+            setShowWarning(true);
+        } else {
+            handleToggle();
+        }
+    };
 
     const handleToggle = async () => {
         if (isToggling) return;
@@ -215,39 +226,68 @@ function SubscriptionCard({ sub, strategy, setEditingAllocation }: { sub: any, s
     };
 
     return (
-        <div className="py-3 border border-black/5 dark:border-white/10 rounded-xl px-4 flex flex-col gap-3 shadow-sm bg-white/40 dark:bg-white/5 backdrop-blur-md">
-            <div className="flex items-center justify-between">
-                <span className="text-sm font-bold tracking-tight flex items-center gap-2">
-                    <span className={`w-2 h-2 rounded-full ${isActive ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)]'}`}></span>
-                    {sub.exchange || strategy.targetExchange}
-                </span>
-                <label htmlFor={`toggle-strat-${strategy.id}-sub-${sub.id}`} className={`relative inline-flex items-center cursor-pointer ${isToggling ? 'opacity-50 pointer-events-none' : ''}`}>
-                    <input
-                        id={`toggle-strat-${strategy.id}-sub-${sub.id}`}
-                        type="checkbox"
-                        className="sr-only peer"
-                        title="Toggle Strategy Subscription"
-                        checked={isActive}
-                        onChange={handleToggle}
-                        disabled={isToggling}
-                    />
-                    <div className="w-9 h-5 bg-rose-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
-                </label>
+        <>
+            <div className="py-3 border border-black/5 dark:border-white/10 rounded-xl px-4 flex flex-col gap-3 shadow-sm bg-white/40 dark:bg-white/5 backdrop-blur-md">
+                <div className="flex items-center justify-between">
+                    <span className="text-sm font-bold tracking-tight flex items-center gap-2">
+                        <span className={`w-2 h-2 rounded-full ${isActive ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)]'}`}></span>
+                        {sub.exchange || strategy.targetExchange}
+                    </span>
+                    <label htmlFor={`toggle-strat-${strategy.id}-sub-${sub.id}`} className={`relative inline-flex items-center cursor-pointer ${isToggling ? 'opacity-50 pointer-events-none' : ''}`}>
+                        <input
+                            id={`toggle-strat-${strategy.id}-sub-${sub.id}`}
+                            type="checkbox"
+                            className="sr-only peer"
+                            title="Toggle Strategy Subscription"
+                            checked={isActive}
+                            onChange={handleToggleClick}
+                            disabled={isToggling}
+                        />
+                        <div className="w-9 h-5 bg-rose-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+                    </label>
+                </div>
+                <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-foreground/60">Allocated</span>
+                    <span className="text-xs font-bold text-foreground">
+                        ${sub.allocatedCapital.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </span>
+                </div>
+                <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => setEditingAllocation({ sub, strategy })}
+                    className="w-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-lg font-bold transition-all"
+                >
+                    Manage Allocation
+                </Button>
             </div>
-            <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-foreground/60">Allocated</span>
-                <span className="text-xs font-bold text-foreground">
-                    ${sub.allocatedCapital.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </span>
-            </div>
-            <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => setEditingAllocation({ sub, strategy })}
-                className="w-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-lg font-bold transition-all"
-            >
-                Manage Allocation
-            </Button>
-        </div>
+
+            {showWarning && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 bg-black/50 backdrop-blur-sm transition-all duration-300">
+                    <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-2xl p-6 max-w-sm w-full border border-black/5 dark:border-white/10 space-y-4 transform transition-all">
+                        <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
+                            <svg className="w-5 h-5 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            Disconnect API?
+                        </h3>
+                        <p className="text-sm text-foreground/80 leading-relaxed">
+                            Disabling this exchange connection will immediately and automatically <strong className="text-rose-500">close all open trading positions</strong> managed by this strategy at market price.
+                        </p>
+                        <p className="text-xs font-semibold text-foreground/50">
+                            Do you wish to proceed?
+                        </p>
+                        <div className="flex justify-end gap-3 pt-2">
+                            <Button variant="secondary" onClick={() => setShowWarning(false)} className="bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground">
+                                Cancel
+                            </Button>
+                            <Button variant="destructive" onClick={() => { setShowWarning(false); handleToggle(); }} className="bg-rose-500 hover:bg-rose-600 text-white">
+                                Disconnect
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
     );
 }

@@ -319,7 +319,18 @@ function MetricCard({ title, value, color }: { title: string, value: string, col
 function ProfileSubscriptionCard({ sub, strategy, setEditingAllocation }: { sub: any, strategy: any, setEditingAllocation: any }) {
     const [isActive, setIsActive] = useState(sub.isActive);
     const [isToggling, setIsToggling] = useState(false);
+    const [showWarning, setShowWarning] = useState(false);
     const router = useRouter();
+
+    const handleToggleClick = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // Prevent default toggle until confirmed if it's currently active
+        e.preventDefault();
+        if (isActive) {
+            setShowWarning(true);
+        } else {
+            handleToggle();
+        }
+    };
 
     const handleToggle = async () => {
         if (isToggling) return;
@@ -342,36 +353,65 @@ function ProfileSubscriptionCard({ sub, strategy, setEditingAllocation }: { sub:
     };
 
     return (
-        <div className="space-y-3">
-            <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-600 dark:text-emerald-400 font-bold flex items-center justify-between">
-                <span className="flex items-center gap-2">
-                    <span className={`w-2 h-2 rounded-full ${isActive ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
-                    {sub.exchange || strategy.targetExchange}
-                </span>
-                <span>Allocated: ${sub.allocatedCapital.toLocaleString()}</span>
+        <>
+            <div className="space-y-3">
+                <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-600 dark:text-emerald-400 font-bold flex items-center justify-between">
+                    <span className="flex items-center gap-2">
+                        <span className={`w-2 h-2 rounded-full ${isActive ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
+                        {sub.exchange || strategy.targetExchange}
+                    </span>
+                    <span>Allocated: ${sub.allocatedCapital.toLocaleString()}</span>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                    <label htmlFor={`profile-toggle-${sub.id}`} className={`relative inline-flex items-center cursor-pointer justify-center py-3 bg-black/5 dark:bg-white/5 rounded-xl border border-black/5 dark:border-white/10 hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${isToggling ? 'opacity-50 pointer-events-none' : ''}`}>
+                        <input
+                            id={`profile-toggle-${sub.id}`}
+                            type="checkbox"
+                            className="sr-only peer"
+                            checked={isActive}
+                            onChange={handleToggleClick}
+                            disabled={isToggling}
+                        />
+                        <div className="w-9 h-5 bg-rose-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[14px] after:left-[calc(50%-36px)] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+                        <span className="ml-[34px] text-sm font-bold text-foreground">{isActive ? 'Active' : 'Paused'}</span>
+                    </label>
+                    <Button
+                        variant="secondary"
+                        onClick={() => setEditingAllocation(sub)}
+                        className="bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-xl font-bold transition-all"
+                    >
+                        Manage Allocation
+                    </Button>
+                </div>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-                <label htmlFor={`profile-toggle-${sub.id}`} className={`relative inline-flex items-center cursor-pointer justify-center py-3 bg-black/5 dark:bg-white/5 rounded-xl border border-black/5 dark:border-white/10 hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${isToggling ? 'opacity-50 pointer-events-none' : ''}`}>
-                    <input
-                        id={`profile-toggle-${sub.id}`}
-                        type="checkbox"
-                        className="sr-only peer"
-                        checked={isActive}
-                        onChange={handleToggle}
-                        disabled={isToggling}
-                    />
-                    <div className="w-9 h-5 bg-rose-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[14px] after:left-[calc(50%-36px)] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
-                    <span className="ml-[34px] text-sm font-bold text-foreground">{isActive ? 'Active' : 'Paused'}</span>
-                </label>
-                <Button
-                    variant="secondary"
-                    onClick={() => setEditingAllocation(sub)}
-                    className="bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-xl font-bold transition-all"
-                >
-                    Manage Allocation
-                </Button>
-            </div>
-        </div>
+
+            {showWarning && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 bg-black/50 backdrop-blur-sm transition-all duration-300">
+                    <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-2xl p-6 max-w-sm w-full border border-black/5 dark:border-white/10 space-y-4 transform transition-all">
+                        <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
+                            <svg className="w-5 h-5 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            Disconnect API?
+                        </h3>
+                        <p className="text-sm text-foreground/80 leading-relaxed">
+                            Disabling this exchange connection will immediately and automatically <strong className="text-rose-500">close all open trading positions</strong> managed by this strategy at market price.
+                        </p>
+                        <p className="text-xs font-semibold text-foreground/50">
+                            Do you wish to proceed?
+                        </p>
+                        <div className="flex justify-end gap-3 pt-2">
+                            <Button variant="secondary" onClick={() => setShowWarning(false)} className="bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground">
+                                Cancel
+                            </Button>
+                            <Button variant="destructive" onClick={() => { setShowWarning(false); handleToggle(); }} className="bg-rose-500 hover:bg-rose-600 text-white">
+                                Disconnect
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
     );
 }
 
