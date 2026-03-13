@@ -60,8 +60,8 @@ export default async function MarketPage() {
         .map((key: any) => key.exchange);
 
     return (
-        <div className="p-4 pt-10 pb-28 md:p-10 md:pt-12 md:pb-12 max-w-7xl mx-auto space-y-8 md:space-y-12">
-            <div className="flex flex-col md:flex-row justify-between md:items-end gap-6">
+        <div className="p-4 pt-16 pb-28 md:p-10 md:pt-12 md:pb-12 max-w-7xl mx-auto space-y-8 md:space-y-12">
+            <div className="flex flex-col md:flex-row justify-between md:items-end gap-6 pr-16 md:pr-0">
                 <div className="space-y-6">
                     <div>
                         <h1 className="text-4xl font-bold text-foreground tracking-tight">Strategy Marketplace</h1>

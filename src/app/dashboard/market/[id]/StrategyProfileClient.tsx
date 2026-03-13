@@ -55,7 +55,7 @@ export default function StrategyProfileClient({
     return (
         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-6 duration-700">
             {/* Header / Nav */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between pr-16 md:pr-0">
                 <div className="flex items-center gap-4">
                     <Link href="/dashboard/market" className="p-3 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 rounded-xl transition-colors">
                         <svg className="w-5 h-5 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">

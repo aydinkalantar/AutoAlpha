@@ -52,8 +52,8 @@ export default async function AccountingPage() {
     }
 
     return (
-        <div className="p-8 pt-20 md:p-12 md:pt-20 max-w-7xl mx-auto space-y-12">
-            <div className="flex flex-col md:flex-row justify-between md:items-end gap-6">
+        <div className="p-8 pt-16 md:p-12 md:pt-20 max-w-7xl mx-auto space-y-12">
+            <div className="flex flex-col md:flex-row justify-between md:items-end gap-6 pr-16 md:pr-0">
                 <div className="space-y-6">
                     <div>
                         <h1 className="text-4xl font-bold text-foreground tracking-tight">Tax & Accounting</h1>
