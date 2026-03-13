@@ -32,6 +32,9 @@ export default async function DashboardPage() {
                 },
                 positions: {
                     orderBy: { createdAt: 'desc' }
+                },
+                exchangeKeys: {
+                    select: { id: true }
                 }
             }
         });
@@ -73,13 +76,24 @@ export default async function DashboardPage() {
     // Filter subscriptions based on mode
     const modeSubscriptions = user.subscriptions.filter((s: any) => s.isPaper === isPaperMode);
 
+    const isApiConnected = user.exchangeKeys && user.exchangeKeys.length > 0;
+
     return (
-        <div className="p-4 pt-10 pb-28 md:p-10 md:pt-12 md:pb-12 max-w-7xl mx-auto space-y-8 md:space-y-12">
+        <div className="p-4 pt-10 pb-32 md:p-10 md:pt-12 md:pb-32 max-w-7xl mx-auto space-y-8 md:space-y-12">
             <WelcomeModal userId={user.id} hasCompletedOnboarding={user.hasCompletedOnboarding ?? false} />
             <div className="flex flex-col md:flex-row justify-between md:items-end gap-6">
                 <div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-3">
                         <h1 className="text-4xl font-bold text-foreground tracking-tight">Investor Dashboard</h1>
+                        
+                        {/* API Status Badge */}
+                        <div className="flex items-center gap-2 px-3 py-1 bg-white/5 dark:bg-white/10 border border-black/5 dark:border-white/10 rounded-full">
+                            <div className={`w-2 h-2 rounded-full ${isApiConnected ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)]'}`} />
+                            <span className="text-xs font-bold tracking-wider uppercase text-foreground/70">
+                                {isApiConnected ? 'API Connected' : 'API Disconnected'}
+                            </span>
+                        </div>
+
                         <Link href="/dashboard/academy" className="text-foreground/40 hover:text-cyan-500 transition-colors" title="Platform Documentation">
                             <Info className="w-5 h-5" />
                         </Link>
@@ -90,14 +104,29 @@ export default async function DashboardPage() {
                     </div>
                 </div>
 
-                <div className="bg-white/50 dark:bg-white/5 backdrop-blur-2xl inline-flex flex-col py-4 px-8 rounded-[1.5rem] border border-black/5 dark:border-white/10 shadow-xl relative overflow-hidden">
-                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/20 to-transparent" />
-                    <span className="text-sm font-bold tracking-wider uppercase mb-1 relative z-10 text-cyan-600 dark:text-cyan-400">
-                        {isPaperMode ? 'Paper Capital' : 'Available Capital'}
-                    </span>
-                    <div className="flex items-baseline space-x-1 relative z-10">
-                        <span className="text-2xl font-bold text-foreground/50">$</span>
-                        <span className="text-4xl font-black text-foreground tracking-tight">{totalBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <div className="flex flex-col gap-3 md:items-end w-full md:w-auto">
+                    <div className="w-full md:w-auto bg-white/50 dark:bg-white/5 backdrop-blur-2xl inline-flex flex-col py-4 px-8 rounded-[1.5rem] border border-black/5 dark:border-white/10 shadow-xl relative overflow-hidden">
+                        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/20 to-transparent" />
+                        <span className="text-sm font-bold tracking-wider uppercase mb-1 relative z-10 text-cyan-600 dark:text-cyan-400">
+                            {isPaperMode ? 'Paper Capital' : 'Connected Exchange Balance'}
+                        </span>
+                        <div className="flex items-baseline space-x-1 relative z-10">
+                            <span className="text-2xl font-bold text-foreground/50">$</span>
+                            <span className="text-4xl font-black text-foreground tracking-tight">{totalBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        </div>
+                    </div>
+
+                    {/* Gas Tank Widget */}
+                    <div className="w-full md:w-auto bg-white/50 dark:bg-white/5 backdrop-blur-xl flex items-center justify-between gap-6 py-3 px-6 rounded-xl border border-black/5 dark:border-white/10 shadow-md">
+                        <div className="flex flex-col">
+                            <span className="text-xs font-bold tracking-wider uppercase text-foreground/50">Gas Tank Balance</span>
+                            <span className="text-base font-bold text-foreground">
+                                ${(user.usdtBalance + user.usdcBalance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USDC
+                            </span>
+                        </div>
+                        <Link href="/dashboard/deposit" className="text-xs font-bold tracking-wider uppercase text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 bg-cyan-500/10 hover:bg-cyan-500/20 px-3 py-1.5 rounded-lg transition-colors border border-cyan-500/20">
+                            Top Up
+                        </Link>
                     </div>
                 </div>
             </div>

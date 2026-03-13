@@ -180,7 +180,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
                             </Tooltip>
                         </div>
                         <div className="flex items-baseline gap-2">
-                            <span className="text-3xl font-bold tracking-tight">${maxDrawdown.toFixed(2)}</span>
+                            <span className="text-3xl font-bold tracking-tight text-rose-500">-{Math.abs(maxDrawdown).toFixed(2)}%</span>
                             <span className="text-xs text-rose-500 font-medium">Peak-to-Trough</span>
                         </div>
                     </div>
