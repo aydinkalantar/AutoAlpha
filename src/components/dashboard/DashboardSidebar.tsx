@@ -294,14 +294,14 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                                 <div className="w-12 h-1.5 bg-black/10 dark:bg-white/20 rounded-full" />
                             </div>
 
-                            <div className="flex-1 overflow-y-auto pb-28 px-6 no-scrollbar touch-pan-y shadow-[inset_0_40px_40px_-40px_rgba(0,0,0,0.05)] dark:shadow-[inset_0_40px_40px_-40px_rgba(0,0,0,0.2)]">
+                            <div className="flex-1 overflow-y-auto pb-4 px-6 no-scrollbar touch-pan-y shadow-[inset_0_40px_40px_-40px_rgba(0,0,0,0.05)] dark:shadow-[inset_0_40px_40px_-40px_rgba(0,0,0,0.2)]">
                                 
                                 <div className="pb-6 pt-2">
                                     <h3 className="text-xl font-bold text-foreground mb-1 tracking-tight">Menu</h3>
                                     <p className="text-sm text-foreground/50 font-medium">Access your account, settings, and more.</p>
                                 </div>
 
-                                <div className="space-y-2 mb-8">
+                                <div className="space-y-1.5 mb-6">
                                     {drawerItems.map((item) => {
                                         const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
                                         const Icon = item.icon;
@@ -318,29 +318,29 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                                                         : "bg-black/5 dark:bg-white/5 text-foreground hover:bg-black/10 dark:hover:bg-white/10"
                                                 )}
                                             >
-                                                <div className="flex items-center gap-4">
-                                                    <div className={cn("p-2 rounded-xl", isActive ? "bg-background/20" : "bg-black/5 dark:bg-white/10")}>
-                                                        <Icon className={cn("w-5 h-5", isActive ? "text-background" : "text-foreground")} />
+                                                <div className="flex items-center gap-3">
+                                                    <div className={cn("p-1.5 rounded-xl", isActive ? "bg-background/20" : "bg-black/5 dark:bg-white/10")}>
+                                                        <Icon className={cn("w-4 h-4", isActive ? "text-background" : "text-foreground")} />
                                                     </div>
-                                                    <span className="font-bold text-lg">{item.name}</span>
+                                                    <span className="font-bold text-base">{item.name}</span>
                                                 </div>
-                                                <ChevronRight className={cn("w-5 h-5", isActive ? "text-background/50" : "text-foreground/30")} />
+                                                <ChevronRight className={cn("w-4 h-4", isActive ? "text-background/50" : "text-foreground/30")} />
                                             </Link>
                                         )
                                     })}
                                 </div>
 
-                                <div className="h-px w-full bg-black/5 dark:bg-white/10 mb-8" />
+                                <div className="h-px w-full bg-black/5 dark:bg-white/10 mb-6" />
 
-                                <div className="space-y-4 mb-8">
+                                <div className="space-y-3 mb-6">
                                     <h4 className="text-xs font-bold tracking-widest uppercase text-foreground/40 px-2">Quick Actions</h4>
                                     <div className="grid grid-cols-2 gap-3">                                        <Button 
                                             variant="ghost"
                                             onClick={toggleSound} 
                                             className="h-auto flex flex-col items-center justify-center gap-2 p-4 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 active:bg-black/15 dark:active:bg-white/15 rounded-2xl transition-colors"
                                         >
-                                            <div className="p-2 rounded-full bg-white dark:bg-[#1C1C1E] shadow-sm">
-                                                {isSoundEnabled ? <Volume2 className="w-5 h-5 text-foreground" /> : <VolumeX className="w-5 h-5 opacity-50 text-foreground" />}
+                                            <div className="p-1.5 rounded-full bg-white dark:bg-[#1C1C1E] shadow-sm">
+                                                {isSoundEnabled ? <Volume2 className="w-4 h-4 text-foreground" /> : <VolumeX className="w-4 h-4 opacity-50 text-foreground" />}
                                             </div>
                                             <span className="text-xs font-bold">{isSoundEnabled ? "Sound On" : "Sound Off"}</span>
                                         </Button>
@@ -351,8 +351,8 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                                                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} 
                                                 className="h-auto flex flex-col items-center justify-center gap-2 p-4 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 active:bg-black/15 dark:active:bg-white/15 rounded-2xl transition-colors"
                                             >
-                                                <div className="p-2 rounded-full bg-white dark:bg-[#1C1C1E] shadow-sm">
-                                                    {theme === 'dark' ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-blue-500" />}
+                                                <div className="p-1.5 rounded-full bg-white dark:bg-[#1C1C1E] shadow-sm">
+                                                    {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-blue-500" />}
                                                 </div>
                                                 <span className="text-xs font-bold">{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
                                             </Button>
@@ -362,9 +362,9 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                                         <Button 
                                             variant="ghost"
                                             onClick={() => signOut({ callbackUrl: '/login' })} 
-                                            className="w-full flex items-center h-auto justify-center gap-3 py-4 text-sm font-bold text-red-500 bg-red-50 dark:bg-red-500/10 active:bg-red-100 dark:active:bg-red-500/20 rounded-2xl transition-colors mt-2"
+                                            className="w-full flex items-center h-auto justify-center gap-2 py-3 text-sm font-bold text-red-500 bg-red-50 dark:bg-red-500/10 active:bg-red-100 dark:active:bg-red-500/20 rounded-2xl transition-colors mt-2"
                                         >
-                                            <LogOut className="w-5 h-5" />
+                                            <LogOut className="w-4 h-4" />
                                             Log Out
                                         </Button>
                                     </div>
