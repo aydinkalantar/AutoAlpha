@@ -106,7 +106,7 @@ export default function LiveRadar({ openPositions: initialPositions, isPaperMode
 
     if (openPositions.length === 0) {
         return (
-            <div className="bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-sm text-center py-16 px-6 relative overflow-hidden group">
+            <div className="md:max-w-3xl md:mx-auto bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-sm text-center py-16 px-6 relative overflow-hidden group">
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-cyan-500/5 group-hover:to-cyan-500/10 transition-colors duration-500" />
                 
                 <div className="relative z-10 max-w-md mx-auto flex flex-col items-center">
