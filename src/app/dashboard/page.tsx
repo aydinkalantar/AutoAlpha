@@ -74,7 +74,7 @@ export default async function DashboardPage() {
     const modeSubscriptions = user.subscriptions.filter((s: any) => s.isPaper === isPaperMode);
 
     return (
-        <div className="p-8 pt-20 md:p-12 md:pt-20 max-w-7xl mx-auto space-y-12">
+        <div className="p-4 pt-10 pb-28 md:p-10 md:pt-12 md:pb-12 max-w-7xl mx-auto space-y-8 md:space-y-12">
             <WelcomeModal userId={user.id} hasCompletedOnboarding={user.hasCompletedOnboarding ?? false} />
             <div className="flex flex-col md:flex-row justify-between md:items-end gap-6">
                 <div>
