@@ -81,7 +81,7 @@ export default async function DashboardPage() {
     return (
         <div className="p-4 pt-10 pb-32 md:p-10 md:pt-12 md:pb-32 max-w-7xl mx-auto space-y-8 md:space-y-12">
             <WelcomeModal userId={user.id} hasCompletedOnboarding={user.hasCompletedOnboarding ?? false} />
-            <div className="flex flex-col md:flex-row justify-between md:items-end gap-6">
+            <div className="flex flex-col md:flex-row justify-between md:items-start gap-6">
                 <div>
                     <div className="flex flex-wrap items-center gap-3">
                         <h1 className="text-4xl font-bold text-foreground tracking-tight">Investor Dashboard</h1>

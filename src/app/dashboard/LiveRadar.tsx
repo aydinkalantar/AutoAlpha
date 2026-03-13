@@ -109,22 +109,24 @@ export default function LiveRadar({ openPositions: initialPositions, isPaperMode
             <div className="bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-sm text-center py-16 px-6 relative overflow-hidden group">
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-cyan-500/5 group-hover:to-cyan-500/10 transition-colors duration-500" />
                 
-                <div className="w-16 h-16 bg-cyan-500/10 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-cyan-500/20 shadow-inner relative z-10">
-                    <Activity className="w-8 h-8 text-cyan-500" />
-                </div>
-                
-                <h3 className="text-xl font-bold tracking-tight mb-2 relative z-10">Your Radar is Quiet</h3>
-                <p className="text-sm text-foreground/60 max-w-sm mx-auto mb-8 relative z-10 leading-relaxed">
-                    You aren't tracking any active trades yet. Allocate capital to a strategy to watch the live execution engine go to work.
-                </p>
+                <div className="relative z-10 max-w-md mx-auto flex flex-col items-center">
+                    <div className="w-16 h-16 bg-cyan-500/10 rounded-2xl flex items-center justify-center mb-6 border border-cyan-500/20 shadow-inner">
+                        <Activity className="w-8 h-8 text-cyan-500" />
+                    </div>
+                    
+                    <h3 className="text-xl font-bold tracking-tight mb-2">Your Radar is Quiet</h3>
+                    <p className="text-sm text-foreground/60 mb-8 leading-relaxed">
+                        You aren't tracking any active trades yet. Allocate capital to a strategy to watch the live execution engine go to work.
+                    </p>
 
-                <Link 
-                    href="/dashboard/market"
-                    className="relative z-10 inline-flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black font-semibold text-sm px-6 py-2.5 rounded-full hover:scale-105 active:scale-95 transition-all shadow-xl shadow-black/10 dark:shadow-white/10"
-                >
-                    <Search className="w-4 h-4" />
-                    Find a Strategy
-                </Link>
+                    <Link 
+                        href="/dashboard/market"
+                        className="inline-flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black font-semibold text-sm px-6 py-2.5 rounded-full hover:scale-105 active:scale-95 transition-all shadow-xl shadow-black/10 dark:shadow-white/10"
+                    >
+                        <Search className="w-4 h-4" />
+                        Find a Strategy
+                    </Link>
+                </div>
             </div>
         );
     }
