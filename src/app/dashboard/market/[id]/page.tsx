@@ -22,7 +22,8 @@ export default async function StrategyProfilePage({ params }: { params: Promise<
             where: { id: userId },
             include: {
                 subscriptions: {
-                    where: { strategyId: id }
+                    where: { strategyId: id },
+                    orderBy: { createdAt: 'asc' }
                 },
                 exchangeKeys: true
             }

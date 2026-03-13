@@ -22,7 +22,8 @@ export default async function StrategyReportPage() {
             where: { id: userId },
             include: {
                 subscriptions: {
-                    include: { strategy: true }
+                    include: { strategy: true },
+                    orderBy: { createdAt: 'asc' }
                 },
                 positions: {
                     orderBy: { createdAt: 'desc' }

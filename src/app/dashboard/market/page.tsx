@@ -26,7 +26,8 @@ export default async function MarketPage() {
             where: { id: userId },
             include: {
                 subscriptions: {
-                    include: { strategy: true }
+                    include: { strategy: true },
+                    orderBy: { createdAt: 'asc' }
                 },
                 exchangeKeys: true
             }
