@@ -270,7 +270,7 @@ export default function StrategyProfileClient({
                             ))}
                         </ul>
                     ) : (
-                        <div className="text-foreground/50 text-sm italic py-4">No explicit risk constraints provided. Standard exchange liquidation limits apply.</div>
+                        <p className="text-foreground/50 text-sm py-4">Standard algorithmic risk protocols apply.</p>
                     )}
                 </div>
             </div>

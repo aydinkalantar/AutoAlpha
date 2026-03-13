@@ -52,10 +52,12 @@ export default function RoiCalculator() {
                                         aria-label="Investment Amount"
                                         placeholder="Enter amount"
                                         onChange={handleSliderChange}
-                                        className="w-full h-2 bg-black/10 dark:bg-white/10 rounded-lg appearance-none cursor-pointer relative z-10"
-                                        style={{
-                                            background: `linear-gradient(to right, #10b981 0%, #06b6d4 ${(investment - 1000) / (100000 - 1000) * 100}%, rgba(0,0,0,0.1) ${(investment - 1000) / (100000 - 1000) * 100}%)`
+                                        ref={(el) => {
+                                            if (el) {
+                                                el.style.background = `linear-gradient(to right, #10b981 0%, #06b6d4 ${(investment - 1000) / (100000 - 1000) * 100}%, rgba(0,0,0,0.1) ${(investment - 1000) / (100000 - 1000) * 100}%)`;
+                                            }
                                         }}
+                                        className="w-full h-2 bg-black/10 dark:bg-white/10 rounded-lg appearance-none cursor-pointer relative z-10"
                                     />
                                     <div className="flex justify-between mt-4 text-xs font-bold text-foreground/40">
                                         <span>$1,000</span>

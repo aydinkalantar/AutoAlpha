@@ -31,7 +31,7 @@ export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBala
 
     if (!isLocalOpen) return (
         <button onClick={handleOpen} className="w-full relative z-10 py-4 mt-2 bg-gradient-to-br from-cyan-400 to-purple-600 shadow-lg shadow-purple-500/20 text-white rounded-xl font-bold hover:opacity-90 transition-opacity">
-            Subscribe
+            Allocate Capital
         </button>
     );
 
@@ -75,7 +75,7 @@ export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBala
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4 md:pl-64 bg-black/50 backdrop-blur-sm transition-all duration-300">
             <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-black/5 dark:border-white/10 relative transform transition-all duration-300">
                 <div className="px-6 py-5 border-b border-black/5 dark:border-white/10 flex justify-between items-center bg-gray-50/50 dark:bg-white/5">
-                    <h2 className="text-xl font-bold text-foreground tracking-tight">Subscribe</h2>
+                    <h2 className="text-xl font-bold text-foreground tracking-tight">Allocate Capital</h2>
                     <button
                         onClick={handleClose}
                         title="Close Modal"
@@ -138,19 +138,24 @@ export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBala
                             <span className="text-xs font-bold text-foreground/40">Available: {currentBalance.toFixed(2)} {strategy.settlementCurrency}</span>
                         </div>
 
-                        <div className="relative group">
-                            <span className="absolute left-5 top-1/2 -translate-y-1/2 text-foreground font-bold text-2xl">$</span>
-                            <input
-                                type="number"
-                                required
-                                min="10"
-                                step="0.01"
-                                placeholder="100.00"
-                                value={capitalStr}
-                                onChange={(e) => setCapitalStr(e.target.value)}
-                                autoFocus
-                                className="w-full bg-white dark:bg-black/50 border border-gray-300 dark:border-white/20 rounded-xl pl-10 pr-4 py-3 text-3xl text-right font-black text-foreground focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all tracking-tight shadow-sm"
-                            />
+                        <div>
+                            <div className="relative group">
+                                <span className="absolute left-5 top-1/2 -translate-y-1/2 text-foreground font-bold text-2xl">$</span>
+                                <input
+                                    type="number"
+                                    required
+                                    min="10"
+                                    step="0.01"
+                                    placeholder="100.00"
+                                    value={capitalStr}
+                                    onChange={(e) => setCapitalStr(e.target.value)}
+                                    autoFocus
+                                    className={`w-full bg-white dark:bg-black/50 border ${parseFloat(capitalStr) > currentBalance ? 'border-destructive text-destructive' : 'border-gray-300 dark:border-white/20 text-foreground'} rounded-xl pl-10 pr-4 py-3 text-3xl text-right font-black focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all tracking-tight shadow-sm`}
+                                />
+                            </div>
+                            {parseFloat(capitalStr) > currentBalance && (
+                                <p className="text-destructive text-sm font-semibold mt-2">Insufficient exchange funds</p>
+                            )}
                         </div>
                     </div>
 
