@@ -199,20 +199,36 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
 
                             <div className="space-y-6">
                                 <div className="space-y-2">
-                                    <h4 className="text-sm font-semibold text-black/60 uppercase tracking-wide">1. Webhook URL</h4>
-                                    <p className="text-sm text-foreground/50 mb-2">Paste this exact URL into your TradingView Alert's Webhook URL field. (Replace <code className="bg-black/5 px-1 rounded">your-domain.com</code> with your actual deployed app domain or local ngrok URL).</p>
+                                    <h4 className="text-sm font-semibold text-black/60 dark:text-white/60 uppercase tracking-wide">1. Webhook URL</h4>
+                                    <p className="text-sm text-foreground/50 mb-2">Paste this exact URL into your TradingView Alert's Webhook URL field. Note: AutoAlpha uses secure payload authentication, so you DO NOT need to put the secret token in this URL.</p>
                                     <div className="relative group">
-                                        <code className="block w-full bg-[#1D1D1F] text-white p-4 rounded-[1rem] text-sm overflow-x-auto whitespace-pre font-mono shadow-inner">
-                                            {typeof window !== 'undefined' ? `${window.location.origin}/api/webhook/tradingview` : 'https://your-domain.com/api/webhook/tradingview'}
+                                        <code className="block w-full bg-[#1D1D1F] text-white p-4 pr-16 rounded-[1rem] text-sm overflow-x-auto whitespace-pre font-mono shadow-inner">
+                                            {typeof window !== 'undefined' ? `${window.location.origin}/api/webhook/tradingview` : 'https://autoalpha.trade/api/webhook/tradingview'}
                                         </code>
+                                        <button 
+                                            onClick={(e) => {
+                                                const url = typeof window !== 'undefined' ? `${window.location.origin}/api/webhook/tradingview` : 'https://autoalpha.trade/api/webhook/tradingview';
+                                                navigator.clipboard.writeText(url);
+                                                const target = e.currentTarget;
+                                                const originalHtml = target.innerHTML;
+                                                target.innerHTML = `<svg class="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>`;
+                                                setTimeout(() => target.innerHTML = originalHtml, 2000);
+                                            }}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-white/10 hover:bg-white/20 active:bg-white/30 rounded-lg transition-colors text-white/70 hover:text-white"
+                                            title="Copy URL"
+                                        >
+                                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                            </svg>
+                                        </button>
                                     </div>
                                 </div>
 
                                 <div className="space-y-4">
                                     <div>
-                                        <h4 className="text-sm font-semibold text-black/60 uppercase tracking-wide">2. Webhook Payloads</h4>
+                                        <h4 className="text-sm font-semibold text-black/60 dark:text-white/60 uppercase tracking-wide">2. Webhook Security Payload</h4>
                                         <p className="text-sm text-foreground/50 mb-4 mt-1">
-                                            Choose one of the required JSON payload methods Below to transmit signals to AutoAlpha.
+                                            Your unique <code className="bg-black/5 dark:bg-white/10 px-1 rounded text-pink-600 dark:text-pink-400">ADMIN_WEBHOOK_SECRET</code> token is automatically injected inside the JSON payloads below. Choose one method to transmit signals securely to AutoAlpha.
                                         </p>
                                     </div>
 
