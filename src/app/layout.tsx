@@ -4,7 +4,6 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { SessionProvider } from "@/components/SessionProvider";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Web3Provider } from "@/app/providers/Web3Provider";
 
 export const dynamic = 'force-dynamic';
 
@@ -62,9 +61,7 @@ export default function RootLayout({
         >
           <SessionProvider>
             <TooltipProvider>
-              <Web3Provider>
                 {children}
-              </Web3Provider>
             </TooltipProvider>
           </SessionProvider>
         </ThemeProvider>

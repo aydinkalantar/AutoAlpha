@@ -8,6 +8,12 @@ import CheckoutForm from './CheckoutForm';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useSwitchChain } from 'wagmi';
 import { parseUnits } from 'viem';
 import { mainnet, arbitrum, optimism, base, polygon } from 'wagmi/chains';
+import dynamic from 'next/dynamic';
+
+const ClientWeb3Provider = dynamic(
+    () => import('@/app/providers/Web3Provider').then(mod => mod.Web3Provider),
+    { ssr: false }
+);
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
 const ADMIN_WALLET = process.env.NEXT_PUBLIC_ADMIN_WALLET || '0x0000000000000000000000000000000000000000';
@@ -44,6 +50,14 @@ import { Stripe } from '@stripe/stripe-js';
 import { useSession } from 'next-auth/react';
 
 export default function DepositPage() {
+    return (
+        <ClientWeb3Provider>
+            <DepositContent />
+        </ClientWeb3Provider>
+    );
+}
+
+function DepositContent() {
     const { data: session } = useSession();
     const [currency, setCurrency] = useState<'USDT' | 'USDC'>('USDT');
     const [method, setMethod] = useState<'web3' | 'card'>('web3');
