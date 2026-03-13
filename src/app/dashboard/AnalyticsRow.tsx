@@ -205,7 +205,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
                                 </TooltipContent>
                             </Tooltip>
                         </div>
-                        <div className="flex items-baseline gap-2">
+                        <div className="flex flex-col items-start gap-y-1">
                             <span className="text-3xl font-bold tracking-tight">{winRate.toFixed(1)}%</span>
                             <span className="text-xs text-foreground/40 font-medium whitespace-nowrap truncate">{totalTrades} trades</span>
                         </div>
@@ -234,7 +234,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
                                 </TooltipContent>
                             </Tooltip>
                         </div>
-                        <div className="flex items-baseline gap-2">
+                        <div className="flex flex-col items-start gap-y-1">
                             <span className="text-3xl font-bold tracking-tight">{profitFactor.toFixed(2)}</span>
                             <span className="text-xs text-emerald-500 font-medium whitespace-nowrap truncate">Gross Prof / Loss</span>
                         </div>
@@ -263,7 +263,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
                                 </TooltipContent>
                             </Tooltip>
                         </div>
-                        <div className="flex items-baseline gap-2">
+                        <div className="flex flex-col items-start gap-y-1">
                             <span className="text-3xl font-bold tracking-tight text-rose-500">-{Math.abs(maxDrawdown).toFixed(2)}%</span>
                             <span className="text-xs text-rose-500 font-medium whitespace-nowrap truncate">Peak-to-Trough</span>
                         </div>
@@ -292,7 +292,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
                                 </TooltipContent>
                             </Tooltip>
                         </div>
-                        <div className="flex items-baseline gap-2">
+                        <div className="flex flex-col items-start gap-y-1">
                             <span className={`text-3xl font-bold tracking-tight ${roiPercentage >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
                                 {roiPercentage >= 0 ? '+' : ''}{roiPercentage.toFixed(2)}%
                             </span>
@@ -323,7 +323,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
                                 </TooltipContent>
                             </Tooltip>
                         </div>
-                        <div className="flex items-baseline gap-2">
+                        <div className="flex flex-col items-start gap-y-1">
                             <span className={`text-3xl font-bold tracking-tight ${totalRevenue >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
                                 {totalRevenue >= 0 ? '+' : '-'}${Math.abs(totalRevenue).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </span>
@@ -342,7 +342,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
                     </div>
                     <div>
                         <h4 className="text-sm font-medium text-foreground/50 mb-1 truncate">24h Daily PnL</h4>
-                        <div className="flex items-baseline gap-2">
+                        <div className="flex flex-col items-start gap-y-1">
                             <span className={`text-3xl font-bold tracking-tight ${dailyPnl >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
                                 {dailyPnl >= 0 ? '+' : '-'}${Math.abs(dailyPnl).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </span>
