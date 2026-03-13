@@ -49,7 +49,7 @@ export default function TestnetToggle({ initialMode, userId }: { initialMode: bo
             </div>
 
             {/* Paper Reset Button Container - Fixed width prevents layout shift */}
-            <div className="w-[120px] flex justify-end">
+            <div className="w-28 md:w-32 flex justify-end">
                 {initialMode && (
                     <div className="pl-4 ml-2 border-l border-black/10 dark:border-white/10 flex-1 flex justify-end">
                         <button

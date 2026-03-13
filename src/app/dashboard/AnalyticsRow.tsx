@@ -207,7 +207,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
                         </div>
                         <div className="flex items-baseline gap-2">
                             <span className="text-3xl font-bold tracking-tight">{winRate.toFixed(1)}%</span>
-                            <span className="text-xs text-foreground/40 font-medium whitespace-nowrap">{totalTrades} trades</span>
+                            <span className="text-xs text-foreground/40 font-medium whitespace-nowrap truncate">{totalTrades} trades</span>
                         </div>
                     </div>
                 </div>
@@ -236,7 +236,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
                         </div>
                         <div className="flex items-baseline gap-2">
                             <span className="text-3xl font-bold tracking-tight">{profitFactor.toFixed(2)}</span>
-                            <span className="text-xs text-emerald-500 font-medium whitespace-nowrap">Gross Prof / Loss</span>
+                            <span className="text-xs text-emerald-500 font-medium whitespace-nowrap truncate">Gross Prof / Loss</span>
                         </div>
                     </div>
                 </div>
@@ -265,7 +265,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
                         </div>
                         <div className="flex items-baseline gap-2">
                             <span className="text-3xl font-bold tracking-tight text-rose-500">-{Math.abs(maxDrawdown).toFixed(2)}%</span>
-                            <span className="text-xs text-rose-500 font-medium whitespace-nowrap">Peak-to-Trough</span>
+                            <span className="text-xs text-rose-500 font-medium whitespace-nowrap truncate">Peak-to-Trough</span>
                         </div>
                     </div>
                 </div>
@@ -296,7 +296,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
                             <span className={`text-3xl font-bold tracking-tight ${roiPercentage >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
                                 {roiPercentage >= 0 ? '+' : ''}{roiPercentage.toFixed(2)}%
                             </span>
-                            <span className="text-xs text-foreground/40 font-medium whitespace-nowrap">On Active Capital</span>
+                            <span className="text-xs text-foreground/40 font-medium whitespace-nowrap truncate">On Active Capital</span>
                         </div>
                     </div>
                 </div>
@@ -327,7 +327,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
                             <span className={`text-3xl font-bold tracking-tight ${totalRevenue >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
                                 {totalRevenue >= 0 ? '+' : '-'}${Math.abs(totalRevenue).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </span>
-                            <span className="text-xs text-foreground/40 font-medium whitespace-nowrap">Realized PnL</span>
+                            <span className="text-xs text-foreground/40 font-medium whitespace-nowrap truncate">Realized PnL</span>
                         </div>
                     </div>
                 </div>
@@ -346,7 +346,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
                             <span className={`text-3xl font-bold tracking-tight ${dailyPnl >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
                                 {dailyPnl >= 0 ? '+' : '-'}${Math.abs(dailyPnl).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </span>
-                            <span className="text-xs text-foreground/40 font-medium whitespace-nowrap">Last 24 hours</span>
+                            <span className="text-xs text-foreground/40 font-medium whitespace-nowrap truncate">Last 24 hours</span>
                         </div>
                     </div>
                 </div>
