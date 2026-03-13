@@ -24,7 +24,7 @@ export default function TestnetToggle({ initialMode, userId }: { initialMode: bo
     return (
         <div className="flex items-center gap-4 bg-white/60 dark:bg-[#111] backdrop-blur-2xl px-6 py-3 rounded-full border border-black/5 dark:border-white/10 shadow-sm w-fit relative z-10 transition-all">
             <span className={`text-sm tracking-tight transition-colors duration-300 font-bold ${!initialMode ? 'text-black dark:text-white' : 'text-black/40 dark:text-white/40'}`}>
-                Live Capital
+                Live
             </span>
 
             <button
@@ -38,7 +38,7 @@ export default function TestnetToggle({ initialMode, userId }: { initialMode: bo
 
             <div className="flex items-center gap-2">
                 <span className={`text-sm tracking-tight transition-colors duration-300 font-bold ${initialMode ? 'text-cyan-600 dark:text-cyan-400' : 'text-black/40 dark:text-white/40'}`}>
-                    Testnet Sandbox
+                    Testnet
                 </span>
                 {initialMode && (
                     <span className="relative flex h-2 w-2">
@@ -48,20 +48,22 @@ export default function TestnetToggle({ initialMode, userId }: { initialMode: bo
                 )}
             </div>
 
-            {/* Paper Reset Button */}
-            {initialMode && (
-                <div className="pl-4 ml-2 border-l border-black/10 dark:border-white/10">
-                    <button
-                        onClick={handleReset}
-                        disabled={isResetting || isPending}
-                        className="flex items-center gap-1.5 text-xs font-bold text-foreground/50 hover:text-cyan-500 transition-colors disabled:opacity-50"
-                        title="Reset Paper Capital to default ($20k)"
-                    >
-                        <RotateCw className={`w-3.5 h-3.5 ${isResetting ? 'animate-spin' : ''}`} />
-                        <span>Reset Funds</span>
-                    </button>
-                </div>
-            )}
+            {/* Paper Reset Button Container - Fixed width prevents layout shift */}
+            <div className="w-[120px] flex justify-end">
+                {initialMode && (
+                    <div className="pl-4 ml-2 border-l border-black/10 dark:border-white/10 flex-1 flex justify-end">
+                        <button
+                            onClick={handleReset}
+                            disabled={isResetting || isPending}
+                            className="flex items-center gap-1.5 text-xs font-bold text-foreground/50 hover:text-cyan-500 transition-colors disabled:opacity-50 whitespace-nowrap"
+                            title="Reset Paper Capital to default ($20k)"
+                        >
+                            <RotateCw className={`w-3.5 h-3.5 ${isResetting ? 'animate-spin' : ''}`} />
+                            <span>Reset Funds</span>
+                        </button>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
