@@ -334,21 +334,22 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
 
                                 <div className="space-y-4 mb-8">
                                     <h4 className="text-xs font-bold tracking-widest uppercase text-foreground/40 px-2">Quick Actions</h4>
-                                    <div className="grid grid-cols-2 gap-3">
-                                        <button 
-                                            onClick={() => { toggleSound(); /* optional: close menu conditionally? */ }} 
-                                            className="flex flex-col items-center justify-center gap-2 p-4 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 active:bg-black/15 dark:active:bg-white/15 rounded-2xl transition-colors"
+                                    <div className="grid grid-cols-2 gap-3">                                        <Button 
+                                            variant="ghost"
+                                            onClick={toggleSound} 
+                                            className="h-auto flex flex-col items-center justify-center gap-2 p-4 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 active:bg-black/15 dark:active:bg-white/15 rounded-2xl transition-colors"
                                         >
                                             <div className="p-2 rounded-full bg-white dark:bg-[#1C1C1E] shadow-sm">
                                                 {isSoundEnabled ? <Volume2 className="w-5 h-5 text-foreground" /> : <VolumeX className="w-5 h-5 opacity-50 text-foreground" />}
                                             </div>
                                             <span className="text-xs font-bold">{isSoundEnabled ? "Sound On" : "Sound Off"}</span>
-                                        </button>
+                                        </Button>
 
                                         {mounted && (
-                                            <button 
+                                            <Button 
+                                                variant="ghost"
                                                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} 
-                                                className="flex flex-col items-center justify-center gap-2 p-4 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 active:bg-black/15 dark:active:bg-white/15 rounded-2xl transition-colors"
+                                                className="h-auto flex flex-col items-center justify-center gap-2 p-4 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 active:bg-black/15 dark:active:bg-white/15 rounded-2xl transition-colors"
                                             >
                                                 <div className="p-2 rounded-full bg-white dark:bg-[#1C1C1E] shadow-sm">
                                                     {theme === 'dark' ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-blue-500" />}

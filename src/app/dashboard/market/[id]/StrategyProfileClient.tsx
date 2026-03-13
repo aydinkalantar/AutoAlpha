@@ -7,6 +7,7 @@ import CapitalAllocationModal from "../../CapitalAllocationModal";
 import { updateSubscriptionCapital } from "../../subscriptionActions";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import {
     Area,
     AreaChart,
@@ -70,12 +71,13 @@ export default function StrategyProfileClient({
                         </h1>
                     </div>
                 </div>
-                <button
+                <Button
+                    size="lg"
                     onClick={() => setIsSubscribeOpen(true)}
-                    className="hidden lg:inline-flex items-center justify-center px-6 py-3 bg-gradient-to-br from-cyan-400 to-purple-600 text-white font-bold rounded-xl shadow-lg shadow-purple-500/30 hover:-translate-y-0.5 hover:shadow-purple-500/40 transition-all flex-shrink-0"
+                    className="hidden lg:inline-flex items-center justify-center bg-gradient-to-br from-cyan-400 to-purple-600 text-white font-bold rounded-xl shadow-lg shadow-purple-500/30 hover:-translate-y-0.5 hover:shadow-purple-500/40 transition-all flex-shrink-0"
                 >
                     Allocate Capital
-                </button>
+                </Button>
             </div>
 
             {/* Top Grid: Main Info & Actions */}
@@ -128,20 +130,22 @@ export default function StrategyProfileClient({
                                         />
                                     ))}
                                 </div>
-                                <button
+                                <Button
+                                    variant="secondary"
                                     onClick={() => setIsSubscribeOpen(true)}
-                                    className="w-full py-3 mt-2 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-xl text-sm font-bold transition-all"
+                                    className="w-full mt-2 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-xl font-bold transition-all"
                                 >
                                     + Add Another Exchange
-                                </button>
+                                </Button>
                             </>
                         ) : (
-                            <button
+                            <Button
+                                size="lg"
                                 onClick={() => setIsSubscribeOpen(true)}
-                                className="w-full py-4 bg-gradient-to-br from-cyan-400 to-purple-600 shadow-lg shadow-purple-500/30 text-white rounded-xl font-bold text-lg hover:-translate-y-0.5 transition-all hover:shadow-purple-500/40"
+                                className="w-full bg-gradient-to-br from-cyan-400 to-purple-600 shadow-lg shadow-purple-500/30 text-white rounded-xl font-bold text-lg hover:-translate-y-0.5 transition-all hover:shadow-purple-500/40"
                             >
                                 Subscribe Now
-                            </button>
+                            </Button>
                         )}
                     </div>
                 </div>
@@ -358,12 +362,13 @@ function ProfileSubscriptionCard({ sub, strategy, setEditingAllocation }: { sub:
                     <div className="w-9 h-5 bg-rose-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[14px] after:left-[calc(50%-36px)] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
                     <span className="ml-[34px] text-sm font-bold text-foreground">{isActive ? 'Active' : 'Paused'}</span>
                 </label>
-                <button
+                <Button
+                    variant="secondary"
                     onClick={() => setEditingAllocation(sub)}
-                    className="py-3 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-xl text-sm font-bold transition-all"
+                    className="bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-xl font-bold transition-all"
                 >
                     Edit Capital
-                </button>
+                </Button>
             </div>
         </div>
     );
