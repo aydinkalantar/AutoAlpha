@@ -41,7 +41,7 @@ export default function StrategySneakPeek({ strategies }: { strategies: any[] })
                         <div className="flex gap-4">
                             <div className="text-right">
                                 <p className="text-xs font-bold uppercase tracking-widest text-foreground/40 mb-1">Max Drawdown</p>
-                                <p className="text-xl font-black text-rose-500">{flagship?.drawdownPercentage != null ? `-${Math.abs(flagship.drawdownPercentage)}%` : "-12.4%"}</p>
+                                <p className="text-xl font-black text-rose-500">{flagship?.drawdownPercentage != null ? `-${Math.abs(flagship.drawdownPercentage).toFixed(2)}%` : "-12.4%"}</p>
                             </div>
                             <div className="w-px h-10 bg-black/10 dark:bg-white/10 self-center" />
                             <div className="text-right">
