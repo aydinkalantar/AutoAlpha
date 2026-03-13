@@ -22,12 +22,15 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
         let grossLoss = 0;
         let cumulativePnl = 0;
         let peakCumulativePnl = 0;
-        let currentDrawdown = 0;
-        let maxDrawdownVal = 0;
+        let maxDrawdownPct = 0;
         let last24hPnl = 0;
 
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
+
+        // Pre-calculate final PnL to infer starting capital for realistic percentage math
+        const finalCumulativePnl = closedPositions.reduce((sum, pos) => sum + (pos.realizedPnl || 0), 0);
+        const inferredInitialCapital = Math.max(totalBalance - finalCumulativePnl, 100); // Base minimum of 100
 
         for (const pos of closedPositions) {
             const exitPnl = pos.realizedPnl || 0;
@@ -44,9 +47,12 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
                 peakCumulativePnl = cumulativePnl;
             }
 
-            currentDrawdown = peakCumulativePnl - cumulativePnl;
-            if (currentDrawdown > maxDrawdownVal) {
-                maxDrawdownVal = currentDrawdown;
+            const currentDrawdown = peakCumulativePnl - cumulativePnl;
+            const currentPeakBalance = inferredInitialCapital + peakCumulativePnl;
+            const currentDrawdownPct = currentPeakBalance > 0 ? (currentDrawdown / currentPeakBalance) * 100 : 0;
+
+            if (currentDrawdownPct > maxDrawdownPct) {
+                maxDrawdownPct = currentDrawdownPct;
             }
 
             // Check if closed in last 24h
@@ -58,12 +64,13 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance }:
         const winRate = (wins / closedPositions.length) * 100;
         const profitFactor = grossLoss === 0 ? (grossProfit > 0 ? 99.9 : 0) : grossProfit / grossLoss;
         const roiPercentage = totalBalance > 0 ? (cumulativePnl / totalBalance) * 100 : 0;
+        const clampedDrawdown = Math.min(maxDrawdownPct, 100); // Prevent impossible >100% drawdowns without explicit leverage models
 
         return { 
             winRate, 
             profitFactor, 
             totalTrades: closedPositions.length, 
-            maxDrawdown: maxDrawdownVal,
+            maxDrawdown: clampedDrawdown,
             totalRevenue: cumulativePnl,
             dailyPnl: last24hPnl,
             roiPercentage
