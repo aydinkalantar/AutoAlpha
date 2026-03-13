@@ -6,7 +6,10 @@ import { motion } from 'framer-motion';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { Accordion } from '@/components/ui/Accordion';
-import { PlayCircle, Key, Wallet, LineChart, Shield, Lock, ShieldAlert } from 'lucide-react';
+import { PlayCircle, Key, Wallet, LineChart, Shield, Lock, ShieldAlert, Cpu } from 'lucide-react';
+import RoiCalculator from './RoiCalculator';
+import StrategySneakPeek from './StrategySneakPeek';
+import PublicLeaderboard from './PublicLeaderboard';
 
 export default function LandingPageClient({ initialStrategies }: { initialStrategies: any[] }) {
   const { data: session, status } = useSession();
@@ -17,12 +20,16 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
 
   const faqItems = [
     {
-      question: "Can AutoAlpha steal my crypto?",
-      answer: "No. You provide us with \"Trade-Only\" API keys. Binance/Bybit physically blocks us from withdrawing your funds."
+      question: "Can AutoAlpha withdraw my crypto?",
+      answer: "No. You provide us with \"Trade-Only\" API keys. Your exchange physically blocks us from withdrawing your funds. Our architecture is 100% non-custodial."
     },
     {
-      question: "What if my Gas Tank runs out?",
-      answer: "Our engine will simply pause executing new trades on your account until you top up your USDT/USDC balance. You will receive an email warning before this happens."
+      question: "How does the Gas Tank work?",
+      answer: "Our engine will execute trades on your account 24/7. We only deduct our performance fee from your prepaid Gas Tank balance when a trade closes in profit. If your Gas Tank hits $0, the system safely pauses new entries."
+    },
+    {
+      question: "What exchanges are supported?",
+      answer: "We natively integrate with Binance, Bybit, OKX, Kraken, Coinbase, MEXC, and Gate.io."
     },
     {
       question: "Do I need to keep my computer on?",
@@ -103,97 +110,131 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
             </motion.div>
 
             <motion.h1 variants={fadeUpVariants} className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[1.05] mb-8 text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/60">
-              Hedge fund power.<br />
+              Institutional-Grade Crypto<br />
               <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                Total custody.
+                Algorithms. Zero Custody Risk.
               </span>
             </motion.h1>
 
             <motion.p variants={fadeUpVariants} className="text-lg md:text-2xl text-foreground/60 max-w-3xl font-medium leading-relaxed mb-12">
-              Connect your exchange. Select an algorithm. We trade 24/7.<br className="hidden md:block" /> Your funds never leave your wallet.
+              Connect your exchange API. Fund your prepaid Gas Tank. Let emotionless algorithms trade your account 24/7. <strong className="text-foreground">We only get paid when you profit.</strong>
             </motion.p>
 
             <motion.div variants={fadeUpVariants} className="flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto">
-              <Link href="#strategies" className="w-full sm:w-auto px-8 py-4 bg-foreground text-background rounded-full text-lg font-bold hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-black/20 dark:shadow-white/10">
-                View Active Strategies
+              <Link href="/api/auth/signin" className="w-full sm:w-auto px-10 py-5 bg-gradient-to-r from-cyan-500 to-purple-600 text-white rounded-full text-xl font-bold hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-purple-500/30 dark:shadow-purple-500/20">
+                Start Automating
               </Link>
-              <button className="w-full sm:w-auto px-8 py-4 flex items-center justify-center gap-3 rounded-full text-lg font-bold text-foreground bg-white/40 dark:bg-white/5 border border-black/5 dark:border-white/5 backdrop-blur-md hover:bg-white/60 dark:hover:bg-white/10 transition-all">
+              <Link href="#strategies" className="w-full sm:w-auto px-10 py-5 flex items-center justify-center gap-3 rounded-full text-xl font-bold text-foreground bg-white/40 dark:bg-white/5 border border-black/5 dark:border-white/5 backdrop-blur-md hover:bg-white/60 dark:hover:bg-white/10 transition-all">
                 <PlayCircle className="w-5 h-5 text-purple-500" />
-                How It Works
-              </button>
+                View Live Strategies
+              </Link>
             </motion.div>
           </motion.div>
         </section>
 
-        {/* 3. Supported Exchanges Marquee */}
-        <section className="w-full py-12 border-y border-black/5 dark:border-white/5 bg-white/50 dark:bg-white/5 backdrop-blur-xl overflow-hidden relative">
-          <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-background to-transparent z-10" />
-          <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-background to-transparent z-10" />
-          <div className="w-full flex justify-center overflow-hidden">
-            <p className="text-center text-xs sm:text-sm font-bold uppercase tracking-widest sm:tracking-[0.2em] text-foreground/40 mb-8 px-4 max-w-full">
-              Natively Integrated With Your Preferred Exchange
-            </p>
-          </div>
-          <div className="flex w-max">
-            <div className="flex w-max animate-[marquee_20s_linear_infinite] items-center">
-              <div className="flex items-center gap-12 sm:gap-24 opacity-40 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500 pr-12 sm:pr-24">
-                {exchanges.map((ex, i) => (
-                  <span key={i} className="text-2xl md:text-4xl font-black tracking-tight">{ex}</span>
-                ))}
+        {/* 3. The Trust Strip */}
+        <section className="w-full border-y border-black/5 dark:border-white/5 bg-white/50 dark:bg-white/5 backdrop-blur-xl relative z-10">
+          <div className="py-12 border-b border-black/5 dark:border-white/5 overflow-hidden relative">
+            <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+            <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+            <div className="w-full flex justify-center overflow-hidden">
+              <p className="text-center text-xs sm:text-sm font-bold uppercase tracking-widest sm:tracking-[0.2em] text-foreground/40 mb-8 px-4 max-w-full">
+                Natively Integrated With Your Preferred Exchange
+              </p>
+            </div>
+            <div className="flex w-max">
+              <div className="flex w-max animate-[marquee_20s_linear_infinite] items-center">
+                <div className="flex items-center gap-12 sm:gap-24 opacity-40 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500 pr-12 sm:pr-24">
+                  {exchanges.map((ex, i) => (
+                    <span key={i} className="text-2xl md:text-3xl font-black tracking-tight">{ex}</span>
+                  ))}
+                </div>
+              </div>
+              <div className="flex w-max animate-[marquee_20s_linear_infinite] items-center" aria-hidden="true">
+                <div className="flex items-center gap-12 sm:gap-24 opacity-40 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500 pr-12 sm:pr-24">
+                  {exchanges.map((ex, i) => (
+                    <span key={`dup-${i}`} className="text-2xl md:text-3xl font-black tracking-tight">{ex}</span>
+                  ))}
+                </div>
               </div>
             </div>
-            <div className="flex w-max animate-[marquee_20s_linear_infinite] items-center" aria-hidden="true">
-              <div className="flex items-center gap-12 sm:gap-24 opacity-40 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500 pr-12 sm:pr-24">
-                {exchanges.map((ex, i) => (
-                  <span key={`dup-${i}`} className="text-2xl md:text-4xl font-black tracking-tight">{ex}</span>
-                ))}
+          </div>
+
+          <div className="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row items-center justify-between gap-12">
+            <div className="flex items-center gap-4 px-6 py-3 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5">
+              <Shield className="w-6 h-6 text-emerald-500" />
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider text-foreground/50">Billing & Subscription</p>
+                <p className="text-sm font-black tracking-tight">Payments secured by Stripe</p>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center gap-8 md:gap-16">
+              <div className="text-center">
+                <p className="text-xs font-bold uppercase tracking-widest text-foreground/50 mb-1">Total Trades Executed</p>
+                <p className="text-3xl font-black bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">1,204,492+</p>
+              </div>
+              <div className="hidden sm:block w-px h-12 bg-black/10 dark:bg-white/10" />
+              <div className="text-center">
+                <p className="text-xs font-bold uppercase tracking-widest text-foreground/50 mb-1">Global Win Rate</p>
+                <p className="text-3xl font-black bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-500">68.4%</p>
+              </div>
+              <div className="hidden sm:block w-px h-12 bg-black/10 dark:bg-white/10" />
+              <div className="text-center">
+                <p className="text-xs font-bold uppercase tracking-widest text-foreground/50 mb-1">Active Platform Uptime</p>
+                <p className="text-3xl font-black text-foreground">99.99%</p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* 4. Evolution of Investing */}
+        {/* ROI Calculator Section */}
+        <RoiCalculator />
+
+        {/* 4. The Three Pillars Grid */}
         <section className="w-full max-w-7xl mx-auto px-6 py-32 z-10">
           <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-6xl font-black tracking-tight mb-6">Passive Investing is Flawed.<br />The Market Goes Both Ways.</h2>
-            <p className="text-xl text-foreground/60 max-w-2xl mx-auto leading-relaxed">Holding crypto forces you to bleed during bear markets. AutoAlpha algorithms are designed for total market capitalization—engineering shallower drawdowns and shorting the market when it crashes.</p>
+            <h2 className="text-4xl md:text-6xl font-black tracking-tight mb-6">Built Differently.<br />Engineered for Trust.</h2>
+            <p className="text-xl text-foreground/60 max-w-2xl mx-auto leading-relaxed">AutoAlpha solves the three biggest fears in crypto: custodian risk, exorbitant fees, and human emotion.</p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 relative items-stretch">
-            {/* V.S. Badge */}
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 hidden md:flex w-16 h-16 rounded-full bg-background border border-black/5 dark:border-white/10/10 items-center justify-center shadow-2xl font-black text-xl italic text-foreground/40 backdrop-blur-md">VS</div>
-
-            <GlassCard className="border-red-500/20 bg-gradient-to-br from-red-500/5 to-transparent flex flex-col">
-              <h3 className="text-3xl font-bold mb-8 flex items-center gap-4">
-                <span className="w-4 h-4 rounded-full bg-red-500 shadow-[0_0_15px_rgba(239,68,68,0.5)]" />
-                The Old Way
-              </h3>
-              <ul className="space-y-6 flex-1">
-                {["Bleeds capital during bear markets.", "Zero automated stop-losses.", "High emotional stress during crashes.", "Only profits when prices go up."].map((text, i) => (
-                  <li key={i} className="flex gap-4 text-lg text-foreground/70 items-start">
-                    <span className="text-red-500 text-xl leading-none mt-1">🔴</span> <span>{text}</span>
-                  </li>
-                ))}
-              </ul>
+          <div className="grid md:grid-cols-3 gap-8 relative items-stretch">
+            {/* Pillar 1 */}
+            <GlassCard className="border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 to-transparent flex flex-col p-8 md:p-10 hover:-translate-y-2 transition-all group">
+              <div className="w-16 h-16 rounded-[1.5rem] bg-cyan-500/20 flex items-center justify-center mb-8 border border-cyan-500/30 group-hover:scale-110 transition-transform">
+                <Shield className="w-8 h-8 text-cyan-500" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4">100% Non-Custodial</h3>
+              <p className="text-foreground/70 leading-relaxed text-lg">
+                Your keys, your crypto. We never hold your funds. Our trade-only API architecture ensures your money stays safely in your own exchange account.
+              </p>
             </GlassCard>
 
-            <GlassCard className="border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 to-transparent shadow-[0_0_50px_rgba(16,185,129,0.05)] flex flex-col">
-              <h3 className="text-3xl font-bold mb-8 flex items-center gap-4">
-                <span className="w-4 h-4 rounded-full bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.6)]" />
-                The AutoAlpha Way
-              </h3>
-              <ul className="space-y-6 flex-1">
-                {["Dynamically shorts the market for profit during crashes.", "Strict, mathematical Stop-Losses to protect equity.", "100% automated, hands-free execution.", "Profits from both upward and downward volatility."].map((text, i) => (
-                  <li key={i} className="flex gap-4 text-lg font-medium text-foreground/90 items-start">
-                    <span className="text-emerald-500 text-xl leading-none mt-1">🟢</span> <span>{text}</span>
-                  </li>
-                ))}
-              </ul>
+            {/* Pillar 2 */}
+            <GlassCard className="border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 to-transparent flex flex-col p-8 md:p-10 hover:-translate-y-2 transition-all shadow-[0_0_50px_rgba(16,185,129,0.05)] group">
+              <div className="w-16 h-16 rounded-[1.5rem] bg-emerald-500/20 flex items-center justify-center mb-8 border border-emerald-500/30 group-hover:scale-110 transition-transform">
+                <LineChart className="w-8 h-8 text-emerald-500" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4">Performance-Aligned</h3>
+              <p className="text-foreground/70 leading-relaxed text-lg">
+                No hidden management fees. You top up a prepaid Gas Tank, and we only deduct our fee when a trade closes in profit. If we don't win, you don't pay.
+              </p>
+            </GlassCard>
+
+            {/* Pillar 3 */}
+            <GlassCard className="border-purple-500/30 bg-gradient-to-br from-purple-500/10 to-transparent flex flex-col p-8 md:p-10 hover:-translate-y-2 transition-all group">
+              <div className="w-16 h-16 rounded-[1.5rem] bg-purple-500/20 flex items-center justify-center mb-8 border border-purple-500/30 group-hover:scale-110 transition-transform">
+                <Cpu className="w-8 h-8 text-purple-500" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4">Emotionless Execution</h3>
+              <p className="text-foreground/70 leading-relaxed text-lg">
+                Humans panic. Algorithms don't. Our sub-second routing engine executes trades flawlessly while you sleep, removing FOMO and fear from the equation.
+              </p>
             </GlassCard>
           </div>
         </section>
 
-        {/* 5. How It Works */}
+        {/* 5. How It Works (3-Step Setup) */}
         <section id="how-it-works" className="w-full py-32 bg-white/20 dark:bg-white/5 backdrop-blur-3xl border-y border-black/5 dark:border-white/5 relative z-10">
           <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/5 via-transparent to-purple-500/5" />
           <div className="max-w-7xl mx-auto px-6 relative z-20">
@@ -201,9 +242,9 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
 
             <div className="grid md:grid-cols-3 gap-12">
               {[
-                { icon: Key, title: "Connect Securely", desc: "Generate read/trade-only API keys on your exchange. We never ask for withdrawal permissions. Your funds stay in your wallet." },
-                { icon: Wallet, title: "Fund Your Gas Tank", desc: "Deposit a small prepaid balance (USDT or USDC) to our platform. This covers your future performance fees." },
-                { icon: LineChart, title: "Allocate & Automate", desc: "Choose a strategy like GaussBreaker v4.1, tell the system how much of your exchange capital to use, and walk away." }
+                { icon: Key, title: "Connect", desc: "Generate a Trade-Only API key on your favorite exchange. We have zero withdrawal access." },
+                { icon: Wallet, title: "Fuel", desc: "Add $50 of USDC or Fiat to your prepaid Gas Tank via Stripe to cover future performance fees." },
+                { icon: LineChart, title: "Deploy", desc: "Select your strategy, enter your desired capital allocation, and activate with one click." }
               ].map((step, i) => (
                 <div key={i} className="flex flex-col items-center text-center group">
                   <div className="w-24 h-24 rounded-[2rem] bg-gradient-to-br from-cyan-400/20 to-purple-600/20 flex items-center justify-center mb-8 border border-white/40 dark:border-white/10 group-hover:-translate-y-2 group-hover:shadow-[0_0_40px_rgba(168,85,247,0.3)] transition-all duration-500 backdrop-blur-md">
@@ -217,50 +258,8 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
           </div>
         </section>
 
-        {/* 6. Strategy Showcase */}
-        <section id="strategies" className="w-full max-w-7xl mx-auto px-6 py-32 z-10">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-6xl font-black tracking-tight mb-6">Algorithms Engineered for<br />Every Market Condition.</h2>
-            <p className="text-xl text-foreground/60 max-w-2xl mx-auto leading-relaxed">Select from a curated repository of battle-tested quantitative models.</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {initialStrategies.length === 0 ? (
-              <div className="col-span-full py-12 text-center text-foreground/50 italic">
-                No public strategies available at this time.
-              </div>
-            ) : (
-              initialStrategies.map((strategy) => (
-                <GlassCard key={strategy.id} className="group hover:-translate-y-2 hover:border-purple-500/50 hover:shadow-[0_10px_40px_rgba(168,85,247,0.15)] flex flex-col justify-between">
-                  <div>
-                    <div className="mb-6">
-                      <h3 className="text-3xl font-black tracking-tight mb-4">{strategy.name}</h3>
-                      <div className="flex flex-wrap gap-2 text-xs font-bold uppercase tracking-widest">
-                        <span className="px-3 py-1.5 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-lg">{strategy.marketType}</span>
-                        <span className="px-3 py-1.5 bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-lg">{strategy.targetExchange}</span>
-                        <span className="px-3 py-1.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-lg">{strategy.settlementCurrency}</span>
-                      </div>
-                    </div>
-                    <p className="text-foreground/70 mb-10 text-lg leading-relaxed">
-                      Powered by advanced algorithmic modeling, {strategy.name} aims for {(strategy.expectedRoiPercentage && strategy.expectedRoiPercentage > 0) ? `${strategy.expectedRoiPercentage}% expected ROI` : 'consistent risk-adjusted returns'} via {strategy.targetExchange}.
-                    </p>
-                  </div>
-                  <div>
-                    <div className="flex items-end justify-between mb-8 pb-8 border-b border-black/5 dark:border-white/10">
-                      <div>
-                        <p className="text-xs font-bold text-foreground/40 uppercase tracking-widest mb-1">Fee Model</p>
-                        <p className="text-2xl font-black">{strategy.performanceFeePercentage}% <span className="text-lg font-medium text-foreground/50 tracking-normal">Performance</span></p>
-                      </div>
-                    </div>
-                    <Link href="/dashboard" className="block text-center w-full py-4 rounded-xl font-bold bg-white/40 dark:bg-white/5 border border-black/5 dark:border-white/5 group-hover:bg-foreground group-hover:text-background transition-all shadow-sm">
-                      Copy Strategy
-                    </Link>
-                  </div>
-                </GlassCard>
-              ))
-            )}
-          </div>
-        </section>
+        {/* 6. Strategy Sneak Peek */}
+        <StrategySneakPeek strategies={initialStrategies} />
 
         {/* 7. Trust & Security Armor */}
         <section id="security" className="w-full py-32 bg-gradient-to-b from-transparent to-cyan-900/10 z-10">
@@ -302,7 +301,10 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
           </GlassCard>
         </section>
 
-        {/* 9. FAQ */}
+        {/* 9. Public Leaderboard */}
+        <PublicLeaderboard />
+
+        {/* 10. FAQ */}
         <section className="w-full max-w-4xl mx-auto px-6 py-20 z-10">
           <h2 className="text-4xl md:text-5xl font-black tracking-tight text-center mb-16">Frequently Asked Questions</h2>
           <Accordion items={faqItems} />
