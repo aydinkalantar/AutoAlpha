@@ -8,8 +8,8 @@ import { useTheme } from 'next-themes';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowUpRight, Menu, X } from 'lucide-react';
 import { useRealtime } from '@/components/dashboard/RealtimeProvider';
 
 export function cn(...inputs: ClassValue[]) {
@@ -22,10 +22,29 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
     const { isSoundEnabled, toggleSound } = useRealtime();
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         setMounted(true);
     }, []);
+
+    // Prevent body scroll when mobile menu is open
+    useEffect(() => {
+        if (isMobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+            // Also apply to html to prevent iOS Safari bounce
+            document.documentElement.style.overflow = 'hidden';
+            
+            // Adjust fixed background positioning if necessary
+            // document.body.style.position = 'fixed'; 
+            // document.body.style.width = '100%';
+        } else {
+            document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
+            // document.body.style.position = '';
+            // document.body.style.width = '';
+        }
+    }, [isMobileMenuOpen]);
 
     // Auto-collapse on small screens
     useEffect(() => {
@@ -52,6 +71,10 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
         { name: 'Academy', href: '/dashboard/academy', icon: HelpCircle },
         { name: 'Settings', href: '/dashboard/settings', icon: Settings },
     ];
+
+    // Split nav items for mobile
+    const bottomBarItems = navItems.filter(item => ['Overview', 'Marketplace', 'Strategy Report'].includes(item.name));
+    const drawerItems = navItems.filter(item => !['Overview', 'Marketplace', 'Strategy Report'].includes(item.name));
 
     return (
         <>
@@ -170,22 +193,24 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
             {/* Mobile Bottom Navigation (Floating Pill) */}
             <div className="md:hidden fixed bottom-6 left-4 right-4 z-50">
                 <nav className="h-16 bg-white/80 dark:bg-[#1C1C1E]/80 backdrop-blur-3xl border border-black/5 dark:border-white/10 rounded-[2rem] flex items-center justify-around px-2 shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
-                {navItems.filter(item => ['Overview', 'Strategy Report', 'Marketplace'].includes(item.name)).map((item) => {
+                {bottomBarItems.map((item) => {
                     const isActive = item.href === '/dashboard'
-                        ? pathname === '/dashboard'
-                        : pathname === item.href || pathname.startsWith(item.href + '/');
+                        ? !isMobileMenuOpen && pathname === '/dashboard'
+                        : !isMobileMenuOpen && (pathname === item.href || pathname.startsWith(item.href + '/'));
 
                     const Icon = item.icon;
                     return (
                         <Link
                             key={item.href}
                             href={item.href}
+                            onClick={() => setIsMobileMenuOpen(false)}
                             className={cn(
-                                "relative flex flex-col items-center justify-center w-14 h-12 rounded-2xl transition-all duration-300",
+                                "relative flex flex-col items-center justify-center w-[var(--mobile-icon-width)] h-12 rounded-2xl transition-all duration-300",
                                 isActive
                                     ? "text-cyan-500 bg-cyan-500/10 dark:bg-cyan-500/20"
                                     : "text-foreground/40 hover:text-foreground/70 active:scale-95"
                             )}
+                            style={{ "--mobile-icon-width": "calc(20vw - 12px)" } as any}
                         >
                             <Icon className={cn("w-5.5 h-5.5 transition-transform duration-300", isActive ? "scale-110 drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]" : "")} />
                             {isActive && (
@@ -199,25 +224,161 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                 })}
                 <Link
                     href="/dashboard/deposit"
+                    onClick={() => setIsMobileMenuOpen(false)}
                     className={cn(
-                        "relative flex flex-col items-center justify-center w-14 h-12 rounded-2xl transition-all duration-300 group",
-                        pathname === '/dashboard/deposit'
+                        "relative flex flex-col items-center justify-center w-[var(--mobile-icon-width)] h-12 rounded-2xl transition-all duration-300 group",
+                        !isMobileMenuOpen && pathname === '/dashboard/deposit'
                             ? "text-cyan-500 bg-cyan-500/10 dark:bg-cyan-500/20"
                             : "text-foreground/40 hover:text-foreground/70 active:scale-95"
                     )}
+                    style={{ "--mobile-icon-width": "calc(20vw - 12px)" } as any}
                     aria-label="Deposit"
                     title="Deposit"
                 >
-                    <Wallet className={cn("w-5.5 h-5.5 transition-transform duration-300", pathname === '/dashboard/deposit' ? "scale-110 drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]" : "group-hover:text-purple-500 transition-colors")} />
-                    {pathname === '/dashboard/deposit' && (
+                    <Wallet className={cn("w-5.5 h-5.5 transition-transform duration-300", !isMobileMenuOpen && pathname === '/dashboard/deposit' ? "scale-110 drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]" : "group-hover:text-purple-500 transition-colors")} />
+                    {!isMobileMenuOpen && pathname === '/dashboard/deposit' && (
                         <motion.div
                             layoutId="mobileNavIndicator"
                             className="absolute -bottom-1 w-1 h-1 rounded-full bg-cyan-400"
                         />
                     )}
                 </Link>
+                
+                {/* Mobile Menu Toggle */}
+                <button
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    className={cn(
+                        "relative flex flex-col items-center justify-center w-[var(--mobile-icon-width)] h-12 rounded-2xl transition-all duration-300",
+                        isMobileMenuOpen
+                            ? "text-cyan-500 bg-cyan-500/10 dark:bg-cyan-500/20"
+                            : "text-foreground/40 hover:text-foreground/70 active:scale-95"
+                    )}
+                    style={{ "--mobile-icon-width": "calc(20vw - 12px)" } as any}
+                    aria-label="Menu"
+                >
+                    <Menu className={cn("w-5.5 h-5.5 transition-transform duration-300", isMobileMenuOpen ? "scale-110 drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]" : "")} />
+                    {isMobileMenuOpen && (
+                        <motion.div
+                            layoutId="mobileNavIndicator"
+                            className="absolute -bottom-1 w-1 h-1 rounded-full bg-cyan-400"
+                        />
+                    )}
+                </button>
                 </nav>
             </div>
+
+            {/* Premium Mobile Menu Drawer */}
+            <AnimatePresence>
+                {isMobileMenuOpen && (
+                    <>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="md:hidden fixed inset-0 z-[40] bg-black/40 dark:bg-black/60 backdrop-blur-sm"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                        />
+                        <motion.div
+                            initial={{ y: "100%", opacity: 0.8 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: "100%", opacity: 0.8 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                            className="md:hidden fixed bottom-0 left-0 right-0 h-[85vh] z-[45] bg-white/95 dark:bg-[#121214]/95 backdrop-blur-2xl border-t border-black/5 dark:border-white/10 rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_-10px_40px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden will-change-transform"
+                        >
+                            {/* Drag Indicator */}
+                            <div className="w-full h-8 flex items-center justify-center shrink-0 cursor-pointer" 
+                                onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                                <div className="w-12 h-1.5 bg-black/10 dark:bg-white/20 rounded-full" />
+                            </div>
+
+                            <div className="flex-1 overflow-y-auto pb-28 px-6 no-scrollbar touch-pan-y shadow-[inset_0_40px_40px_-40px_rgba(0,0,0,0.05)] dark:shadow-[inset_0_40px_40px_-40px_rgba(0,0,0,0.2)]">
+                                
+                                <div className="pb-6 pt-2">
+                                    <h3 className="text-xl font-bold text-foreground mb-1 tracking-tight">Menu</h3>
+                                    <p className="text-sm text-foreground/50 font-medium">Access your account, settings, and more.</p>
+                                </div>
+
+                                <div className="space-y-2 mb-8">
+                                    {drawerItems.map((item) => {
+                                        const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+                                        const Icon = item.icon;
+
+                                        return (
+                                            <Link
+                                                key={item.href}
+                                                href={item.href}
+                                                onClick={() => setIsMobileMenuOpen(false)}
+                                                className={cn(
+                                                    "flex items-center justify-between p-4 rounded-2xl transition-all duration-300 active:scale-[0.98]",
+                                                    isActive 
+                                                        ? "bg-foreground text-background shadow-lg shadow-black/10 dark:shadow-white/5" 
+                                                        : "bg-black/5 dark:bg-white/5 text-foreground hover:bg-black/10 dark:hover:bg-white/10"
+                                                )}
+                                            >
+                                                <div className="flex items-center gap-4">
+                                                    <div className={cn("p-2 rounded-xl", isActive ? "bg-background/20" : "bg-black/5 dark:bg-white/10")}>
+                                                        <Icon className={cn("w-5 h-5", isActive ? "text-background" : "text-foreground")} />
+                                                    </div>
+                                                    <span className="font-bold text-lg">{item.name}</span>
+                                                </div>
+                                                <ChevronRight className={cn("w-5 h-5", isActive ? "text-background/50" : "text-foreground/30")} />
+                                            </Link>
+                                        )
+                                    })}
+                                </div>
+
+                                <div className="h-px w-full bg-black/5 dark:bg-white/10 mb-8" />
+
+                                <div className="space-y-4 mb-8">
+                                    <h4 className="text-xs font-bold tracking-widest uppercase text-foreground/40 px-2">Quick Actions</h4>
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <button 
+                                            onClick={() => { toggleSound(); /* optional: close menu conditionally? */ }} 
+                                            className="flex flex-col items-center justify-center gap-2 p-4 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 active:bg-black/15 dark:active:bg-white/15 rounded-2xl transition-colors"
+                                        >
+                                            <div className="p-2 rounded-full bg-white dark:bg-[#1C1C1E] shadow-sm">
+                                                {isSoundEnabled ? <Volume2 className="w-5 h-5 text-foreground" /> : <VolumeX className="w-5 h-5 opacity-50 text-foreground" />}
+                                            </div>
+                                            <span className="text-xs font-bold">{isSoundEnabled ? "Sound On" : "Sound Off"}</span>
+                                        </button>
+
+                                        {mounted && (
+                                            <button 
+                                                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} 
+                                                className="flex flex-col items-center justify-center gap-2 p-4 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 active:bg-black/15 dark:active:bg-white/15 rounded-2xl transition-colors"
+                                            >
+                                                <div className="p-2 rounded-full bg-white dark:bg-[#1C1C1E] shadow-sm">
+                                                    {theme === 'dark' ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-blue-500" />}
+                                                </div>
+                                                <span className="text-xs font-bold">{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    <button 
+                                        onClick={() => signOut({ callbackUrl: '/login' })} 
+                                        className="w-full flex items-center justify-center gap-3 py-4 text-sm font-bold text-red-500 bg-red-50 dark:bg-red-500/10 active:bg-red-100 dark:active:bg-red-500/20 rounded-2xl transition-colors mt-2"
+                                    >
+                                        <LogOut className="w-5 h-5" />
+                                        Log Out
+                                    </button>
+                                </div>
+
+                                <div className="flex flex-col items-center gap-2 pb-4 pt-4 border-t border-black/5 dark:border-white/10">
+                                    <div className="flex justify-center gap-4 text-[11px] font-bold tracking-widest uppercase text-foreground/40">
+                                        <Link href="/terms" target="_blank" className="hover:text-foreground">Terms</Link>
+                                        <Link href="/privacy" target="_blank" className="hover:text-foreground">Privacy</Link>
+                                        <Link href="/risk" target="_blank" className="hover:text-foreground">Risk</Link>
+                                    </div>
+                                    <span className="text-[10px] text-foreground/30 font-medium">© 2026 AutoAlpha</span>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
         </>
     );
 }
