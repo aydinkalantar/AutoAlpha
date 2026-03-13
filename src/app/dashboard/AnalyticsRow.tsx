@@ -270,7 +270,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
                     </div>
                 </div>
 
-                {/* Total Return (ROI) KPI */}
+                {/* Total Return KPI */}
                 <div className="min-w-[85vw] sm:min-w-0 flex-shrink-0 snap-center bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl p-4 md:p-6 flex flex-col justify-between relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                     <div className="flex justify-between items-start mb-4">
@@ -280,7 +280,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
                     </div>
                     <div>
                         <div className="flex items-center gap-1.5 mb-1">
-                            <h4 className="text-sm font-medium text-foreground/50 truncate">Total Return (ROI)</h4>
+                            <h4 className="text-sm font-medium text-foreground/50 truncate">Total Return</h4>
                             <Tooltip>
                                 <TooltipTrigger asChild>
                                     <button className="text-foreground/30 hover:text-cyan-500 cursor-help transition-colors focus:outline-none">
