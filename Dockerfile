@@ -20,7 +20,8 @@ ARG DATABASE_URL="postgresql://mock:mock@localhost:5432/mock"
 ARG DIRECT_URL="postgresql://mock:mock@localhost:5432/mock"
 ARG REDIS_HOST="localhost"
 ARG NEXT_PUBLIC_ADMIN_WALLET
-RUN DATABASE_URL=${DATABASE_URL} DIRECT_URL=${DIRECT_URL} REDIS_HOST=${REDIS_HOST} NEXT_PUBLIC_ADMIN_WALLET=${NEXT_PUBLIC_ADMIN_WALLET} npm run build
+ARG NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
+RUN DATABASE_URL=${DATABASE_URL} DIRECT_URL=${DIRECT_URL} REDIS_HOST=${REDIS_HOST} NEXT_PUBLIC_ADMIN_WALLET=${NEXT_PUBLIC_ADMIN_WALLET} NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=${NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID} npm run build
 RUN npx --yes esbuild src/workers/tradeWorker.ts --bundle --platform=node --target=node20 --outdir=dist/workers --packages=external
 RUN npx --yes esbuild src/workers/cronJobs.ts --bundle --platform=node --target=node20 --outdir=dist/workers --packages=external
 

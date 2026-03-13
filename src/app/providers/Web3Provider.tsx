@@ -15,7 +15,7 @@ const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || '8a33fa3fc
 const metadata = {
   name: 'AutoAlpha',
   description: 'AutoAlpha Institutional Crypto Copy-Trading',
-  url: 'https://autoalpha.ai',
+  url: 'https://autoalpha.trade',
   icons: ['https://avatars.githubusercontent.com/u/37784886']
 };
 
