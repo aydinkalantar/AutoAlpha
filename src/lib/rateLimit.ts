@@ -1,13 +1,22 @@
 import Redis from 'ioredis';
 
 const redisClient = process.env.REDIS_URL 
-    ? new Redis(process.env.REDIS_URL, { maxRetriesPerRequest: null, lazyConnect: true, family: 0 }) 
+    ? new Redis(process.env.REDIS_URL, { maxRetriesPerRequest: 1, commandTimeout: 2000, lazyConnect: true, family: 0 }) 
     : new Redis({
         host: process.env.REDIS_HOST || 'localhost',
         port: parseInt(process.env.REDIS_PORT || '6379'),
         lazyConnect: true,
-        maxRetriesPerRequest: null
+        commandTimeout: 2000,
+        maxRetriesPerRequest: 1
     });
+
+// Prevent unhandled promise rejections from crashing the process when Redis is down
+redisClient.on('error', (err) => {
+    // Only log once to prevent log spam in local dev
+    if ((redisClient as any)._hasLoggedError) return;
+    console.warn('[RateLimit Redis] Connection error. Rate limiting will bypass safely.');
+    (redisClient as any)._hasLoggedError = true;
+});
 
 /**
  * Basic Redis-backed Rate Limiter
