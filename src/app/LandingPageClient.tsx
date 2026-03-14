@@ -112,7 +112,7 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
             
             <div className="flex-1 min-w-0 flex flex-col justify-center">
               <p className="font-bold text-[15px] text-foreground truncate leading-tight tracking-tight">AutoAlpha Web App</p>
-              <p className="text-[13px] text-foreground/60 truncate leading-tight font-medium">AutoAlpha Ltd.</p>
+              <p className="text-[13px] text-foreground/60 truncate leading-tight font-medium">Pro performance. Zero effort.</p>
               <div className="flex items-center gap-1 mt-0.5">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <svg key={star} className="w-3 h-3 text-amber-400 fill-amber-400" viewBox="0 0 20 20">
