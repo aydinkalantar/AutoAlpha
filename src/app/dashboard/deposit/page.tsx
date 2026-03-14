@@ -16,7 +16,7 @@ const ClientWeb3Provider = dynamic(
     { ssr: false }
 );
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
+import { getStripePublishableKey } from '@/app/actions/stripe';
 const ADMIN_WALLET = process.env.NEXT_PUBLIC_ADMIN_WALLET || '0x0000000000000000000000000000000000000000';
 
 const NETWORK_CHAINS: Record<string, number> = {
@@ -85,27 +85,24 @@ function DepositContent() {
     // Stripe State
     const [clientSecret, setClientSecret] = useState('');
     const [grossAmount, setGrossAmount] = useState(0);
-    // const [stripePromise, setStripePromise] = useState<Promise<Stripe | null> | null>(null); // Removed as it's now a global constant
+    const [stripePromise, setStripePromise] = useState<Promise<Stripe | null> | null>(null);
 
     const userId = (session?.user as any)?.id;
 
     useEffect(() => {
-        // const fetchStripeKey = async () => { // Removed as stripePromise is now a global constant
-        //     try {
-        //         // Fetch dynamic Stripe key from Admin Config
-        //         const pubKey = await getStripePublishableKey();
-        //         if (pubKey) {
-        //             setStripePromise(loadStripe(pubKey));
-        //         }
-        //     } catch (err) {
-        //         console.error("Failed to load Stripe key");
-        //     }
-        // };
-        // fetchStripeKey();
+        const fetchStripeKey = async () => {
+            try {
+                // Fetch dynamic Stripe key from Admin Config (Live or Test)
+                const pubKey = await getStripePublishableKey();
+                if (pubKey) {
+                    setStripePromise(loadStripe(pubKey));
+                }
+            } catch (err) {
+                console.error("Failed to load Stripe key");
+            }
+        };
+        fetchStripeKey();
     }, []);
-
-    // Provide a dummy web3 wallet address for demonstration
-    // const ADMIN_WALLET = process.env.NEXT_PUBLIC_ADMIN_WALLET || '0xYourAdminWalletAddress...'; // Removed as it's now a global constant
 
     // AutoAlpha Absorbs Stripe Fee
     const calculateTotalWithFee = (baseAmount: number) => {
