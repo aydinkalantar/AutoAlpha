@@ -1,15 +1,22 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
-import { LogIn, Mail, Lock, AlertTriangle, ChevronLeft } from 'lucide-react';
+import { LogIn, Mail, Lock, AlertTriangle, ChevronLeft, Sun, Moon } from 'lucide-react';
 import Link from 'next/link';
+import { useTheme } from 'next-themes';
 
 export default function LoginPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const { theme, setTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const [formData, setFormData] = useState({
         email: '',
@@ -44,8 +51,19 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-[100dvh] w-full flex flex-col md:flex-row bg-background">
+        <div className="min-h-[100dvh] w-full flex flex-col md:flex-row bg-background relative">
             
+            {/* Theme Toggle (Absolute Top Right) */}
+            {mounted && (
+                <button
+                    onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                    className="absolute top-6 right-6 z-[100] p-3 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 rounded-full transition-colors border border-black/5 dark:border-white/10 shadow-sm"
+                    aria-label="Toggle Theme"
+                >
+                    {theme === 'dark' ? <Sun className="w-5 h-5 text-amber-500" /> : <Moon className="w-5 h-5 text-blue-500" />}
+                </button>
+            )}
+
             {/* Step 2: The Mobile Header (Top) */}
             <div className="flex flex-col md:hidden w-full items-center justify-center pt-12 pb-2 px-6 relative z-20 text-center">
                  <div className="flex items-center gap-3 mb-6">
