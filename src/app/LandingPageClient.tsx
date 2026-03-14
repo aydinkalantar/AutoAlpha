@@ -111,7 +111,7 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
             </div>
             
             <div className="flex-1 min-w-0 flex flex-col justify-center">
-              <p className="font-bold text-[15px] text-foreground truncate leading-tight tracking-tight">AutoAlpha App</p>
+              <p className="font-bold text-[15px] text-foreground truncate leading-tight tracking-tight">AutoAlpha Web App</p>
               <p className="text-[13px] text-foreground/60 truncate leading-tight font-medium">AutoAlpha Ltd.</p>
               <div className="flex items-center gap-1 mt-0.5">
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -450,7 +450,7 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
               <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
               <Link href="/risk" className="hover:text-foreground transition-colors">Risk Disclaimer</Link>
               <button onClick={handleInstallClick} className="hover:text-cyan-500 transition-colors uppercase font-bold tracking-widest md:hidden">
-                Download App
+                Download Web App
               </button>
             </div>
           </div>
@@ -483,7 +483,7 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
             </div>
             
             <div className="px-6 pb-8">
-              <h2 className="text-2xl font-black tracking-tight text-foreground mb-3">Install AutoAlpha</h2>
+              <h2 className="text-2xl font-black tracking-tight text-foreground mb-3">Install AutoAlpha Web App</h2>
               <p className="text-foreground/70 text-lg leading-relaxed mb-8">
                 Install AutoAlpha on your home screen for quick, secure access and a full-screen trading experience.
               </p>
