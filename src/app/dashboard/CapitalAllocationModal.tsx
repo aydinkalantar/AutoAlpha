@@ -81,6 +81,7 @@ export default function CapitalAllocationModal({
         }
     };
 
+    return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 md:pl-64 bg-black/50 backdrop-blur-sm transition-all duration-300">
             <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-2xl w-full max-w-lg max-h-[85dvh] mb-20 md:mb-0 overflow-hidden flex flex-col border border-black/5 dark:border-white/10 relative transform transition-all duration-300 scale-100 opacity-100">
 
