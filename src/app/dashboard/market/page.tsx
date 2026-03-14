@@ -64,13 +64,17 @@ export default async function MarketPage() {
     return (
         <div className="p-4 pt-8 pb-32 md:p-10 md:pt-12 md:pb-32 max-w-7xl mx-auto space-y-8 md:space-y-12">
             <div className="flex flex-row items-start justify-between gap-4 w-full">
-                <div className="flex flex-col gap-2 w-full break-words">
-                    <div className="flex flex-wrap items-center gap-3 w-full">
-                        <h1 className="text-4xl font-bold text-foreground tracking-tight break-words w-full">Strategy Marketplace</h1>
+                <div className="flex flex-col gap-3 w-full break-words">
+                    <h1 className="text-4xl font-bold text-foreground tracking-tight break-words w-full">Strategy Marketplace</h1>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full">
                         <p className="text-foreground/60 text-lg">
                             Browse and subscribe to institutional-grade trading algorithms.
-                            {isPaperMode && <span className="inline-flex items-center px-3 py-1 ml-3 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20 text-sm font-bold uppercase tracking-wider relative -top-0.5">Sandbox Mode</span>}
                         </p>
+                        {isPaperMode && (
+                            <div className="w-fit inline-flex items-center px-3 py-1 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20 text-xs sm:text-sm font-bold uppercase tracking-wider">
+                                Testnet Mode
+                            </div>
+                        )}
                     </div>
                 </div>
                 <div className="flex-shrink-0">
