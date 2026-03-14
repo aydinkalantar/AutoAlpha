@@ -116,11 +116,11 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                 <div className="flex items-center gap-1">
                     {notificationBell}
                     <button
-                        onClick={() => setIsMobileMenuOpen(true)}
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         className="p-2 text-foreground/80 hover:text-foreground active:scale-95 transition-all"
-                        aria-label="Menu"
+                        aria-label={isMobileMenuOpen ? "Close Menu" : "Open Menu"}
                     >
-                        <Menu className="w-6 h-6" />
+                        {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                     </button>
                 </div>
             </div>
