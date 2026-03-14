@@ -72,8 +72,8 @@ export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBala
     };
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 md:pl-64 bg-black/50 backdrop-blur-sm transition-all duration-300">
-            <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-2xl w-full max-w-md max-h-[85dvh] mb-20 md:mb-0 flex flex-col overflow-hidden border border-black/5 dark:border-white/10 relative transform transition-all duration-300 scale-100 opacity-100">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center px-4 md:pl-64 bg-black/50 backdrop-blur-sm transition-all duration-300">
+            <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-2xl w-full max-w-md max-h-[85dvh] pt-12 md:pt-0 mb-20 md:mb-0 flex flex-col overflow-hidden border border-black/5 dark:border-white/10 relative transform transition-all duration-300 scale-100 opacity-100">
                 <div className="px-6 py-5 border-b border-black/5 dark:border-white/10 flex justify-between items-center bg-gray-50/50 dark:bg-white/5 flex-shrink-0">
                     <h2 className="text-xl font-bold text-foreground tracking-tight">Allocate Capital</h2>
                     <button
