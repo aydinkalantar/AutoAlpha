@@ -24,9 +24,33 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isHeaderVisible, setIsHeaderVisible] = useState(true);
 
     useEffect(() => {
         setMounted(true);
+    }, []);
+
+    // Mobile Header Hide-on-Scroll Logic
+    useEffect(() => {
+        let lastScrollY = window.scrollY;
+
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+            
+            // If scrolling down AND past the top bounce buffer
+            if (currentScrollY > lastScrollY && currentScrollY > 50) {
+                setIsHeaderVisible(false);
+            } 
+            // If scrolling up
+            else if (currentScrollY < lastScrollY) {
+                setIsHeaderVisible(true);
+            }
+            
+            lastScrollY = currentScrollY;
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     // Prevent body scroll when mobile menu is open
@@ -80,7 +104,10 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
     return (
         <>
             {/* Mobile Top Header */}
-            <div className="flex md:hidden fixed top-0 w-full h-16 z-50 px-4 justify-between items-center bg-background/80 backdrop-blur-md border-b border-black/5 dark:border-white/10">
+            <div className={cn(
+                "flex md:hidden fixed top-0 w-full h-16 z-50 px-4 justify-between items-center bg-background/80 backdrop-blur-md border-b border-black/5 dark:border-white/10 transition-transform duration-300 ease-in-out md:translate-y-0",
+                isHeaderVisible ? "translate-y-0" : "-translate-y-full"
+            )}>
                 <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-lg outline-none flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
                         <div className="w-3 h-3 bg-white rounded-sm transform rotate-45" />
