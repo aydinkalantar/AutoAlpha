@@ -6,7 +6,7 @@ import Stripe from 'stripe';
 import { Resend } from 'resend';
 import { ZombieReminderEmail } from '../../emails/ZombieReminderEmail';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY || 're_dummy_key_for_build');
 
 // Task 1: 5-Minute Reconciliation Loop
 cron.schedule('*/5 * * * *', async () => {

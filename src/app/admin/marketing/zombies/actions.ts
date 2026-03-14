@@ -6,7 +6,7 @@ import { authOptions } from "@/lib/auth";
 import { Resend } from "resend";
 import ZombieReminderEmail from "../../../../../emails/ZombieReminderEmail";
 
-const resend = new Resend(process.env.RESEND_API_KEY!);
+const resend = new Resend(process.env.RESEND_API_KEY || 're_dummy_key_for_build');
 
 async function verifyAdmin() {
     const session = await getServerSession(authOptions);
