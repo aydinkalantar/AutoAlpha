@@ -109,20 +109,20 @@ export default function CapitalAllocationModal({
                 {/* Body */}
                 <div className="p-6 pb-32 space-y-8">
                     {/* Visual Feedback Metrics */}
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="bg-cyan-500/10 dark:bg-cyan-500/20 rounded-xl p-5 border border-cyan-500/20 flex flex-col justify-center">
-                            <p className="text-xs font-bold tracking-wider uppercase text-cyan-600 dark:text-cyan-400 mb-2">
+                    <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                        <div className="bg-cyan-500/10 dark:bg-cyan-500/20 rounded-xl p-4 border border-cyan-500/20 flex flex-col justify-center overflow-hidden">
+                            <p className="text-[10px] sm:text-xs font-bold tracking-wider uppercase text-cyan-600 dark:text-cyan-400 mb-1.5 sm:mb-2 line-clamp-2">
                                 Allocated to Strategy
                             </p>
-                            <p className="text-3xl font-black text-cyan-700 dark:text-cyan-300 tracking-tight">
+                            <p className="text-xl sm:text-2xl md:text-3xl font-black text-cyan-700 dark:text-cyan-300 tracking-tight truncate" title={allocationAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}>
                                 ${allocationAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </p>
                         </div>
-                        <div className="bg-gray-100/80 dark:bg-white/5 rounded-xl p-5 border border-black/5 dark:border-white/10 flex flex-col justify-center shadow-sm">
-                            <p className="text-xs font-bold tracking-wider uppercase text-foreground/50 mb-2">
+                        <div className="bg-gray-100/80 dark:bg-white/5 rounded-xl p-4 border border-black/5 dark:border-white/10 flex flex-col justify-center shadow-sm overflow-hidden">
+                            <p className="text-[10px] sm:text-xs font-bold tracking-wider uppercase text-foreground/50 mb-1.5 sm:mb-2 line-clamp-2">
                                 Remaining Idle Cash
                             </p>
-                            <p className="text-3xl font-black text-foreground/70 tracking-tight">
+                            <p className="text-xl sm:text-2xl md:text-3xl font-black text-foreground/70 tracking-tight truncate" title={unallocatedCash.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}>
                                 ${unallocatedCash.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </p>
                         </div>
