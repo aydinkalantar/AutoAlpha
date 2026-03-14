@@ -416,6 +416,9 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
               <Link href="/terms" className="hover:text-foreground transition-colors">Terms of Service</Link>
               <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
               <Link href="/risk" className="hover:text-foreground transition-colors">Risk Disclaimer</Link>
+              <button onClick={handleInstallClick} className="hover:text-cyan-500 transition-colors uppercase font-bold tracking-widest md:hidden">
+                Download App
+              </button>
             </div>
           </div>
 
