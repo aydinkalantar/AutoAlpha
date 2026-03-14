@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { Accordion } from '@/components/ui/Accordion';
@@ -18,6 +18,7 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
   const [isIOS, setIsIOS] = useState(false);
   const [isStandalone, setIsStandalone] = useState(false);
   const [showIOSModal, setShowIOSModal] = useState(false);
+  const [showBanner, setShowBanner] = useState(true);
 
   useEffect(() => {
     // Check if already installed
@@ -87,8 +88,52 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-cyan-600/20 dark:bg-cyan-600/30 blur-[120px] rounded-full mix-blend-screen dark:mix-blend-color-dodge" />
       </div>
 
+      {/* PWA Smart App Banner (Mobile iOS Style) */}
+      <AnimatePresence>
+        {showBanner && !isStandalone && (deferredPrompt || isIOS) && (
+          <motion.div
+            initial={{ y: -100 }}
+            animate={{ y: 0 }}
+            exit={{ y: -100 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="fixed top-0 inset-x-0 z-[100] bg-white/90 dark:bg-[#1C1C1E]/90 backdrop-blur-xl border-b border-black/10 dark:border-white/10 px-4 py-3 flex items-center gap-3 md:hidden shadow-lg"
+          >
+            <button 
+              onClick={() => setShowBanner(false)} 
+              className="p-2 -ml-2 text-foreground/40 hover:text-foreground transition-colors mix-blend-difference"
+              aria-label="Close"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            
+            <div className="w-11 h-11 rounded-[0.85rem] bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-inner shrink-0 border border-black/10 dark:border-white/10">
+              <div className="w-3.5 h-3.5 bg-white rounded-sm transform rotate-45" />
+            </div>
+            
+            <div className="flex-1 min-w-0 flex flex-col justify-center">
+              <p className="font-bold text-[15px] text-foreground truncate leading-tight tracking-tight">AutoAlpha App</p>
+              <p className="text-[13px] text-foreground/60 truncate leading-tight font-medium">AutoAlpha Ltd.</p>
+              <div className="flex items-center gap-1 mt-0.5">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <svg key={star} className="w-3 h-3 text-amber-400 fill-amber-400" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+            </div>
+            
+            <button 
+              onClick={handleInstallClick} 
+              className="px-5 py-1.5 bg-gradient-to-b from-cyan-500 to-cyan-600 text-white text-[13px] font-bold rounded-full shrink-0 hover:scale-105 active:scale-95 transition-all shadow-md"
+            >
+              GET
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* 1. The Navigation Bar */}
-      <header className="fixed top-0 w-full z-50 bg-white/50 dark:bg-black/20 backdrop-blur-2xl border-b border-black/5 dark:border-white/5 transition-colors duration-300">
+      <header className={`fixed w-full z-50 bg-white/50 dark:bg-black/20 backdrop-blur-2xl border-b border-black/5 dark:border-white/5 transition-all duration-300 ${showBanner && !isStandalone && (deferredPrompt || isIOS) ? 'top-[70px] md:top-0' : 'top-0'}`}>
         <nav className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
@@ -161,16 +206,7 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
             </motion.p>
 
             <motion.div variants={fadeUpVariants} className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-              {(!isStandalone && (deferredPrompt || isIOS)) ? (
-                // Unified PWA Install Button for Mobile Chrome / Safari
-                <button 
-                  onClick={handleInstallClick}
-                  className="w-full sm:w-auto px-10 py-5 flex items-center justify-center gap-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-[2rem] text-xl font-bold tracking-tight shadow-xl shadow-emerald-500/20 hover:scale-105 active:scale-95 transition-all md:hidden"
-                >
-                  <Download className="w-6 h-6" />
-                  Install App
-                </button>
-              ) : null}
+              {/* Hero CTA Block has been unified, Mobile Install logic is now handled by the Smart Banner at the top of the viewport */}
 
               <Link href="/api/auth/signin" className="w-full sm:w-auto px-10 py-5 bg-gradient-to-r from-cyan-500 to-purple-600 text-white rounded-[2rem] text-xl font-bold hover:scale-105 active:scale-95 transition-all shadow-xl shadow-purple-500/30 dark:shadow-purple-500/20 text-center">
                 Start Automating
