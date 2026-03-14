@@ -84,15 +84,15 @@ export default function RegisterPage() {
             )}
 
             {/* Step 2: The Mobile Header (Top) */}
-            <div className="flex flex-col md:hidden w-full items-center justify-center pt-12 pb-2 px-6 relative z-20 text-center">
-                 <div className="flex items-center gap-3 mb-6">
-                     <div className="w-10 h-10 rounded-xl flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
-                         <div className="w-3.5 h-3.5 bg-white rounded-sm transform rotate-45" />
+            <div className="flex flex-col md:hidden w-full items-center justify-center pt-16 pb-2 px-6 relative z-20 text-center">
+                 <div className="flex items-center gap-4 mb-8">
+                     <div className="w-14 h-14 rounded-2xl flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
+                         <div className="w-5 h-5 bg-white rounded-sm transform rotate-45" />
                      </div>
-                     <span className="font-bold text-2xl tracking-tight text-foreground">AutoAlpha</span>
+                     <span className="font-bold text-4xl tracking-tight text-foreground">AutoAlpha</span>
                  </div>
-                 <h1 className="text-2xl font-black tracking-tight text-foreground mb-2">Create Account</h1>
-                 <p className="text-sm text-foreground/60 max-w-[280px]">Join AutoAlpha and start outperforming.</p>
+                 <h1 className="text-3xl font-black tracking-tight text-foreground mb-3">Create Account</h1>
+                 <p className="text-base text-foreground/60 max-w-[320px]">Join AutoAlpha and start outperforming.</p>
             </div>
 
             {/* Step 3: The Left Panel (Desktop Only - Info & Glassmorphism) */}
