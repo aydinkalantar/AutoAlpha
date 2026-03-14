@@ -208,9 +208,9 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
                             ? "text-cyan-500 bg-cyan-500/10 dark:bg-cyan-500/20"
                             : "text-foreground/40 hover:text-foreground/70 active:scale-95"
                     )}
-                    aria-label="Menu"
+                    aria-label="Settings"
                 >
-                    <Menu className={cn("w-5.5 h-5.5 transition-transform duration-300", isMobileMenuOpen ? "scale-110 drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]" : "")} />
+                    <Settings className={cn("w-5.5 h-5.5 transition-transform duration-300", isMobileMenuOpen ? "scale-110 drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]" : "")} />
                     {isMobileMenuOpen && (
                         <motion.div
                             layoutId="adminMobileNavIndicator"
