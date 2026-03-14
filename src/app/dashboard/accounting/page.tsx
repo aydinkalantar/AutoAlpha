@@ -60,7 +60,7 @@ export default async function AccountingPage() {
                     <p className="text-foreground/60 text-lg">Export your trade history and monitor platform fees.</p>
                 </div>
                 <div className="flex-shrink-0">
-                    <NotificationBell userId={user.id} />
+                    <NotificationBell userId={user.id} className="hidden md:block" />
                 </div>
             </div>
 

@@ -79,7 +79,7 @@ export default async function AccountHubPage() {
                     <p className="text-foreground/60 text-lg">Manage your personal profile and security configurations.</p>
                 </div>
                 <div className="flex-shrink-0">
-                    <NotificationBell userId={user.id} />
+                    <NotificationBell userId={user.id} className="hidden md:block" />
                 </div>
             </div>
 

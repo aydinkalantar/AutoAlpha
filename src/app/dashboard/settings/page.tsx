@@ -46,7 +46,7 @@ export default async function SettingsPage() {
                     <p className="text-foreground/60 text-lg">Manage your API connections and trading permissions.</p>
                 </div>
                 <div className="flex-shrink-0">
-                    <NotificationBell userId={user.id} />
+                    <NotificationBell userId={user.id} className="hidden md:block" />
                 </div>
             </div>
 

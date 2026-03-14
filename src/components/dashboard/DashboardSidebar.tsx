@@ -103,7 +103,6 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
 
     return (
         <>
-            {/* Mobile Top Header */}
             <div className={cn(
                 "flex md:hidden fixed top-0 w-full h-16 z-50 px-4 justify-between items-center bg-background/80 backdrop-blur-md border-b border-black/5 dark:border-white/10 transition-transform duration-300 ease-in-out md:translate-y-0",
                 isHeaderVisible ? "translate-y-0" : "-translate-y-full"
@@ -114,13 +113,16 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                     </div>
                     <span className="font-bold text-lg text-foreground tracking-tight">AutoAlpha</span>
                 </div>
-                <button
-                    onClick={() => setIsMobileMenuOpen(true)}
-                    className="p-2 text-foreground/80 hover:text-foreground active:scale-95 transition-all"
-                    aria-label="Menu"
-                >
-                    <Menu className="w-6 h-6" />
-                </button>
+                <div className="flex items-center gap-1">
+                    {notificationBell}
+                    <button
+                        onClick={() => setIsMobileMenuOpen(true)}
+                        className="p-2 text-foreground/80 hover:text-foreground active:scale-95 transition-all"
+                        aria-label="Menu"
+                    >
+                        <Menu className="w-6 h-6" />
+                    </button>
+                </div>
             </div>
 
             {/* Desktop Sidebar */}

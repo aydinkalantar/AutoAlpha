@@ -74,7 +74,7 @@ export default async function StrategyReportPage() {
                     <p className="text-foreground/60 text-lg">Analyze individual algorithmic performance and historical execution logs.</p>
                 </div>
                 <div className="flex-shrink-0">
-                    <NotificationBell userId={user.id} />
+                    <NotificationBell userId={user.id} className="hidden md:block" />
                 </div>
             </div>
 

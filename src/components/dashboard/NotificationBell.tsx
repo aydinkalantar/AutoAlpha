@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Bell, Check, CheckCircle2 } from 'lucide-react';
 import { getUnreadNotifications, markNotificationAsRead, markAllAsRead } from '@/app/dashboard/actions';
-export default function NotificationBell({ userId }: { userId?: string }) {
+export default function NotificationBell({ userId, className }: { userId?: string, className?: string }) {
     const [notifications, setNotifications] = useState<any[]>([]);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -43,7 +43,7 @@ export default function NotificationBell({ userId }: { userId?: string }) {
     if (!userId) return null;
 
     return (
-        <div className="relative z-50">
+        <div className={`relative z-50 ${className || ''}`}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="relative p-2 rounded-full bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-all border border-black/5 dark:border-white/10"

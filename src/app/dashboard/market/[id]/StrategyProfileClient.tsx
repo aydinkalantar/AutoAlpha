@@ -80,7 +80,7 @@ export default function StrategyProfileClient({
                     </div>
                 </div>
                 <div className="flex-shrink-0">
-                    <NotificationBell userId={userId} />
+                    <NotificationBell userId={userId} className="hidden md:block" />
                 </div>
             </div>
 

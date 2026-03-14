@@ -75,7 +75,7 @@ export default async function AffiliateHubPage() {
                     <p className="text-foreground/60 text-lg">Invite traders to AutoAlpha and earn 10% of their generated performance fees.</p>
                 </div>
                 <div className="flex-shrink-0">
-                    <NotificationBell userId={user.id} />
+                    <NotificationBell userId={user.id} className="hidden md:block" />
                 </div>
             </div>
 
