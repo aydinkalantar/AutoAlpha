@@ -54,3 +54,42 @@ export async function sendTradeNotificationEmail(data: TradeEmailData) {
         return { success: false, error };
     }
 }
+
+export async function sendWelcomeBonusEmail(userEmail: string, bonusAmount: number) {
+    if (!resend) {
+        console.log("Mock Welcome Email Sent (No Resend API Key):", userEmail, bonusAmount);
+        return { success: true, mock: true };
+    }
+
+    try {
+        await resend.emails.send({
+            from: 'AutoAlpha Team <notifications@autoalpha.trade>',
+            to: userEmail,
+            subject: 'We just funded your AutoAlpha Gas Tank! ⛽️',
+            html: `
+                <div style="font-family: sans-serif; padding: 20px; color: #333;">
+                    <h2 style="color: #8b5cf6;">Welcome to AutoAlpha!</h2>
+                    <p>To help you get started, we've credited your account with <strong>$${bonusAmount.toFixed(2)}</strong> in Gas Tank credits.</p>
+                    
+                    <p style="margin-top: 20px; line-height: 1.6;">
+                        Because we are strictly non-custodial, we never touch your exchange funds. 
+                        This credit covers your initial performance fees so you can test our algorithmic strategies completely risk-free.
+                    </p>
+                    
+                    <p style="margin-top: 20px; font-weight: bold;">
+                        Log in, connect your exchange API, and deploy your first strategy today!
+                    </p>
+
+                    <div style="margin-top: 30px;">
+                        <a href="https://autoalpha.trade/dashboard" style="background-color: #8b5cf6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">Go to Dashboard</a>
+                    </div>
+                </div>
+            `,
+        });
+
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to send Welcome Bonus email:", error);
+        return { success: false, error };
+    }
+}

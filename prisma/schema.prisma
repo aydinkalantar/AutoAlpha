@@ -235,6 +235,8 @@ model SystemConfig {
   stripeLivePublicKey     String?
   stripeLiveSecretKey     String?
   stripeLiveWebhookSecret String?
+  welcomeBonusEnabled     Boolean  @default(false)
+  welcomeBonusAmount      Float    @default(50.0)
   updatedAt               DateTime @updatedAt
 }
 

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from "@/lib/prisma";
+import { sendWelcomeBonusEmail } from "@/lib/emails";
 import bcrypt from 'bcryptjs';
 
 
@@ -35,13 +36,56 @@ export async function POST(req: Request) {
 
         const passwordHash = await bcrypt.hash(password, 12);
 
-        const newUser = await prisma.user.create({
-            data: {
-                email,
-                passwordHash,
-                referredById
-            }
+        // Fetch Global System Configuration for Welcome Bonus
+        const config = await prisma.systemConfig.findUnique({
+            where: { id: "global" }
         });
+
+        const isBonusEnabled = config?.welcomeBonusEnabled ?? false;
+        const bonusAmount = config?.welcomeBonusAmount || 50.0;
+
+        let newUser;
+
+        // Atomically create user, apply logic, and credit gas tank
+        if (isBonusEnabled && bonusAmount > 0) {
+            newUser = await prisma.$transaction(async (tx: any) => {
+                const created = await tx.user.create({
+                    data: {
+                        email,
+                        passwordHash,
+                        referredById,
+                        usdtBalance: bonusAmount // Intentionally inject the welcome bonus gas tank credit
+                    }
+                });
+
+                // Generate rigid audit trail showing exactly *why* they got this free capital
+                await tx.ledger.create({
+                    data: {
+                        userId: created.id,
+                        amount: bonusAmount,
+                        currency: 'USDT',
+                        description: 'Promo Campaign: Welcome Bonus Credit',
+                        type: 'DEPOSIT'
+                    }
+                });
+
+                return created;
+            });
+            
+            // Asynchronously fire the Resend Template, do not block the API payload response
+            sendWelcomeBonusEmail(newUser.email, bonusAmount).catch(e => {
+                console.error("Non-fatal: Resend Background Job Failed", e);
+            });
+
+        } else {
+            newUser = await prisma.user.create({
+                data: {
+                    email,
+                    passwordHash,
+                    referredById
+                }
+            });
+        }
 
         return NextResponse.json({ message: "User created successfully", userId: newUser.id }, { status: 201 });
 

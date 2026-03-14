@@ -9,6 +9,7 @@ export default function SettingsForm({ config }: { config: SystemConfig | null }
     config = config || ({ stripeMode: 'TEST' } as SystemConfig);
     const [isPending, startTransition] = useTransition();
     const [mode, setMode] = useState(config.stripeMode);
+    const [welcomeBonusEnabled, setWelcomeBonusEnabled] = useState(config.welcomeBonusEnabled ?? false);
     const [saved, setSaved] = useState(false);
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -43,7 +44,45 @@ export default function SettingsForm({ config }: { config: SystemConfig | null }
                 <div className="p-4 bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/20 rounded-2xl flex items-start gap-3">
                     <AlertTriangle className="w-5 h-5 text-orange-500 shrink-0 mt-0.5" />
                     <div className="text-sm font-medium text-orange-800 dark:text-orange-300">
-                        These Database keys will override your `.env` file. If they are left empty, the system will attempt to fallback to the existing `.env` string.
+                        These Database keys will override your \`.env\` file. If they are left empty, the system will attempt to fallback to the existing \`.env\` string.
+                    </div>
+                </div>
+
+                {/* PROMOTION CONFIG */}
+                <div className="space-y-6 pt-2 pb-6 border-b border-black/5 dark:border-white/10">
+                    <h3 className="text-lg font-bold text-foreground">Welcome Bonus Campaign</h3>
+                    
+                    <div className="flex items-center gap-4 bg-black/5 dark:bg-white/5 p-4 rounded-xl border border-transparent">
+                        <input
+                            type="hidden"
+                            name="welcomeBonusEnabled"
+                            value={welcomeBonusEnabled ? 'true' : 'false'}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setWelcomeBonusEnabled(!welcomeBonusEnabled)}
+                            className={`w-12 h-6 rounded-full transition-colors relative flex items-center ${welcomeBonusEnabled ? 'bg-purple-500' : 'bg-foreground/20'}`}
+                        >
+                            <span className={`w-4 h-4 bg-white rounded-full shadow-sm absolute transition-transform ${welcomeBonusEnabled ? 'translate-x-7' : 'translate-x-1'}`} />
+                        </button>
+                        <div className="flex flex-col">
+                            <span className="text-sm font-bold text-foreground">Enable New User Gas Tank Bonus</span>
+                            <span className="text-xs text-foreground/50 font-medium">Automatically credit new signups and trigger the Welcome promo email via Resend.</span>
+                        </div>
+                    </div>
+
+                    <div className={`space-y-3 transition-opacity ${welcomeBonusEnabled ? 'opacity-100' : 'opacity-40 pointer-events-none'}`}>
+                        <label className="text-sm font-semibold text-foreground/60 px-2">Credited Amount ($ USD)</label>
+                        <div className="relative">
+                            <span className="absolute left-6 top-1/2 -translate-y-1/2 text-foreground/50 font-bold">$</span>
+                            <input
+                                type="number"
+                                step="0.01"
+                                name="welcomeBonusAmount"
+                                defaultValue={config.welcomeBonusAmount || 50}
+                                className="w-full bg-black/5 dark:bg-white/5 border border-transparent rounded-[1.2rem] pl-10 pr-5 py-4 text-foreground placeholder-foreground/30 focus:outline-none focus:border-black/10 dark:focus:border-white/10 focus:bg-white dark:focus:bg-[#1C1C1E] focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 transition-all font-mono text-sm font-bold"
+                            />
+                        </div>
                     </div>
                 </div>
 
