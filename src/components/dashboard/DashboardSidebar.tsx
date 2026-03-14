@@ -79,6 +79,23 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
 
     return (
         <>
+            {/* Mobile Top Header */}
+            <div className="flex md:hidden fixed top-0 w-full h-16 z-50 px-4 justify-between items-center bg-background/80 backdrop-blur-md border-b border-black/5 dark:border-white/10">
+                <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg outline-none flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
+                        <div className="w-3 h-3 bg-white rounded-sm transform rotate-45" />
+                    </div>
+                    <span className="font-bold text-lg text-foreground tracking-tight">AutoAlpha</span>
+                </div>
+                <button
+                    onClick={() => setIsMobileMenuOpen(true)}
+                    className="p-2 text-foreground/80 hover:text-foreground active:scale-95 transition-all"
+                    aria-label="Menu"
+                >
+                    <Menu className="w-6 h-6" />
+                </button>
+            </div>
+
             {/* Desktop Sidebar */}
             <div className={cn("hidden md:flex bg-white/50 dark:bg-white/5 backdrop-blur-2xl border-r border-black/5 dark:border-white/10 h-screen fixed top-0 left-0 flex-col z-50 transition-all duration-300", isCollapsed ? "w-20" : "w-64")}>
                 <div className="h-20 flex items-center justify-between px-4 border-b border-black/5 dark:border-white/10">
@@ -180,7 +197,7 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                 </div>
             </div>
 
-            <div className={cn("flex-1 flex flex-col min-h-screen w-full md:w-auto max-w-[100vw] md:max-w-none overflow-x-hidden relative z-10 transition-all duration-300 pb-20 md:pb-0", isCollapsed ? "md:ml-20" : "md:ml-64 lg:ml-64")}>
+            <div className={cn("flex-1 flex flex-col min-h-screen w-full md:w-auto max-w-[100vw] md:max-w-none overflow-x-hidden relative z-10 transition-all duration-300 pt-20 pb-28 md:pt-0 md:pb-0", isCollapsed ? "md:ml-20" : "md:ml-64 lg:ml-64")}>
                 <main className="flex-1 transition-all duration-300 w-full overflow-hidden">
                     {children}
                 </main>
@@ -240,26 +257,28 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                     )}
                 </Link>
                 
-                {/* Mobile Menu Toggle */}
-                <button
-                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                {/* Mobile Settings Shortcut */}
+                <Link
+                    href="/dashboard/settings"
+                    onClick={() => setIsMobileMenuOpen(false)}
                     className={cn(
-                        "relative flex flex-col items-center justify-center w-[var(--mobile-icon-width)] h-12 rounded-2xl transition-all duration-300",
-                        isMobileMenuOpen
+                        "relative flex flex-col items-center justify-center w-[var(--mobile-icon-width)] h-12 rounded-2xl transition-all duration-300 group",
+                        !isMobileMenuOpen && pathname.startsWith('/dashboard/settings')
                             ? "text-cyan-500 bg-cyan-500/10 dark:bg-cyan-500/20"
                             : "text-foreground/40 hover:text-foreground/70 active:scale-95"
                     )}
                     style={{ "--mobile-icon-width": "calc(20vw - 12px)" } as any}
-                    aria-label="Menu"
+                    aria-label="Settings"
+                    title="Settings"
                 >
-                    <Menu className={cn("w-5.5 h-5.5 transition-transform duration-300", isMobileMenuOpen ? "scale-110 drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]" : "")} />
-                    {isMobileMenuOpen && (
+                    <Settings className={cn("w-5.5 h-5.5 transition-transform duration-300", !isMobileMenuOpen && pathname.startsWith('/dashboard/settings') ? "scale-110 drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]" : "group-hover:text-purple-500 transition-colors")} />
+                    {!isMobileMenuOpen && pathname.startsWith('/dashboard/settings') && (
                         <motion.div
                             layoutId="mobileNavIndicator"
                             className="absolute -bottom-1 w-1 h-1 rounded-full bg-cyan-400"
                         />
                     )}
-                </button>
+                </Link>
                 </nav>
             </div>
 
