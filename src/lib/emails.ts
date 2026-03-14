@@ -23,7 +23,7 @@ export async function sendTradeNotificationEmail(data: TradeEmailData) {
         const action = data.side === 'BUY' ? 'opened a LONG' : 'closed a LONG / opened a SHORT';
         const priceStr = data.price ? `$${data.price.toFixed(4)}` : "Market Price";
         
-        await resend.emails.send({
+        const { data: resendData, error } = await resend.emails.send({
             from: 'AutoAlpha Trading <notifications@autoalpha.trade>',
             to: data.userEmail,
             subject: `Trade Alert: ${data.strategyName} executed on ${data.symbol}`,
@@ -42,15 +42,20 @@ export async function sendTradeNotificationEmail(data: TradeEmailData) {
                     </div>
                     
                     <p style="font-size: 12px; color: #666; margin-top: 40px;">
-                        To stop receiving these alerts, you can disable Trade Notifications in your <a href="https://autoalpha.ai/dashboard/account">Account Settings</a>.
+                        To stop receiving these alerts, you can disable Trade Notifications in your <a href="https://autoalpha.trade/dashboard">Account Settings</a>.
                     </p>
                 </div>
             `,
         });
+        
+        if (error) {
+            console.error("Resend API Error (Trade):", error);
+            return { success: false, error };
+        }
 
-        return { success: true };
+        return { success: true, data: resendData };
     } catch (error) {
-        console.error("Failed to send Resend email:", error);
+        console.error("Failed to execute Trade email routine:", error);
         return { success: false, error };
     }
 }
@@ -65,7 +70,7 @@ export async function sendWelcomeEmail(userEmail: string, hasBonus: boolean, bon
         : "Welcome to AutoAlpha 🚀";
 
     try {
-        await resend.emails.send({
+        const { data, error } = await resend.emails.send({
             from: 'AutoAlpha Team <notifications@autoalpha.trade>',
             to: userEmail,
             subject: subject,
@@ -120,9 +125,14 @@ export async function sendWelcomeEmail(userEmail: string, hasBonus: boolean, bon
             `,
         });
 
-        return { success: true };
+        if (error) {
+            console.error("Resend API Error (Welcome):", error);
+            return { success: false, error };
+        }
+
+        return { success: true, data };
     } catch (error) {
-        console.error("Failed to send Welcome email:", error);
+        console.error("Failed to execute Welcome email routine:", error);
         return { success: false, error };
     }
 }
