@@ -59,6 +59,7 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
         { name: 'Live Executions', href: '/admin/executions', icon: Activity },
         { name: 'Master Ledger', href: '/admin/ledger', icon: FileText },
         { name: 'Marketing', href: '/admin/marketing', icon: Megaphone },
+        { name: 'Blog CMS', href: '/admin/marketing/blog', icon: FileText },
         { name: 'Settings', href: '/admin/settings', icon: Settings },
     ];
 
