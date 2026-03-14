@@ -43,3 +43,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+/* Hard-disable Recharts tooltips on mobile to prevent accidental touch blockages */
+@media (max-width: 768px) {
+  .recharts-tooltip-wrapper {
+    display: none !important;
+  }
+}
