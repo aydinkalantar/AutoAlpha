@@ -35,6 +35,7 @@ enum LedgerType {
   DEPOSIT
   FEE_DEDUCTION
   AFFILIATE_COMMISSION
+  PROMO_CODE
 }
 
 model User {
@@ -57,6 +58,9 @@ model User {
   referredById        String?
   createdAt           DateTime       @default(now())
   updatedAt           DateTime       @updatedAt
+
+  // Zombie Campaign
+  zombieEmailSentAt   DateTime?
 
   // Affiliate & Referrals
   affiliateBalance        Float          @default(0)
@@ -82,6 +86,7 @@ model User {
   positions           Position[]
   ledgers             Ledger[]
   notifications       Notification[]
+  promoRedemptions    PromoRedemption[]
 }
 
 model Account {
@@ -242,6 +247,8 @@ model SystemConfig {
   welcomeBonusEnabled     Boolean  @default(false)
   welcomeBonusAmount      Float    @default(50.0)
   affiliateCommissionRate Float    @default(0.10)
+  zombieCampaignEnabled   Boolean  @default(false)
+  zombieTriggerDays       Int      @default(3)
   updatedAt               DateTime @updatedAt
 }
 
@@ -271,4 +278,64 @@ model AuditLog {
   actionType    String
   ipAddress     String?
   timestamp     DateTime @default(now())
+}
+
+model PromoCode {
+  id           String            @id @default(cuid())
+  code         String            @unique
+  creditAmount Float
+  maxUses      Int?
+  currentUses  Int               @default(0)
+  expiresAt    DateTime?
+  isActive     Boolean           @default(true)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  redemptions  PromoRedemption[]
+}
+
+model PromoRedemption {
+  id          String    @id @default(cuid())
+  redeemedAt  DateTime  @default(now())
+
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  promoCodeId String
+  promoCode   PromoCode @relation(fields: [promoCodeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, promoCodeId])
+}
+
+model BroadcastLog {
+  id          String   @id @default(cuid())
+  subject     String
+  audience    String
+  sentCount   Int
+  sentAt      DateTime @default(now())
+}
+
+model SEOSettings {
+  id          String   @id @default(cuid())
+  route       String   @unique
+  title       String
+  description String   @db.Text
+  keywords    String   @db.Text
+  ogImageUrl  String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model BlogPost {
+  id             String   @id @default(cuid())
+  title          String
+  slug           String   @unique
+  excerpt        String   @db.Text
+  content        String   @db.Text
+  coverImage     String?
+  published      Boolean  @default(false)
+  seoTitle       String?
+  seoDescription String?  @db.Text
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }

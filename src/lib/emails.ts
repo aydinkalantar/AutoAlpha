@@ -1,7 +1,7 @@
 import { Resend } from 'resend';
 
 // Only initialize if the key exists so it doesn't crash builds if the user hasn't added it yet
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+export const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 export interface TradeEmailData {
     userEmail: string;

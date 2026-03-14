@@ -14,37 +14,53 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL('https://autoalpha.ai'),
-  title: {
-    template: '%s | AutoAlpha',
-    default: 'AutoAlpha | Institutional Crypto Copy-Trading',
-  },
-  description: "Automated crypto trading, Binance API bot, algorithmic copy-trading, non-custodial.",
-  openGraph: {
-    type: 'website',
-    title: 'AutoAlpha | Institutional Crypto Copy-Trading',
-    description: "Automated crypto trading, Binance API bot, algorithmic copy-trading, non-custodial.",
-    siteName: 'AutoAlpha',
-    images: [{
-      url: '/og-image.jpg',
-      width: 1200,
-      height: 630,
-      alt: 'AutoAlpha Trading Terminal',
-    }],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'AutoAlpha | Institutional Crypto Copy-Trading',
-    description: "Automated crypto trading, Binance API bot, algorithmic copy-trading, non-custodial.",
-    images: ['/og-image.jpg'],
-  },
-  icons: {
-    icon: '/icon',
-    apple: '/apple-icon',
-  },
-  manifest: '/manifest.json',
-};
+import { getSEOForRoute } from "./actions/seo";
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getSEOForRoute("/layout-fallback");
+
+  const defaultTitle = "AutoAlpha | Institutional Crypto Copy-Trading";
+  const defaultDesc = "Automated crypto trading, Binance API bot, algorithmic copy-trading, non-custodial.";
+  
+  return {
+    metadataBase: new URL('https://autoalpha.ai'),
+    title: {
+      template: '%s | AutoAlpha',
+      default: seo?.title || defaultTitle,
+    },
+    description: seo?.description || defaultDesc,
+    keywords: seo?.keywords || undefined,
+    openGraph: {
+      type: 'website',
+      title: seo?.title || defaultTitle,
+      description: seo?.description || defaultDesc,
+      siteName: 'AutoAlpha',
+      images: seo?.ogImageUrl ? [{
+        url: seo.ogImageUrl,
+        width: 1200,
+        height: 630,
+        alt: seo.title || 'AutoAlpha Trading Terminal',
+      }] : [{
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'AutoAlpha Trading Terminal',
+      }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: seo?.title || defaultTitle,
+      description: seo?.description || defaultDesc,
+      images: seo?.ogImageUrl ? [seo.ogImageUrl] : ['/og-image.jpg'],
+    },
+    icons: {
+      icon: '/icon',
+      apple: '/apple-icon',
+    },
+    manifest: '/manifest.json',
+  };
+}
 
 export default function RootLayout({
   children,

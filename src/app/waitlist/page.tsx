@@ -3,6 +3,31 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from 'next/link';
 
+import { getSEOForRoute } from '@/app/actions/seo';
+import { Metadata } from 'next';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getSEOForRoute('/waitlist');
+  if (!seo) return {};
+  
+  return {
+    title: seo.title,
+    description: seo.description,
+    keywords: seo.keywords || undefined,
+    openGraph: {
+      title: seo.title,
+      description: seo.description,
+      images: seo.ogImageUrl ? [seo.ogImageUrl] : [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: seo.title,
+      description: seo.description,
+      images: seo.ogImageUrl ? [seo.ogImageUrl] : [],
+    }
+  };
+}
+
 export default async function WaitlistPage() {
     const session = await getServerSession(authOptions);
 

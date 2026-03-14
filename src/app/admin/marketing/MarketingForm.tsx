@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import { updateMarketingConfig } from './actions';
-import { Mail, Gift, Megaphone, Loader2 } from 'lucide-react';
+import { Mail, Gift, Megaphone, Loader2, ArrowRight } from 'lucide-react';
 import { SystemConfig } from '@prisma/client';
+import Link from 'next/link';
 
 export default function MarketingForm({ config }: { config: SystemConfig | null }) {
     const [welcomeBonusEnabled, setWelcomeBonusEnabled] = useState(config?.welcomeBonusEnabled || false);
@@ -108,8 +109,8 @@ export default function MarketingForm({ config }: { config: SystemConfig | null 
                 </div>
             </div>
 
-            {/* Email Marketing Block (Future Expansion) */}
-            <div className="bg-white/40 dark:bg-white/5 backdrop-blur-2xl rounded-[2.5rem] p-8 border border-black/5 dark:border-white/10 shadow-2xl shadow-black/5 dark:shadow-black/20 opacity-70">
+            {/* Email Marketing Block */}
+            <div className="bg-white/40 dark:bg-white/5 backdrop-blur-2xl rounded-[2.5rem] p-8 border border-black/5 dark:border-white/10 shadow-2xl shadow-black/5 dark:shadow-black/20 mt-8">
                 <div className="flex items-center gap-4 mb-6 pb-6 border-b border-black/5 dark:border-white/10">
                     <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/20 text-white">
                         <Mail className="w-6 h-6" />
@@ -117,15 +118,40 @@ export default function MarketingForm({ config }: { config: SystemConfig | null 
                     <div>
                         <div className="flex items-center gap-3">
                             <h2 className="text-2xl font-bold tracking-tight">Email Marketing</h2>
-                            <span className="px-2 py-1 text-[10px] font-black uppercase tracking-wider bg-black/10 dark:bg-white/10 text-foreground/70 rounded-full">Coming Soon</span>
                         </div>
                         <p className="text-foreground/60">Broadcast newsletters and promotional sequences to all registered investors.</p>
                     </div>
                 </div>
 
-                <div className="flex flex-col items-center justify-center py-8 text-center">
-                    <Megaphone className="w-12 h-12 text-foreground/20 mb-4" />
-                    <p className="text-foreground/50 font-medium">Bulk email broadcast capabilities will be unlocked in a future sprint.</p>
+                <div className="flex flex-col items-center justify-center py-6 text-center">
+                    <Link href="/admin/marketing/broadcasts" className="flex items-center gap-2 bg-foreground text-background font-bold py-4 px-8 rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-black/10 dark:shadow-white/5 mt-2">
+                        <Megaphone className="w-5 h-5" />
+                        Go to Broadcasts
+                        <ArrowRight className="w-5 h-5 ml-2" />
+                    </Link>
+                </div>
+            </div>
+
+            {/* Social Media Automation Block */}
+            <div className="bg-white/40 dark:bg-white/5 backdrop-blur-2xl rounded-[2.5rem] p-8 border border-black/5 dark:border-white/10 shadow-2xl shadow-black/5 dark:shadow-black/20 mt-8">
+                <div className="flex items-center gap-4 mb-6 pb-6 border-b border-black/5 dark:border-white/10">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center shadow-lg shadow-yellow-500/20 text-white">
+                        <Megaphone className="w-6 h-6" />
+                    </div>
+                    <div>
+                        <div className="flex items-center gap-3">
+                            <h2 className="text-2xl font-bold tracking-tight">Automated Social Proof</h2>
+                        </div>
+                        <p className="text-foreground/60">Draft and publish tweets showcasing your top-performing strategies automatically.</p>
+                    </div>
+                </div>
+
+                <div className="flex flex-col items-center justify-center py-6 text-center">
+                    <Link href="/admin/marketing/social" className="flex items-center gap-2 bg-foreground text-background font-bold py-4 px-8 rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-black/10 dark:shadow-white/5 mt-2">
+                        <Megaphone className="w-5 h-5" />
+                        Go to Social Proof
+                        <ArrowRight className="w-5 h-5 ml-2" />
+                    </Link>
                 </div>
             </div>
 

@@ -10,6 +10,7 @@ import { useWeb3Modal } from '@web3modal/wagmi/react';
 import { parseUnits } from 'viem';
 import { mainnet, arbitrum, optimism, base, polygon } from 'wagmi/chains';
 import dynamic from 'next/dynamic';
+import PromoRedemptionForm from './PromoRedemptionForm';
 
 const ClientWeb3Provider = dynamic(
     () => import('@/app/providers/Web3Provider').then(mod => mod.Web3Provider),
@@ -478,6 +479,9 @@ function DepositContent() {
                     </div>
                 )}
             </div>
+
+            {/* Promo Code Redemption Module */}
+            <PromoRedemptionForm />
         </div>
     );
 }

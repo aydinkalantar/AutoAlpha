@@ -1,6 +1,32 @@
 import { prisma } from '@/lib/prisma';
 import LandingPageClient from './LandingPageClient';
 
+import { getSEOForRoute } from './actions/seo';
+import { Metadata } from 'next';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getSEOForRoute('/');
+  
+  if (!seo) return {}; // Falls back to layout.tsx metadata
+  
+  return {
+    title: seo.title,
+    description: seo.description,
+    keywords: seo.keywords || undefined,
+    openGraph: {
+      title: seo.title,
+      description: seo.description,
+      images: seo.ogImageUrl ? [seo.ogImageUrl] : [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: seo.title,
+      description: seo.description,
+      images: seo.ogImageUrl ? [seo.ogImageUrl] : [],
+    }
+  };
+}
+
 export default async function Page() {
     // Fetch active strategies marked as public
     // Circuit breaker: In the Railway Docker build, DATABASE_URL is set to a "mock" string.
