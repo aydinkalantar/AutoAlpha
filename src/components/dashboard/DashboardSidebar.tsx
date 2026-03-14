@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';
-import { LayoutDashboard, Store, FileText, Settings, User, ChevronLeft, ChevronRight, Gift, LogOut, Wallet, HelpCircle, Activity, Volume2, VolumeX, Sun, Moon } from 'lucide-react';
+import { LayoutDashboard, Store, FileText, Settings, User, ChevronLeft, ChevronRight, Gift, LogOut, Wallet, HelpCircle, Activity, Volume2, VolumeX, Sun, Moon, Download } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -26,9 +26,49 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
     const [mounted, setMounted] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+    // PWA Installation States
+    const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+    const [isIOS, setIsIOS] = useState(false);
+    const [isStandalone, setIsStandalone] = useState(false);
+    const [showIOSModal, setShowIOSModal] = useState(false);
+
     useEffect(() => {
         setMounted(true);
+
+        // Check if already installed
+        const _isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone === true;
+        setIsStandalone(_isStandalone);
+
+        // Detect iOS
+        const userAgent = window.navigator.userAgent.toLowerCase();
+        const isIosDevice = /iphone|ipad|ipod/.test(userAgent);
+        setIsIOS(isIosDevice);
+
+        // Capture Chrome/Android native install prompt
+        const handleBeforeInstallPrompt = (e: Event) => {
+            e.preventDefault();
+            setDeferredPrompt(e);
+        };
+
+        window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+        return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     }, []);
+
+    const handleInstallClick = async () => {
+        if (isIOS) {
+            setShowIOSModal(true);
+            setIsMobileMenuOpen(false);
+            return;
+        }
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                setDeferredPrompt(null);
+            }
+            setIsMobileMenuOpen(false);
+        }
+    };
 
     // Prevent body scroll when mobile menu is open
     useEffect(() => {
@@ -361,26 +401,48 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                                 <div className="flex items-center justify-between px-2 mb-3 mt-4">
                                     <h4 className="text-xs font-bold tracking-widest uppercase text-foreground/40">Preferences</h4>
                                 </div>
-                                <div className="bg-black/5 dark:bg-white/5 rounded-[2rem] overflow-hidden mb-6 p-2 flex gap-2">
-                                    <Button 
-                                        variant="ghost"
-                                        onClick={toggleSound} 
-                                        className={cn("flex-1 h-auto flex flex-col items-center justify-center gap-2.5 p-4 rounded-3xl transition-all", isSoundEnabled ? "bg-background shadow-sm" : "hover:bg-black/5 dark:hover:bg-white/5 text-foreground/60")}
-                                    >
-                                        {isSoundEnabled ? <Volume2 className="w-5 h-5 text-foreground" /> : <VolumeX className="w-5 h-5 text-foreground/50" />}
-                                        <span className="text-xs font-bold tracking-wide">{isSoundEnabled ? "Sound On" : "Sound Off"}</span>
-                                    </Button>
-
-                                    {mounted && (
+                                <div className="bg-black/5 dark:bg-white/5 rounded-[2rem] overflow-hidden mb-6 p-2 flex flex-col gap-2">
+                                    {/* Web App Install Button (Only show if not installed and prompt is available) */}
+                                    {!isStandalone && (deferredPrompt || isIOS) && (
                                         <Button 
                                             variant="ghost"
-                                            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} 
-                                            className={cn("flex-1 h-auto flex flex-col items-center justify-center gap-2.5 p-4 rounded-3xl transition-all", "hover:bg-black/5 dark:hover:bg-white/5 text-foreground/60")}
+                                            onClick={handleInstallClick} 
+                                            className="w-full h-auto flex items-center justify-between p-4 px-5 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 hover:from-cyan-500/20 hover:to-purple-500/20 text-foreground transition-colors rounded-2xl mb-2 border border-cyan-500/20"
                                         >
-                                            {theme === 'dark' ? <Sun className="w-5 h-5 text-amber-500" /> : <Moon className="w-5 h-5 text-blue-500" />}
-                                            <span className="text-xs font-bold tracking-wide">{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+                                            <div className="flex items-center gap-4">
+                                                <div className="p-2 rounded-xl bg-gradient-to-br from-cyan-400 to-purple-600 text-white flex items-center justify-center shadow-lg shadow-purple-500/20">
+                                                    <Download className="w-5 h-5" />
+                                                </div>
+                                                <div className="flex flex-col items-start">
+                                                    <span className="text-base font-bold tracking-tight">Install Web App</span>
+                                                    <span className="text-xs text-foreground/60 font-medium tracking-tight">Pro performance. Zero effort.</span>
+                                                </div>
+                                            </div>
+                                            <ChevronRight className="w-5 h-5 text-foreground/30" />
                                         </Button>
                                     )}
+
+                                    <div className="flex gap-2">
+                                        <Button 
+                                            variant="ghost"
+                                            onClick={toggleSound} 
+                                            className={cn("flex-1 h-auto flex flex-col items-center justify-center gap-2.5 p-4 rounded-3xl transition-all", isSoundEnabled ? "bg-background shadow-sm" : "hover:bg-black/5 dark:hover:bg-white/5 text-foreground/60")}
+                                        >
+                                            {isSoundEnabled ? <Volume2 className="w-5 h-5 text-foreground" /> : <VolumeX className="w-5 h-5 text-foreground/50" />}
+                                            <span className="text-xs font-bold tracking-wide">{isSoundEnabled ? "Sound On" : "Sound Off"}</span>
+                                        </Button>
+
+                                        {mounted && (
+                                            <Button 
+                                                variant="ghost"
+                                                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} 
+                                                className={cn("flex-1 h-auto flex flex-col items-center justify-center gap-2.5 p-4 rounded-3xl transition-all", "hover:bg-black/5 dark:hover:bg-white/5 text-foreground/60")}
+                                            >
+                                                {theme === 'dark' ? <Sun className="w-5 h-5 text-amber-500" /> : <Moon className="w-5 h-5 text-blue-500" />}
+                                                <span className="text-xs font-bold tracking-wide">{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+                                            </Button>
+                                        )}
+                                    </div>
                                 </div>
 
                                 <div className="bg-black/5 dark:bg-white/5 rounded-[2rem] overflow-hidden mb-8">
@@ -410,6 +472,88 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                             </div>
                         </motion.div>
                     </>
+                )}
+            </AnimatePresence>
+            {/* iOS Installation Instructions Modal */}
+            <AnimatePresence>
+                {showIOSModal && (
+                    <div className="fixed inset-0 z-[200] flex items-end justify-center sm:items-center sm:p-4 pb-0">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 bg-background/80 backdrop-blur-sm"
+                            onClick={() => setShowIOSModal(false)}
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, y: 100, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 100, scale: 0.95 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                            className="relative w-full max-w-sm bg-white dark:bg-[#1C1C1E] border border-black/10 dark:border-white/10 rounded-t-[2.5rem] sm:rounded-[2.5rem] shadow-2xl overflow-hidden pb-8 sm:pb-0 z-10"
+                        >
+                            <div className="absolute top-4 right-4 z-10">
+                                <button 
+                                    onClick={() => setShowIOSModal(false)}
+                                    className="p-2 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 rounded-full transition-colors"
+                                    aria-label="Close iOS Install Modal"
+                                >
+                                    <X className="w-5 h-5 text-foreground/60" />
+                                </button>
+                            </div>
+
+                            <div className="p-8 pb-6 flex flex-col items-center text-center bg-gradient-to-b from-black/5 dark:from-white/5 to-transparent">
+                                <div className="w-20 h-20 rounded-[1.5rem] bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-xl shadow-purple-500/30 mb-6 border border-black/10 dark:border-white/10">
+                                    <div className="w-6 h-6 bg-white rounded-md transform rotate-45" />
+                                </div>
+                                <h2 className="text-2xl font-black tracking-tight text-foreground mb-2">Install AutoAlpha Web App</h2>
+                                <p className="text-foreground/60 text-sm font-medium">Install this application on your home screen for quick and easy access when you're on the go.</p>
+                            </div>
+
+                            <div className="px-8 pb-8 space-y-6">
+                                <div className="flex items-start gap-4">
+                                    <div className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center shrink-0 mt-0.5">
+                                        <span className="text-sm font-bold text-foreground">1</span>
+                                    </div>
+                                    <div>
+                                        <p className="text-base text-foreground font-medium mb-1">Tap the Share button</p>
+                                        <p className="text-sm text-foreground/50">Look for the square with an arrow pointing up at the bottom of your screen.</p>
+                                    </div>
+                                </div>
+                                
+                                <div className="flex items-start gap-4">
+                                    <div className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center shrink-0 mt-0.5">
+                                        <span className="text-sm font-bold text-foreground">2</span>
+                                    </div>
+                                    <div>
+                                        <p className="text-base text-foreground font-medium mb-1">Scroll down and tap</p>
+                                        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-black/5 dark:bg-white/10 rounded-lg border border-black/10 dark:border-white/10">
+                                            <span className="text-sm font-bold text-foreground">Add to Home Screen</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="flex items-start gap-4">
+                                    <div className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center shrink-0 mt-0.5">
+                                        <span className="text-sm font-bold text-foreground">3</span>
+                                    </div>
+                                    <div>
+                                        <p className="text-base text-foreground font-medium mb-1">Confirm installation</p>
+                                        <p className="text-sm text-foreground/50">Tap "Add" in the top right corner to finish.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="p-6 pt-0">
+                                <button 
+                                    onClick={() => setShowIOSModal(false)}
+                                    className="w-full py-4 rounded-xl bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground font-bold text-base transition-colors"
+                                >
+                                    Got it, thanks
+                                </button>
+                            </div>
+                        </motion.div>
+                    </div>
                 )}
             </AnimatePresence>
         </>
