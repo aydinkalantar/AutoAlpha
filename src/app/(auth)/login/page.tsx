@@ -48,10 +48,7 @@ export default function LoginPage() {
             
             {/* Step 2: The Mobile Logo (Top) */}
             <div className="flex md:hidden w-full items-center justify-center pt-16 pb-6 relative z-20">
-                 <Link href="/" className="absolute top-6 left-6 flex items-center gap-2 text-foreground/60 hover:text-foreground transition-colors font-medium text-sm bg-black/5 dark:bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-black/5 dark:border-white/10 shadow-sm">
-                    <ChevronLeft className="w-4 h-4" />
-                    Back
-                 </Link>
+
                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-purple-600 p-0.5 shadow-lg shadow-purple-500/20 pointer-events-none">
                      <div className="w-full h-full rounded-[14px] bg-background flex items-center justify-center">
                          <span className="font-bold text-3xl tracking-tighter">A</span>
@@ -64,16 +61,14 @@ export default function LoginPage() {
                 {/* Ambient Background */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-br from-cyan-500/20 to-purple-600/20 blur-[120px] rounded-full pointer-events-none" />
 
-                <Link href="/" className="absolute top-12 left-12 flex items-center gap-2 text-foreground/60 hover:text-foreground transition-colors font-medium text-sm z-50 bg-white/50 dark:bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-black/5 dark:border-white/10 shadow-sm">
-                    <ChevronLeft className="w-4 h-4" />
-                    Back to Home
-                </Link>
+
 
                 <div className="relative z-10 bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-3xl p-12 max-w-lg w-full shadow-2xl">
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-purple-600 p-0.5 mb-8 shadow-lg shadow-purple-500/20">
-                        <div className="w-full h-full rounded-[14px] bg-background flex items-center justify-center">
-                            <span className="font-bold text-3xl tracking-tighter">A</span>
+                    <div className="flex items-center gap-3 mb-8">
+                        <div className="w-12 h-12 rounded-xl flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
+                            <div className="w-4 h-4 bg-white rounded-sm transform rotate-45" />
                         </div>
+                        <span className="font-bold text-3xl tracking-tight text-foreground">AutoAlpha</span>
                     </div>
                     <h2 className="text-4xl font-black tracking-tight text-foreground mb-4">
                         Automate Your Alpha.
