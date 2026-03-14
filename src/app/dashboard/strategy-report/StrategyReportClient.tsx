@@ -55,7 +55,9 @@ export default function StrategyReportClient({ subscriptions, positions, totalBa
             <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-black/5 dark:border-white/10 rounded-2xl p-6 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div className="relative z-10 w-full md:max-w-xl">
                     <h2 className="text-2xl font-black text-foreground tracking-tight">{activeSubscription?.strategy?.name || "Strategy"} Report</h2>
-                    <p className="text-foreground/60 text-sm mt-1">{activeSubscription?.strategy?.description || "Performance metrics, drawdown mappings, and historical trade logs strictly isolated to this algorithmic vault."}</p>
+                    <p className="text-foreground/60 text-sm mt-1 line-clamp-2 md:line-clamp-none">
+                        {activeSubscription?.strategy?.description || "Performance metrics, drawdown mappings, and historical trade logs strictly isolated to this algorithmic vault."}
+                    </p>
                 </div>
                 {activeSubscription && (
                     <div className="relative z-10 flex items-center gap-3 w-full md:w-auto shrink-0">
