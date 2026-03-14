@@ -9,6 +9,7 @@ import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import SecurityActions from './SecurityActions';
 import NotificationSettings from './NotificationSettings';
+import NotificationBell from '@/components/dashboard/NotificationBell';
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -71,13 +72,14 @@ export default async function AccountHubPage() {
     }).format(new Date(user.createdAt));
 
     return (
-        <div className="p-8 pt-[104px] md:p-12 md:pt-[104px] max-w-7xl mx-auto space-y-12">
-            <div className="flex flex-col md:flex-row justify-between md:items-end gap-6 relative z-10">
-                <div className="space-y-6 pr-16 md:pr-0">
-                    <div>
-                        <h1 className="text-4xl font-bold text-foreground tracking-tight">Account Hub</h1>
-                        <p className="text-foreground/60 mt-2 text-lg">Manage your personal profile and security configurations.</p>
-                    </div>
+        <div className="p-8 pt-8 md:p-12 md:pt-12 max-w-7xl mx-auto space-y-12">
+            <div className="flex flex-row items-start justify-between gap-4 w-full relative z-10">
+                <div className="flex flex-col gap-2 w-full break-words">
+                    <h1 className="text-4xl font-bold text-foreground tracking-tight break-words w-full">Account Hub</h1>
+                    <p className="text-foreground/60 text-lg">Manage your personal profile and security configurations.</p>
+                </div>
+                <div className="flex-shrink-0">
+                    <NotificationBell userId={user.id} />
                 </div>
             </div>
 

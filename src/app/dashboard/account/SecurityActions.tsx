@@ -66,7 +66,7 @@ export default function SecurityActions({ hasPassword }: { hasPassword: boolean 
             {/* Change Password Modal */}
             {isChangePasswordOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-                    <div className="bg-white dark:bg-[#0A0A0A] border border-black/10 dark:border-white/10 rounded-[2rem] p-8 max-w-md w-full shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+                    <div className="bg-white dark:bg-[#0A0A0A] border border-black/10 dark:border-white/10 rounded-[2rem] p-8 pb-32 max-w-md w-full max-h-[85dvh] overflow-y-auto shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
                         <button onClick={() => setIsChangePasswordOpen(false)} className="absolute top-6 right-6 text-foreground/40 hover:text-foreground">
                             ✕
                         </button>
@@ -115,7 +115,7 @@ export default function SecurityActions({ hasPassword }: { hasPassword: boolean 
             {/* Delete Account Modal */}
             {isDeleteAccountOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-                    <div className="bg-white dark:bg-[#0A0A0A] border border-red-500/30 rounded-[2rem] p-8 max-w-md w-full shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+                    <div className="bg-white dark:bg-[#0A0A0A] border border-red-500/30 rounded-[2rem] p-8 pb-32 max-w-md w-full max-h-[85dvh] overflow-y-auto shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
                         <button onClick={() => setIsDeleteAccountOpen(false)} className="absolute top-6 right-6 text-foreground/40 hover:text-foreground">
                             ✕
                         </button>

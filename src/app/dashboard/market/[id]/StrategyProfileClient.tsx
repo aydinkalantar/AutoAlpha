@@ -7,6 +7,7 @@ import CapitalAllocationModal from "../../CapitalAllocationModal";
 import { updateSubscriptionCapital } from "../../subscriptionActions";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import NotificationBell from '@/components/dashboard/NotificationBell';
 import { Button } from "@/components/ui/button";
 import {
     Area,
@@ -55,29 +56,32 @@ export default function StrategyProfileClient({
     return (
         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-6 duration-700">
             {/* Header / Nav */}
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4 pr-16 md:pr-0">
-                    <Link href="/dashboard/market" className="p-3 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 rounded-xl transition-colors">
+            <div className="flex flex-row items-start justify-between gap-4 w-full">
+                <div className="flex flex-wrap md:flex-nowrap items-center gap-4 w-full break-words">
+                    <Link href="/dashboard/market" className="p-3 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 rounded-xl transition-colors flex-shrink-0">
                         <svg className="w-5 h-5 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
                         </svg>
                     </Link>
-                    <div>
-                        <h1 className="text-3xl md:text-4xl font-black tracking-tight text-foreground flex items-center gap-2 md:gap-4 flex-wrap">
+                    <div className="flex-1 min-w-0 flex flex-wrap items-center gap-4">
+                        <h1 className="text-3xl md:text-4xl font-black tracking-tight text-foreground flex items-center gap-2 md:gap-4 flex-wrap break-words">
                             {strategy.name}
                             <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-cyan-500/10 text-cyan-600 dark:text-cyan-400">
                                 {strategy.targetExchange}
                             </span>
                         </h1>
+                        <Button
+                            size="lg"
+                            onClick={() => setIsSubscribeOpen(true)}
+                            className="hidden lg:inline-flex items-center justify-center bg-gradient-to-br from-cyan-400 to-purple-600 text-white font-bold rounded-xl shadow-lg shadow-purple-500/30 hover:-translate-y-0.5 hover:shadow-purple-500/40 transition-all flex-shrink-0"
+                        >
+                            Manage Allocation
+                        </Button>
                     </div>
                 </div>
-                <Button
-                    size="lg"
-                    onClick={() => setIsSubscribeOpen(true)}
-                    className="hidden lg:inline-flex items-center justify-center bg-gradient-to-br from-cyan-400 to-purple-600 text-white font-bold rounded-xl shadow-lg shadow-purple-500/30 hover:-translate-y-0.5 hover:shadow-purple-500/40 transition-all flex-shrink-0"
-                >
-                    Manage Allocation
-                </Button>
+                <div className="flex-shrink-0">
+                    <NotificationBell userId={userId} />
+                </div>
             </div>
 
             {/* Top Grid: Main Info & Actions */}

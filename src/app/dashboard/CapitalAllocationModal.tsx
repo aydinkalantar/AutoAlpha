@@ -83,7 +83,7 @@ export default function CapitalAllocationModal({
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4 md:pl-64 bg-black/50 backdrop-blur-sm transition-all duration-300">
-            <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden border border-black/5 dark:border-white/10 relative transform transition-all duration-300 scale-100 opacity-100">
+            <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-2xl w-full max-w-lg max-h-[85dvh] overflow-y-auto overflow-x-hidden border border-black/5 dark:border-white/10 relative transform transition-all duration-300 scale-100 opacity-100">
 
                 {/* Header */}
                 <div className="px-6 py-5 border-b border-black/5 dark:border-white/10 flex justify-between items-center bg-gray-50/50 dark:bg-white/5">
@@ -107,7 +107,7 @@ export default function CapitalAllocationModal({
                 </div>
 
                 {/* Body */}
-                <div className="p-6 space-y-8">
+                <div className="p-6 pb-32 space-y-8">
                     {/* Visual Feedback Metrics */}
                     <div className="grid grid-cols-2 gap-4">
                         <div className="bg-cyan-500/10 dark:bg-cyan-500/20 rounded-xl p-5 border border-cyan-500/20 flex flex-col justify-center">

@@ -9,6 +9,7 @@ import TestnetToggle from './TestnetToggle';
 import WelcomeModal from './WelcomeModal';
 import Link from 'next/link';
 import { Info } from 'lucide-react';
+import NotificationBell from '@/components/dashboard/NotificationBell';
 
 export const dynamic = 'force-dynamic';
 
@@ -80,12 +81,12 @@ export default async function DashboardPage() {
     const isApiConnected = user.exchangeKeys && user.exchangeKeys.length > 0;
 
     return (
-        <div className="p-4 pt-[104px] pb-32 md:p-10 md:pt-[104px] md:pb-32 max-w-7xl mx-auto space-y-8 md:space-y-12">
+        <div className="p-4 pt-8 pb-32 md:p-10 md:pt-12 md:pb-32 max-w-7xl mx-auto space-y-8 md:space-y-12">
             <WelcomeModal userId={user.id} hasCompletedOnboarding={user.hasCompletedOnboarding ?? false} />
-            <div className="flex flex-col md:flex-row justify-between md:items-center gap-6">
-                <div className="pr-16 md:pr-0">
-                    <div className="flex flex-wrap items-center gap-3">
-                        <h1 className="text-4xl font-bold text-foreground tracking-tight">Investor Dashboard</h1>
+            <div className="flex flex-row items-start justify-between gap-4 w-full">
+                <div className="flex flex-col gap-2 w-full">
+                    <div className="flex flex-wrap items-center gap-3 break-words w-full">
+                        <h1 className="text-4xl font-bold text-foreground tracking-tight break-words w-full">Investor Dashboard</h1>
                         
                         {/* API Status Badge */}
                         <div className="flex items-center gap-2 px-3 py-1 bg-white/5 dark:bg-white/10 border border-black/5 dark:border-white/10 rounded-full">
@@ -99,10 +100,11 @@ export default async function DashboardPage() {
                             <Info className="w-5 h-5" />
                         </Link>
                     </div>
-                    <p className="text-foreground/60 mt-2 text-lg">Manage your capital and monitor active positions.</p>
+                    <p className="text-foreground/60 text-lg">Manage your capital and monitor active positions.</p>
                 </div>
 
-                <div className="mt-2 md:mt-0 flex w-full md:w-auto justify-end">
+                <div className="flex flex-col items-end gap-3 flex-shrink-0">
+                    <NotificationBell userId={user.id} />
                     <TestnetToggle initialMode={user.isTestnetMode} userId={user.id} />
                 </div>
             </div>
