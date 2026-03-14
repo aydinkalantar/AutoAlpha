@@ -6,13 +6,53 @@ import { motion } from 'framer-motion';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { Accordion } from '@/components/ui/Accordion';
-import { PlayCircle, Key, Wallet, LineChart, Shield, Lock, ShieldAlert, Cpu } from 'lucide-react';
+import { PlayCircle, Key, Wallet, LineChart, Shield, Lock, ShieldAlert, Cpu, Download, X, Share } from 'lucide-react';
 import RoiCalculator from './RoiCalculator';
 import StrategySneakPeek from './StrategySneakPeek';
 import PublicLeaderboard from './PublicLeaderboard';
+import { useState, useEffect } from 'react';
 
 export default function LandingPageClient({ initialStrategies }: { initialStrategies: any[] }) {
   const { data: session, status } = useSession();
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isIOS, setIsIOS] = useState(false);
+  const [isStandalone, setIsStandalone] = useState(false);
+  const [showIOSModal, setShowIOSModal] = useState(false);
+
+  useEffect(() => {
+    // Check if already installed
+    const _isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone === true;
+    setIsStandalone(_isStandalone);
+
+    // Detect iOS
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    const isIosDevice = /iphone|ipad|ipod/.test(userAgent);
+    setIsIOS(isIosDevice);
+
+    // Capture Chrome/Android native install prompt
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (isIOS) {
+      setShowIOSModal(true);
+      return;
+    }
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        setDeferredPrompt(null);
+      }
+    }
+  };
+
   const fadeUpVariants: any = {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
@@ -120,11 +160,22 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
               Connect your exchange API. Fund your prepaid Gas Tank. Let emotionless algorithms trade your account 24/7. <strong className="text-foreground">We only get paid when you profit.</strong>
             </motion.p>
 
-            <motion.div variants={fadeUpVariants} className="flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto">
-              <Link href="/api/auth/signin" className="w-full sm:w-auto px-10 py-5 bg-gradient-to-r from-cyan-500 to-purple-600 text-white rounded-full text-xl font-bold hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-purple-500/30 dark:shadow-purple-500/20">
+            <motion.div variants={fadeUpVariants} className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+              {(!isStandalone && (deferredPrompt || isIOS)) ? (
+                // Unified PWA Install Button for Mobile Chrome / Safari
+                <button 
+                  onClick={handleInstallClick}
+                  className="w-full sm:w-auto px-10 py-5 flex items-center justify-center gap-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-[2rem] text-xl font-bold tracking-tight shadow-xl shadow-emerald-500/20 hover:scale-105 active:scale-95 transition-all md:hidden"
+                >
+                  <Download className="w-6 h-6" />
+                  Install App
+                </button>
+              ) : null}
+
+              <Link href="/api/auth/signin" className="w-full sm:w-auto px-10 py-5 bg-gradient-to-r from-cyan-500 to-purple-600 text-white rounded-[2rem] text-xl font-bold hover:scale-105 active:scale-95 transition-all shadow-xl shadow-purple-500/30 dark:shadow-purple-500/20 text-center">
                 Start Automating
               </Link>
-              <Link href="#strategies" className="w-full sm:w-auto px-10 py-5 flex items-center justify-center gap-3 rounded-full text-xl font-bold text-foreground bg-white/40 dark:bg-white/5 border border-black/5 dark:border-white/5 backdrop-blur-md hover:bg-white/60 dark:hover:bg-white/10 transition-all">
+              <Link href="#strategies" className="w-full sm:w-auto px-10 py-5 flex items-center justify-center gap-3 rounded-[2rem] text-xl font-bold text-foreground bg-white/40 dark:bg-white/5 border border-black/5 dark:border-white/5 backdrop-blur-md hover:bg-white/60 dark:hover:bg-white/10 transition-all">
                 <PlayCircle className="w-5 h-5 text-purple-500" />
                 View Live Strategies
               </Link>
@@ -345,6 +396,52 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
           </div>
         </div>
       </footer>
+
+      {/* iOS PWA Install Instruction Modal */}
+      {showIOSModal && (
+        <div className="fixed inset-0 z-[100] flex items-end justify-center px-4 pb-8 sm:items-center sm:pb-0 bg-black/50 backdrop-blur-sm transition-opacity">
+          <div className="bg-white dark:bg-[#1C1C1E] border border-black/5 dark:border-white/10 w-full max-w-sm rounded-[2rem] shadow-2xl overflow-hidden flex flex-col relative animate-in fade-in slide-in-from-bottom-8 duration-300">
+            <div className="p-6 flex items-start justify-between">
+              <div className="flex bg-cyan-500/20 dark:bg-cyan-500/20 p-3 rounded-2xl w-fit mb-4 border border-cyan-500/20">
+                <Download className="w-8 h-8 text-cyan-500" />
+              </div>
+              <button onClick={() => setShowIOSModal(false)} className="p-2 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 rounded-full transition-colors text-foreground/60 focus:outline-none">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="px-6 pb-8">
+              <h2 className="text-2xl font-black tracking-tight text-foreground mb-3">Install AutoAlpha</h2>
+              <p className="text-foreground/70 text-lg leading-relaxed mb-8">
+                Install AutoAlpha on your home screen for quick, secure access and a full-screen trading experience.
+              </p>
+
+              <div className="flex flex-col gap-5 relative isolate">
+                <div className="absolute left-[19px] top-6 bottom-6 w-[2px] bg-gradient-to-b from-cyan-500/50 to-purple-500/50 -z-10 rounded-full" />
+                
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-cyan-100 dark:bg-cyan-900/40 text-cyan-600 dark:text-cyan-400 font-bold flex items-center justify-center shadow-inner text-sm border-2 border-white dark:border-[#1C1C1E]">1</div>
+                  <p className="font-medium text-foreground/80 flex items-center gap-2 text-base">
+                    Tap the
+                    <Share className="w-5 h-5 text-blue-500 inline-block px-1 bg-gray-100 dark:bg-white/10 rounded" />
+                    Share icon
+                  </p>
+                </div>
+                
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 font-bold flex items-center justify-center shadow-inner text-sm border-2 border-white dark:border-[#1C1C1E]">2</div>
+                  <p className="font-medium text-foreground/80 text-base">Select <strong>Add to Home Screen</strong></p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="p-6 bg-gray-50/80 dark:bg-white/5 border-t border-black/5 dark:border-white/5">
+                <button onClick={() => setShowIOSModal(false)} className="w-full py-4 text-center text-sm font-bold text-foreground/50 hover:text-foreground/80 transition-colors uppercase tracking-widest focus:outline-none">Got It</button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div >
   );
 }

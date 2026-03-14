@@ -1,0 +1,23 @@
+{
+  "name": "AutoAlpha",
+  "short_name": "AutoAlpha",
+  "description": "Institutional-Grade Crypto Algorithms. Zero Custody Risk.",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#09090b",
+  "icons": [
+    {
+      "src": "/apple-icon?size=192",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-icon?size=512",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "orientation": "portrait",
+  "id": "ai.autoalpha.app"
+}
