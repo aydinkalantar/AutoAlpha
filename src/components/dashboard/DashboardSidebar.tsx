@@ -412,7 +412,7 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                                         </Button>
                                     </div>
 
-                                <div className="flex flex-col items-center gap-2 pb-4 pt-4 border-t border-black/5 dark:border-white/10">
+                                <div className="flex flex-col items-center gap-2 pb-32 pt-4 border-t border-black/5 dark:border-white/10">
                                     <div className="flex justify-center gap-4 text-[11px] font-bold tracking-widest uppercase text-foreground/40">
                                         <Link href="/terms" target="_blank" className="hover:text-foreground">Terms</Link>
                                         <Link href="/privacy" target="_blank" className="hover:text-foreground">Privacy</Link>

@@ -70,7 +70,7 @@ export default function NotificationBell({ userId, className }: { userId?: strin
                                         Mark all
                                     </button>
                                 )}
-                                <button onClick={() => setIsOpen(false)} className="md:hidden p-1 rounded-full text-foreground/50 hover:text-foreground hover:bg-black/10 dark:hover:bg-white/10 transition-colors">
+                                <button onClick={() => setIsOpen(false)} aria-label="Close notifications" title="Close" className="md:hidden p-1 rounded-full text-foreground/50 hover:text-foreground hover:bg-black/10 dark:hover:bg-white/10 transition-colors">
                                     <X className="w-5 h-5" />
                                 </button>
                             </div>
