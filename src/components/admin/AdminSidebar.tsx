@@ -67,6 +67,25 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
 
     return (
         <>
+            {/* Mobile Top Header */}
+            <div className="flex md:hidden fixed top-0 w-full h-16 z-[60] px-4 justify-between items-center bg-background/80 backdrop-blur-md border-b border-black/5 dark:border-white/10 transition-transform duration-300">
+                <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg outline-none flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
+                        <div className="w-3 h-3 bg-white rounded-sm transform rotate-45" />
+                    </div>
+                    <span className="font-bold text-lg text-foreground tracking-tight">Admin Console</span>
+                </div>
+                <div className="flex items-center gap-1">
+                    <button
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        className="p-2 text-foreground/80 hover:text-foreground active:scale-95 transition-all"
+                        aria-label={isMobileMenuOpen ? "Close Menu" : "Open Menu"}
+                    >
+                        {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                    </button>
+                </div>
+            </div>
+
             {/* Desktop Sidebar */}
             <div className={cn("hidden md:flex bg-white/50 dark:bg-white/5 backdrop-blur-2xl border-r border-black/5 dark:border-white/10 h-screen fixed top-0 left-0 flex-col z-50 transition-all duration-300", isCollapsed ? "w-20" : "w-64")}>
                 <div className="h-20 flex items-center justify-between px-4 border-b border-black/5 dark:border-white/10">
@@ -142,7 +161,7 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
                 </div>
             </div>
 
-            <div className={cn("flex-1 flex flex-col min-h-screen w-full md:w-auto max-w-[100vw] md:max-w-none overflow-x-hidden relative z-10 transition-all duration-300 pb-20 md:pb-0", isCollapsed ? "md:ml-20" : "md:ml-64 lg:ml-64")}>
+            <div className={cn("flex-1 flex flex-col min-h-screen w-full md:w-auto max-w-[100vw] md:max-w-none overflow-x-hidden relative z-10 transition-all duration-300 pt-20 pb-28 md:pt-0 md:pb-0", isCollapsed ? "md:ml-20" : "md:ml-64 lg:ml-64")}>
                 <main className="flex-1 transition-all duration-300 w-full overflow-hidden">
                     {children}
                 </main>
