@@ -25,49 +25,9 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isHeaderVisible, setIsHeaderVisible] = useState(true);
 
     useEffect(() => {
         setMounted(true);
-    }, []);
-
-    // Mobile Header Hide-on-Scroll Logic
-    useEffect(() => {
-        let lastScrollY = window.scrollY;
-        let ticking = false;
-
-        const handleScroll = () => {
-            if (!ticking) {
-                window.requestAnimationFrame(() => {
-                    const currentScrollY = window.scrollY;
-                    
-                    // Always show at the very top
-                    if (currentScrollY < 50) {
-                        setIsHeaderVisible(true);
-                    } 
-                    // Scrolling down (add 10px deadzone to prevent micro-stutter)
-                    else if (currentScrollY > lastScrollY && currentScrollY - lastScrollY > 10) {
-                        setIsHeaderVisible(false);
-                    } 
-                    // Scrolling up (add 10px deadzone)
-                    else if (currentScrollY < lastScrollY && lastScrollY - currentScrollY > 10) {
-                        setIsHeaderVisible(true);
-                    }
-                    
-                    // Only update lastScrollY if we moved more than the deadzone, 
-                    // or if we are at the very top to reset the anchor
-                    if (Math.abs(currentScrollY - lastScrollY) > 10 || currentScrollY < 50) {
-                        lastScrollY = currentScrollY;
-                    }
-                    
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        };
-
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     // Prevent body scroll when mobile menu is open
@@ -120,10 +80,7 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
 
     return (
         <>
-            <div className={cn(
-                "flex md:hidden fixed top-0 w-full h-16 z-50 px-4 justify-between items-center bg-background/80 backdrop-blur-md border-b border-black/5 dark:border-white/10 transition-transform duration-300 ease-in-out md:translate-y-0 will-change-transform",
-                isHeaderVisible ? "translate-y-0" : "-translate-y-full"
-            )}>
+            <div className="flex md:hidden fixed top-0 w-full h-16 z-50 px-4 justify-between items-center bg-background/80 backdrop-blur-md border-b border-black/5 dark:border-white/10">
                 {['/dashboard', '/dashboard/market', '/dashboard/accounting'].includes(pathname) ? (
                     <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-lg outline-none flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
