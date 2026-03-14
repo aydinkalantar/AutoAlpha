@@ -72,9 +72,9 @@ export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBala
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 md:pl-64 bg-black/50 backdrop-blur-sm transition-all duration-300">
-            <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-black/5 dark:border-white/10 relative transform transition-all duration-300">
-                <div className="px-6 py-5 border-b border-black/5 dark:border-white/10 flex justify-between items-center bg-gray-50/50 dark:bg-white/5">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 md:pl-64 bg-black/50 backdrop-blur-sm transition-all duration-300">
+            <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-2xl w-full max-w-md max-h-[85dvh] mb-20 md:mb-0 flex flex-col overflow-hidden border border-black/5 dark:border-white/10 relative transform transition-all duration-300 scale-100 opacity-100">
+                <div className="px-6 py-5 border-b border-black/5 dark:border-white/10 flex justify-between items-center bg-gray-50/50 dark:bg-white/5 flex-shrink-0">
                     <h2 className="text-xl font-bold text-foreground tracking-tight">Allocate Capital</h2>
                     <button
                         onClick={handleClose}
@@ -86,7 +86,8 @@ export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBala
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                <form onSubmit={handleSubmit} className="flex flex-col min-h-0 overflow-hidden">
+                    <div className="p-6 space-y-6 overflow-y-auto flex-1">
                     {error && (
                         <div className="p-4 bg-rose-500/10 text-rose-500 rounded-xl text-sm font-semibold border border-rose-500/20">
                             {error}
@@ -177,7 +178,9 @@ export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBala
                         </label>
                     </div>
 
-                    <div className="pt-2">
+                    </div>
+
+                    <div className="px-6 py-5 border-t border-black/5 dark:border-white/10 bg-gray-50/80 dark:bg-white/5 flex-shrink-0">
                         <button
                             type="submit"
                             disabled={isSubmitting || parseFloat(capitalStr) > currentBalance}
