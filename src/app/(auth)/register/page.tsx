@@ -72,6 +72,12 @@ export default function RegisterPage() {
     return (
         <div className="min-h-[100dvh] w-full flex flex-col md:flex-row bg-background relative">
             
+            {/* Ambient Animated Background (Global) */}
+            <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+                <div className="absolute top-[-10%] left-[-20%] w-[80vw] h-[80vw] md:w-[40vw] md:h-[40vw] bg-cyan-500/20 blur-[100px] md:blur-[140px] rounded-full animate-ambient-float" />
+                <div className="absolute bottom-[-10%] right-[-20%] w-[80vw] h-[80vw] md:w-[40vw] md:h-[40vw] bg-purple-600/20 blur-[100px] md:blur-[140px] rounded-full animate-ambient-float" style={{ animationDelay: '-7.5s' }} />
+            </div>
+
             {/* Theme Toggle (Absolute Top Right) */}
             {mounted && (
                 <button
@@ -97,11 +103,7 @@ export default function RegisterPage() {
 
             {/* Step 3: The Left Panel (Desktop Only - Info & Glassmorphism) */}
             <div className="hidden md:flex md:w-1/2 p-10 flex-col justify-center items-center relative overflow-hidden bg-black/5 dark:bg-white/5">
-                {/* Ambient Background */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-br from-cyan-500/20 to-purple-600/20 blur-[120px] rounded-full pointer-events-none" />
-
-
-
+                
                 <div className="relative z-10 bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-3xl p-12 max-w-lg w-full shadow-2xl">
                     <div className="flex items-center gap-3 mb-8">
                         <div className="w-12 h-12 rounded-xl flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
