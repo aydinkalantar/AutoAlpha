@@ -143,7 +143,7 @@ export default function CapitalAllocationModal({
                                     value={allocationAmount === 0 ? "" : allocationAmount} // Better UX for typing 0
                                     onChange={handleInputChange}
                                     disabled={isSaving}
-                                    className="w-40 bg-white dark:bg-black/50 border border-gray-300 dark:border-white/20 rounded-xl py-3 pl-8 pr-4 text-right font-black text-foreground focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all shadow-sm"
+                                    className="w-40 h-14 bg-white dark:bg-black/50 border border-gray-300 dark:border-white/20 rounded-xl py-2 pl-8 pr-4 text-right font-black text-2xl md:text-3xl text-foreground focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all shadow-sm"
                                     placeholder="0"
                                 />
                             </div>

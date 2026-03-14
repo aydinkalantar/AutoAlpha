@@ -6,6 +6,7 @@ import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-
 import { loadStripe } from '@stripe/stripe-js';
 import CheckoutForm from './CheckoutForm';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useSwitchChain } from 'wagmi';
+import { useWeb3Modal } from '@web3modal/wagmi/react';
 import { parseUnits } from 'viem';
 import { mainnet, arbitrum, optimism, base, polygon } from 'wagmi/chains';
 import dynamic from 'next/dynamic';
@@ -69,6 +70,7 @@ function DepositContent() {
     // Web3 Wagmi Hooks
     const { address, isConnected, chainId } = useAccount();
     const { switchChain } = useSwitchChain();
+    const { open: openWeb3Modal } = useWeb3Modal();
     const { data: web3TxHash, writeContractAsync, isPending: isWalletPromptOpen } = useWriteContract();
     const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash: web3TxHash });
 
@@ -233,33 +235,36 @@ function DepositContent() {
                 {/* Amount Input */}
                 <div className="space-y-3 relative z-10">
                     <label className="text-sm font-medium text-foreground/80">Deposit Amount</label>
-                    <div className="relative flex items-center">
-                        <span className="absolute left-6 text-3xl font-bold text-foreground/40">$</span>
-                        <input
-                            type="number"
-                            value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
-                            className="w-full bg-white/50 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-[1.5rem] pl-14 pr-[150px] md:pr-40 py-6 text-4xl font-bold text-foreground placeholder:text-foreground/20 focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner transition-all"
-                            placeholder="0.00"
-                        />
-                        {method === 'web3' ? (
-                            <div className="absolute right-3 flex bg-black/5 dark:bg-white/5 rounded-xl p-1 border border-black/5 dark:border-white/5">
+                    <div className="flex flex-col gap-6">
+                        <div className="relative flex items-center w-full">
+                            <span className="absolute left-6 text-3xl font-bold text-foreground/40">$</span>
+                            <input
+                                type="number"
+                                value={amount}
+                                onChange={(e) => setAmount(e.target.value)}
+                                className="w-full bg-white/50 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-[1.5rem] pl-14 pr-6 py-6 text-4xl font-bold text-foreground placeholder:text-foreground/20 focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner transition-all"
+                                placeholder="0.00"
+                            />
+                            {method === 'card' && (
+                                <div className="absolute right-6 flex items-center pr-4">
+                                    <span className="text-sm font-bold text-foreground/40 uppercase tracking-widest">USD</span>
+                                </div>
+                            )}
+                        </div>
+                        {method === 'web3' && (
+                            <div className="flex bg-black/5 dark:bg-white/5 rounded-xl p-1 border border-black/5 dark:border-white/5 w-full sm:w-auto self-start">
                                 <button
                                     onClick={() => setCurrency('USDT')}
-                                    className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${currency === 'USDT' ? 'bg-gradient-to-br from-cyan-400 to-purple-600 text-white shadow-sm' : 'text-foreground/60 hover:text-foreground'}`}
+                                    className={`flex-1 sm:flex-none px-6 py-3 rounded-lg text-sm font-bold transition-all ${currency === 'USDT' ? 'bg-gradient-to-br from-cyan-400 to-purple-600 text-white shadow-sm' : 'text-foreground/60 hover:text-foreground'}`}
                                 >
                                     USDT
                                 </button>
                                 <button
                                     onClick={() => setCurrency('USDC')}
-                                    className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${currency === 'USDC' ? 'bg-gradient-to-br from-cyan-400 to-purple-600 text-white shadow-sm' : 'text-foreground/60 hover:text-foreground'}`}
+                                    className={`flex-1 sm:flex-none px-6 py-3 rounded-lg text-sm font-bold transition-all ${currency === 'USDC' ? 'bg-gradient-to-br from-cyan-400 to-purple-600 text-white shadow-sm' : 'text-foreground/60 hover:text-foreground'}`}
                                 >
                                     USDC
                                 </button>
-                            </div>
-                        ) : (
-                            <div className="absolute right-3 flex items-center pr-4">
-                                <span className="text-sm font-bold text-foreground/40 uppercase tracking-widest">USD</span>
                             </div>
                         )}
                     </div>
@@ -349,10 +354,13 @@ function DepositContent() {
                         {/* Web3 Button Overrides & UI */}
                         <div className="flex flex-col gap-4 mt-6">
                             {!isConnected ? (
-                                <div className="w-full flex justify-center py-2">
-                                    {/* @ts-ignore - Custom Web3Modal Web Component */}
-                                    <w3m-button />
-                                </div>
+                                <button
+                                    onClick={() => openWeb3Modal()}
+                                    className="w-full py-6 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-[1.5rem] text-lg font-semibold transition-all shadow-lg hover:shadow-[0_10px_40px_rgba(147,51,234,0.3)] flex items-center justify-center gap-3 active:scale-[0.98]"
+                                >
+                                    <Wallet className="w-6 h-6" />
+                                    Connect Wallet
+                                </button>
                             ) : chainId !== NETWORK_CHAINS[network] ? (
                                 <button
                                     onClick={() => switchChain({ chainId: NETWORK_CHAINS[network] })}
