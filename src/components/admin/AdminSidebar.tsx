@@ -29,11 +29,18 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
     const [isIOS, setIsIOS] = useState(false);
     const [isStandalone, setIsStandalone] = useState(false);
     const [showIOSModal, setShowIOSModal] = useState(false);
+    const [hasInstalled, setHasInstalled] = useState(false);
 
     useEffect(() => {
         setMounted(true);
 
         // Check if already installed
+        if (typeof window !== 'undefined') {
+            if (localStorage.getItem('pwaInstalled') === 'true') {
+                setHasInstalled(true);
+            }
+        }
+
         const _isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone === true;
         setIsStandalone(_isStandalone);
 
@@ -48,8 +55,17 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
             setDeferredPrompt(e);
         };
 
+        const handleAppInstalled = () => {
+            localStorage.setItem('pwaInstalled', 'true');
+            setHasInstalled(true);
+        };
+
         window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-        return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+        window.addEventListener('appinstalled', handleAppInstalled);
+        return () => {
+            window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+            window.removeEventListener('appinstalled', handleAppInstalled);
+        };
     }, []);
 
     const handleInstallClick = async () => {
@@ -63,6 +79,8 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
             const { outcome } = await deferredPrompt.userChoice;
             if (outcome === 'accepted') {
                 setDeferredPrompt(null);
+                localStorage.setItem('pwaInstalled', 'true');
+                setHasInstalled(true);
             }
             setIsMobileMenuOpen(false);
         }
@@ -201,7 +219,7 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
 
                 <div className="p-4 border-t border-black/5 dark:border-white/10 flex flex-col gap-2 overflow-hidden shrink-0">
                     {/* Desktop Web App Install Button */}
-                    {!isStandalone && (deferredPrompt || isIOS) && (
+                    {!isStandalone && !hasInstalled && (deferredPrompt || isIOS) && (
                         <div className="w-full flex flex-col gap-2 mb-2">
                             <Button 
                                 variant="ghost"
@@ -360,7 +378,7 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
                                     <h4 className="text-xs font-bold tracking-widest uppercase text-foreground/40 px-2">Preferences</h4>
 
                                     {/* Web App Install Button (Only show if not installed and prompt is available) */}
-                                    {!isStandalone && (deferredPrompt || isIOS) && (
+                                    {!isStandalone && !hasInstalled && (deferredPrompt || isIOS) && (
                                         <Button 
                                             variant="ghost"
                                             onClick={handleInstallClick} 

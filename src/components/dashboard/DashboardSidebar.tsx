@@ -31,11 +31,18 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
     const [isIOS, setIsIOS] = useState(false);
     const [isStandalone, setIsStandalone] = useState(false);
     const [showIOSModal, setShowIOSModal] = useState(false);
+    const [hasInstalled, setHasInstalled] = useState(false);
 
     useEffect(() => {
         setMounted(true);
 
         // Check if already installed
+        if (typeof window !== 'undefined') {
+            if (localStorage.getItem('pwaInstalled') === 'true') {
+                setHasInstalled(true);
+            }
+        }
+
         const _isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone === true;
         setIsStandalone(_isStandalone);
 
@@ -50,8 +57,17 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
             setDeferredPrompt(e);
         };
 
+        const handleAppInstalled = () => {
+            localStorage.setItem('pwaInstalled', 'true');
+            setHasInstalled(true);
+        };
+
         window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-        return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+        window.addEventListener('appinstalled', handleAppInstalled);
+        return () => {
+            window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+            window.removeEventListener('appinstalled', handleAppInstalled);
+        };
     }, []);
 
     const handleInstallClick = async () => {
@@ -65,6 +81,8 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
             const { outcome } = await deferredPrompt.userChoice;
             if (outcome === 'accepted') {
                 setDeferredPrompt(null);
+                localStorage.setItem('pwaInstalled', 'true');
+                setHasInstalled(true);
             }
             setIsMobileMenuOpen(false);
         }
@@ -209,7 +227,7 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
 
                 <div className="p-4 pb-8 border-t border-black/5 dark:border-white/10 flex flex-col items-center gap-2 shrink-0">
                     {/* Desktop Web App Install Button */}
-                    {!isStandalone && (deferredPrompt || isIOS) && (
+                    {!isStandalone && !hasInstalled && (deferredPrompt || isIOS) && (
                         <div className="w-full flex flex-col gap-2 mb-2">
                             <Button 
                                 variant="ghost"
@@ -411,7 +429,7 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                                 </div>
                                 <div className="bg-black/5 dark:bg-white/5 rounded-[2rem] overflow-hidden mb-6 p-2 flex flex-col gap-2">
                                     {/* Web App Install Button (Only show if not installed and prompt is available) */}
-                                    {!isStandalone && (deferredPrompt || isIOS) && (
+                                    {!isStandalone && !hasInstalled && (deferredPrompt || isIOS) && (
                                         <Button 
                                             variant="ghost"
                                             onClick={handleInstallClick} 
@@ -502,7 +520,11 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                         >
                             <div className="absolute top-4 right-4 z-10">
                                 <button 
-                                    onClick={() => setShowIOSModal(false)}
+                                    onClick={() => {
+                                        setShowIOSModal(false);
+                                        localStorage.setItem('pwaInstalled', 'true');
+                                        setHasInstalled(true);
+                                    }}
                                     className="p-2 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 rounded-full transition-colors"
                                     aria-label="Close iOS Install Modal"
                                 >
@@ -554,7 +576,11 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                             
                             <div className="p-6 pt-0">
                                 <button 
-                                    onClick={() => setShowIOSModal(false)}
+                                    onClick={() => {
+                                        setShowIOSModal(false);
+                                        localStorage.setItem('pwaInstalled', 'true');
+                                        setHasInstalled(true);
+                                    }}
                                     className="w-full py-4 rounded-xl bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground font-bold text-base transition-colors"
                                 >
                                     Got it, thanks
