@@ -243,6 +243,11 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                     <div className="w-full h-px bg-black/5 dark:bg-white/10" />
 
                     <div className="w-full flex flex-col gap-1 mt-3">
+                        <Link href="/dashboard/deposit" className={cn("flex items-center gap-3 py-3 text-sm font-bold text-white bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 shadow-md shadow-purple-500/20 rounded-xl transition-all w-full mb-1", isCollapsed ? "justify-center px-0" : "px-3")}>
+                            <Wallet className="w-5 h-5 flex-shrink-0" />
+                            {!isCollapsed && <span className="whitespace-nowrap">Fund Gas Tank</span>}
+                        </Link>
+
                         <Link href="/" className={cn("flex items-center gap-3 py-3 text-sm font-bold text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
                             <ChevronLeft className="w-5 h-5 flex-shrink-0" />
                             {!isCollapsed && <span className="whitespace-nowrap">Home</span>}
@@ -277,13 +282,13 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
             </div>
 
             <div className={cn("flex-1 flex flex-col min-h-screen w-full md:w-auto max-w-[100vw] md:max-w-none overflow-x-hidden relative z-10 transition-all duration-300 pt-20 pb-28 md:pt-0 md:pb-0", isCollapsed ? "md:ml-20" : "md:ml-64 lg:ml-64")}>
-                <main className="flex-1 transition-all duration-300 w-full overflow-hidden">
+                <main className="flex-1 transition-all duration-300 w-full">
                     {children}
                 </main>
             </div>
 
             {/* Mobile Bottom Navigation (Floating Pill) */}
-            <div className="md:hidden fixed bottom-6 left-4 right-4 z-50" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+            <div className="md:hidden fixed left-4 right-4 z-50 [@media(max-height:600px)]:hidden" style={{ bottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}>
                 <nav className="h-16 bg-white/80 dark:bg-[#1C1C1E]/80 backdrop-blur-3xl border border-black/5 dark:border-white/10 rounded-[2rem] flex items-center justify-around px-2 shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
                 {bottomBarItems.map((item) => {
                     const isActive = item.href === '/dashboard'
@@ -428,6 +433,10 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                                     <h4 className="text-xs font-bold tracking-widest uppercase text-foreground/40">Preferences</h4>
                                 </div>
                                 <div className="bg-black/5 dark:bg-white/5 rounded-[2rem] overflow-hidden mb-6 p-2 flex flex-col gap-2">
+                                    <Link href="/dashboard/deposit" onClick={() => setIsMobileMenuOpen(false)} className="w-full flex items-center justify-center gap-3 py-4 text-base font-bold text-white bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 rounded-2xl shadow-lg shadow-purple-500/20 transition-all mb-2">
+                                        <Wallet className="w-5 h-5 flex-shrink-0" />
+                                        <span>Fund Gas Tank</span>
+                                    </Link>
                                     {/* Web App Install Button (Only show if not installed and prompt is available) */}
                                     {!isStandalone && !hasInstalled && (deferredPrompt || isIOS) && (
                                         <Button 
