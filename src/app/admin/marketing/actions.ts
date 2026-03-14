@@ -1,3 +1,5 @@
+"use server";
+
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
@@ -5,7 +7,7 @@ import { authOptions } from '@/lib/auth';
 
 export async function getMarketingConfig() {
     const session = await getServerSession(authOptions);
-    if (!session || session.user.role !== 'ADMIN') {
+    if (!session || !session.user || (session.user as any).role !== 'ADMIN') {
         throw new Error('Unauthorized');
     }
 
@@ -18,7 +20,7 @@ export async function getMarketingConfig() {
 
 export async function updateMarketingConfig(formData: FormData) {
     const session = await getServerSession(authOptions);
-    if (!session || session.user.role !== 'ADMIN') {
+    if (!session || !session.user || (session.user as any).role !== 'ADMIN') {
         throw new Error('Unauthorized');
     }
 
