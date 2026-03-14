@@ -8,10 +8,24 @@ export default function Icon() {
   return new ImageResponse(
     (
       <div
-        tw="flex items-center justify-center w-full h-full rounded-[20%] bg-gradient-to-br from-cyan-400 to-purple-600"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '100%',
+          height: '100%',
+          borderRadius: '25%', 
+          backgroundImage: 'linear-gradient(to bottom right, #22d3ee, #9333ea)', // from-cyan-400 to-purple-600
+        }}
       >
         <div
-          tw="w-[37.5%] h-[37.5%] bg-white rounded-[12%] rotate-45"
+          style={{
+            width: '37.5%', 
+            height: '37.5%',
+            backgroundColor: 'white',
+            borderRadius: '12%', 
+            transform: 'rotate(45deg)',
+          }}
         />
       </div>
     ),
