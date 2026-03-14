@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function AdminExecutionsPage() {
     return (
-        <div className="p-8 pt-20 md:p-12 md:pt-20 max-w-7xl mx-auto">
+        <div className="p-4 pt-8 pb-32 md:p-10 md:pt-12 md:pb-32 max-w-7xl mx-auto">
             <LiveExecutionsClient />
         </div>
     );

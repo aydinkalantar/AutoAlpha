@@ -112,7 +112,7 @@ export default async function AdminOverviewPage() {
     }));
 
     return (
-        <div className="p-8 pt-20 md:p-12 md:pt-20 max-w-7xl mx-auto space-y-8">
+        <div className="p-4 pt-8 pb-32 md:p-10 md:pt-12 md:pb-32 max-w-7xl mx-auto space-y-8">
             <div className="relative z-10">
                 <div className="flex items-center gap-3">
                     <h1 className="text-4xl font-bold text-foreground tracking-tight">Command Center</h1>
