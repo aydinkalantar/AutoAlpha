@@ -65,14 +65,16 @@ export default function RegisterPage() {
     return (
         <div className="min-h-[100dvh] w-full flex flex-col md:flex-row bg-background">
             
-            {/* Step 2: The Mobile Logo (Top) */}
-            <div className="flex md:hidden w-full items-center justify-center pt-16 pb-6 relative z-20">
-
-                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-purple-600 p-0.5 shadow-lg shadow-purple-500/20 pointer-events-none">
-                     <div className="w-full h-full rounded-[14px] bg-background flex items-center justify-center">
-                         <span className="font-bold text-3xl tracking-tighter">A</span>
+            {/* Step 2: The Mobile Header (Top) */}
+            <div className="flex flex-col md:hidden w-full items-center justify-center pt-12 pb-2 px-6 relative z-20 text-center">
+                 <div className="flex items-center gap-3 mb-6">
+                     <div className="w-10 h-10 rounded-xl flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
+                         <div className="w-3.5 h-3.5 bg-white rounded-sm transform rotate-45" />
                      </div>
+                     <span className="font-bold text-2xl tracking-tight text-foreground">AutoAlpha</span>
                  </div>
+                 <h1 className="text-2xl font-black tracking-tight text-foreground mb-2">Create Account</h1>
+                 <p className="text-sm text-foreground/60 max-w-[280px]">Join AutoAlpha and start outperforming.</p>
             </div>
 
             {/* Step 3: The Left Panel (Desktop Only - Info & Glassmorphism) */}
