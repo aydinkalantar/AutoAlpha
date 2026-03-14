@@ -1,133 +1,82 @@
 import {
-    Body,
-    Button,
-    Container,
-    Head,
-    Heading,
-    Html,
-    Link,
-    Preview,
-    Section,
-    Text,
-} from '@react-email/components';
-import React from 'react';
+  Body,
+  Button,
+  Container,
+  Head,
+  Heading,
+  Hr,
+  Html,
+  Link,
+  Preview,
+  Section,
+  Text,
+  Tailwind,
+} from "@react-email/components";
+import * as React from "react";
 
-export default function ZombieReminderEmail({
-    userName = 'Investor',
-}: {
-    userName?: string;
-}) {
-    return (
-        <Html>
-            <Head />
-            <Preview>Need help setting up AutoAlpha? 🤖</Preview>
-            <Body style={main}>
-                <Container style={container}>
-                    <Heading style={h1}>Need help setting up AutoAlpha? 🤖</Heading>
-                    <Text style={text}>Hi {userName},</Text>
-                    <Text style={text}>
-                        We noticed you created an AutoAlpha account but haven't connected your exchange API yet.
-                    </Text>
-                    <Text style={text}>
-                        Because our platform is 100% non-custodial, you must connect a Read/Trade API key to deploy your first strategy. It takes exactly 60 seconds.
-                    </Text>
-                    
-                    <Section style={stepsContainer}>
-                        <Text style={stepText}>1. Log in to your exchange (e.g. Binance, Bybit)</Text>
-                        <Text style={stepText}>2. Create a new API Key with Read & Trade permissions (No Withdrawals)</Text>
-                        <Text style={stepText}>3. Paste the keys into AutoAlpha</Text>
-                    </Section>
-
-                    <Section style={buttonContainer}>
-                        <Button style={button} href="https://autoalpha.io/dashboard/settings">
-                            Connect Your API Now
-                        </Button>
-                    </Section>
-
-                    <Text style={text}>
-                        If you need any help, check out our <Link href="https://docs.autoalpha.io" style={link}>documentation</Link> or reply directly to this email!
-                    </Text>
-
-                    <Text style={footer}>
-                        — The AutoAlpha Team
-                    </Text>
-                </Container>
-            </Body>
-        </Html>
-    );
+interface ZombieReminderEmailProps {
+  userName: string;
 }
 
-const main = {
-    backgroundColor: '#000000',
-    color: '#ffffff',
-    fontFamily:
-        "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://autoalpha.ai";
+
+export const ZombieReminderEmail = ({
+  userName = "Trader",
+}: ZombieReminderEmailProps) => {
+  return (
+    <Html>
+      <Head />
+      <Preview>Complete your AutoAlpha setup to start automated trading.</Preview>
+      <Tailwind>
+        <Body className="bg-[#0B0D14] my-auto mx-auto font-sans px-2">
+          <Container className="border border-white/10 rounded-[20px] my-[40px] mx-auto p-[20px] max-w-[465px] bg-[#11131F]">
+            
+            {/* Header / Logo Simulation */}
+            <Section className="mt-[20px] mb-[30px] text-center">
+              <div className="mx-auto w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-400 to-cyan-500 flex items-center justify-center">
+                 <div className="w-4 h-4 bg-white rotate-45 rounded-sm" />
+              </div>
+            </Section>
+
+            <Heading className="text-white text-[24px] font-bold text-center p-0 my-[30px] mx-0 tracking-tight">
+              Action Required: Connect Your Exchange
+            </Heading>
+            
+            <Text className="text-white/80 text-[15px] leading-[24px]">
+              Hi {userName},
+            </Text>
+            
+            <Text className="text-white/80 text-[15px] leading-[24px]">
+              We noticed you created an AutoAlpha account but haven't connected your exchange API keys yet. Your algorithmic trading terminal is currently suspended and won't execute trades in the market.
+            </Text>
+            
+            <Text className="text-white/80 text-[15px] leading-[24px]">
+              You can complete your setup in under two minutes by securely linking your Binance or Bybit read-only execution credentials.
+            </Text>
+
+            <Section className="text-center mt-[32px] mb-[32px]">
+              <Button
+                className="bg-emerald-500 rounded-lg text-white text-[14px] font-bold no-underline text-center px-6 py-3"
+                href={`${baseUrl}/dashboard/account`}
+              >
+                Connect Exchange API &rarr;
+              </Button>
+            </Section>
+            
+            <Text className="text-white/60 text-[14px] leading-[24px]">
+              Our platform uses end-to-end AES-256 encryption. We can never withdraw funds from your exchange—AutoAlpha only negotiates read-only and Spot execution rights.
+            </Text>
+
+            <Hr className="border border-solid border-white/10 my-[26px] mx-0 w-full" />
+            
+            <Text className="text-[#666666] text-[12px] leading-[24px]">
+              If you have any questions about API security or need help generating your keys, reply to this email to reach our engineering team.
+            </Text>
+          </Container>
+        </Body>
+      </Tailwind>
+    </Html>
+  );
 };
 
-const container = {
-    margin: '0 auto',
-    padding: '40px 20px',
-    maxWidth: '560px',
-    backgroundColor: '#111111',
-    borderRadius: '12px',
-    border: '1px solid #333333',
-};
-
-const h1 = {
-    color: '#ffffff',
-    fontSize: '24px',
-    fontWeight: 'bold',
-    margin: '30px 0',
-    padding: '0',
-    textAlign: 'center' as const,
-};
-
-const text = {
-    color: '#e0e0e0',
-    fontSize: '16px',
-    lineHeight: '24px',
-    marginBottom: '20px',
-};
-
-const stepsContainer = {
-    backgroundColor: '#1a1a1a',
-    padding: '20px',
-    borderRadius: '8px',
-    marginBottom: '24px',
-    border: '1px solid #333333',
-};
-
-const stepText = {
-    color: '#cccccc',
-    fontSize: '14px',
-    margin: '8px 0',
-};
-
-const buttonContainer = {
-    textAlign: 'center' as const,
-    marginTop: '32px',
-    marginBottom: '32px',
-};
-
-const button = {
-    backgroundColor: '#ffffff',
-    borderRadius: '8px',
-    color: '#000000',
-    fontSize: '16px',
-    textDecoration: 'none',
-    textAlign: 'center' as const,
-    display: 'inline-block',
-    padding: '14px 24px',
-    fontWeight: 'bold',
-};
-
-const link = {
-    color: '#60a5fa',
-    textDecoration: 'underline',
-};
-
-const footer = {
-    color: '#8898aa',
-    fontSize: '14px',
-    marginTop: '48px',
-};
+export default ZombieReminderEmail;

@@ -152,7 +152,7 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
 
             {/* Desktop Sidebar */}
             <div className={cn("hidden md:flex bg-white/50 dark:bg-white/5 backdrop-blur-2xl border-r border-black/5 dark:border-white/10 h-screen fixed top-0 left-0 flex-col z-50 transition-all duration-300", isCollapsed ? "w-20" : "w-64")}>
-                <div className="h-20 flex items-center justify-between px-4 border-b border-black/5 dark:border-white/10">
+                <div className="h-20 flex items-center justify-between px-4 border-b border-black/5 dark:border-white/10 shrink-0">
                     <div className={cn("flex items-center gap-3 overflow-hidden transition-all duration-300", isCollapsed ? "w-8 opacity-0 pointer-events-none absolute" : "w-auto opacity-100 relative")}>
                         <div className="w-8 h-8 rounded-lg outline-none flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
                             <div className="w-3 h-3 bg-white rounded-sm transform rotate-45" />
@@ -207,13 +207,20 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                     })}
                 </nav>
 
-                <div className="p-4 pb-8 border-t border-black/5 dark:border-white/10 flex flex-col items-center gap-2 overflow-hidden">
-                    <div className="w-full flex flex-col gap-2 mb-2">
-                        <Link href="/dashboard/deposit" className={cn("flex items-center justify-center gap-2 py-3 text-sm font-bold bg-gradient-to-br from-cyan-400 to-purple-600 text-white rounded-xl shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:opacity-90 transition-all w-full", isCollapsed ? "px-0" : "px-3")}>
-                            <Wallet className="w-5 h-5 flex-shrink-0" />
-                            {!isCollapsed && <span className="whitespace-nowrap">Fund Gas Tank</span>}
-                        </Link>
-                    </div>
+                <div className="p-4 pb-8 border-t border-black/5 dark:border-white/10 flex flex-col items-center gap-2 shrink-0">
+                    {/* Desktop Web App Install Button */}
+                    {!isStandalone && (deferredPrompt || isIOS) && (
+                        <div className="w-full flex flex-col gap-2 mb-2">
+                            <Button 
+                                variant="ghost"
+                                onClick={handleInstallClick} 
+                                className={cn("flex items-center justify-center gap-2 py-3 text-sm font-bold bg-foreground text-background rounded-xl shadow-lg shadow-black/10 dark:shadow-white/5 hover:opacity-90 transition-all w-full", isCollapsed ? "px-0" : "px-3")}
+                            >
+                                <Download className="w-5 h-5 flex-shrink-0" />
+                                {!isCollapsed && <span className="whitespace-nowrap">Install Web App</span>}
+                            </Button>
+                        </div>
+                    )}
 
                     <div className="w-full h-px bg-black/5 dark:bg-white/10" />
 
@@ -258,7 +265,7 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
             </div>
 
             {/* Mobile Bottom Navigation (Floating Pill) */}
-            <div className="md:hidden fixed bottom-6 left-4 right-4 z-50">
+            <div className="md:hidden fixed bottom-6 left-4 right-4 z-50" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
                 <nav className="h-16 bg-white/80 dark:bg-[#1C1C1E]/80 backdrop-blur-3xl border border-black/5 dark:border-white/10 rounded-[2rem] flex items-center justify-around px-2 shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
                 {bottomBarItems.map((item) => {
                     const isActive = item.href === '/dashboard'
@@ -354,6 +361,7 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                             exit={{ y: "100%", opacity: 0.8 }}
                             transition={{ type: "spring", damping: 25, stiffness: 200 }}
                             className="md:hidden fixed bottom-0 left-0 right-0 h-[85vh] z-[45] bg-white/95 dark:bg-[#121214]/95 backdrop-blur-2xl border-t border-black/5 dark:border-white/10 rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_-10px_40px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden will-change-transform"
+                            style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
                         >
                             {/* Drag Indicator */}
                             <div className="w-full h-8 flex items-center justify-center shrink-0 cursor-pointer" 

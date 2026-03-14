@@ -224,7 +224,7 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                                     </ShadcnTooltip>
                                 </div>
                                 <div className="text-2xl font-bold text-rose-500">
-                                    {maxDrawdown}%
+                                    {Math.abs(maxDrawdown) === 0 ? "0.00" : maxDrawdown}%
                                 </div>
                             </div>
 

@@ -3,6 +3,10 @@ import ccxt from 'ccxt';
 import { prisma } from "@/lib/prisma";
 import { decryptKey } from '@/lib/encryption';
 import Stripe from 'stripe';
+import { Resend } from 'resend';
+import { ZombieReminderEmail } from '../../emails/ZombieReminderEmail';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Task 1: 5-Minute Reconciliation Loop
 cron.schedule('*/5 * * * *', async () => {
@@ -340,6 +344,59 @@ cron.schedule('0 * * * *', async () => {
 
     } catch (err) {
         console.error('[Cron] Fatal Error in Auto-Deposit Job:', err);
+    }
+});
+
+// Task 4: Hourly "Zombie User" Re-engagement Drone
+cron.schedule('0 * * * *', async () => {
+    console.log('[Cron] Running Zombie User Sweep...');
+    
+    try {
+        // Query users created > 24 hours ago, inactive, no API keys, and never emailed before.
+        const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        
+        const zombies = await prisma.user.findMany({
+            where: {
+                isActive: false,
+                hasCompletedOnboarding: false,
+                createdAt: { lt: twentyFourHoursAgo },
+                zombieEmailSentAt: null,
+                role: "USER" // Don't ping admins testing the platform
+            },
+            take: 50 // Throttle Resend API burst
+        });
+
+        if (zombies.length === 0) return;
+
+        console.log(`[Cron] Found ${zombies.length} Zombie users. Initiating Email Broadcast...`);
+
+        for (const user of zombies) {
+            try {
+                const { data, error } = await resend.emails.send({
+                    from: "AutoAlpha Engineering <engineering@autoalpha.ai>",
+                    to: [user.email],
+                    subject: "Action Required: Complete your AutoAlpha Setup",
+                    react: ZombieReminderEmail({ userName: user.name || "Trader" }),
+                });
+
+                if (error) {
+                    console.error(`[Cron] Failed to email zombie ${user.email}:`, error);
+                    continue;
+                }
+
+                // Immutably stamp the user to prevent duplicate drips forever
+                await prisma.user.update({
+                    where: { id: user.id },
+                    data: { zombieEmailSentAt: new Date() }
+                });
+
+                console.log(`[Cron] Successfully hit Zombie Drone for ${user.email}`);
+            } catch (err) {
+                console.error(`[Cron] Runtime error emailing zombie ${user.email}:`, err);
+            }
+        }
+    } catch (err) {
+        console.error('[Cron] Fatal Error in Zombie Drone Job:', err);
     }
 });
 

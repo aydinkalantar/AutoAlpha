@@ -14,9 +14,10 @@ interface AnalyticsRowProps {
     isPaperMode: boolean;
     usdtBalance: number;
     usdcBalance: number;
+    isLoading?: boolean;
 }
 
-export default function AnalyticsRow({ positions, subscriptions, totalBalance, isPaperMode, usdtBalance, usdcBalance }: AnalyticsRowProps) {
+export default function AnalyticsRow({ positions, subscriptions, totalBalance, isPaperMode, usdtBalance, usdcBalance, isLoading = false }: AnalyticsRowProps) {
     const closedPositions = useMemo(() => positions.filter(p => !p.isOpen), [positions]);
 
     const { winRate, profitFactor, totalTrades, maxDrawdown, totalRevenue, dailyPnl, roiPercentage } = useMemo(() => {
@@ -37,7 +38,11 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
         const finalCumulativePnl = closedPositions.reduce((sum, pos) => sum + (pos.realizedPnl || 0), 0);
         const inferredInitialCapital = Math.max(totalBalance - finalCumulativePnl, 100); // Base minimum of 100
 
-        for (const pos of closedPositions) {
+        // `closedPositions` is inherited from `page.tsx` as `createdAt: 'desc'` (newest first).
+        // Temporal math metrics like Peak-to-Trough Drawdown MUST be calculated in chronological order (oldest -> newest).
+        const chronologicalPositions = [...closedPositions].reverse();
+
+        for (const pos of chronologicalPositions) {
             const exitPnl = pos.realizedPnl || 0;
 
             if (exitPnl > 0) {
@@ -118,9 +123,13 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
                 </span>
                 <div className="flex items-baseline space-x-1 relative z-10">
                     <span className="text-3xl font-bold text-foreground/50">$</span>
-                    <span className="text-5xl font-black text-foreground tracking-tight">
-                        {!isPaperMode ? '--' : totalBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </span>
+                    {isLoading ? (
+                        <div className="h-8 w-32 bg-foreground/10 animate-pulse rounded-md mt-1" />
+                    ) : (
+                        <span className="text-5xl font-black text-foreground tracking-tight">
+                            {totalBalance === 0 ? "0.00" : totalBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </span>
+                    )}
                 </div>
             </div>
 
@@ -264,7 +273,9 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
                             </Tooltip>
                         </div>
                         <div className="flex flex-col items-start gap-y-1">
-                            <span className="text-3xl font-bold tracking-tight text-rose-500">-{Math.abs(maxDrawdown).toFixed(2)}%</span>
+                            <span className="text-3xl font-bold tracking-tight text-rose-500">
+                                {maxDrawdown === 0 ? "0.00%" : `-${Math.abs(maxDrawdown).toFixed(2)}%`}
+                            </span>
                             <span className="text-xs text-rose-500 font-medium whitespace-nowrap truncate">Peak-to-Trough</span>
                         </div>
                     </div>

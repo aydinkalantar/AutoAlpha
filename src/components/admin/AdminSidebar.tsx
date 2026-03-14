@@ -1,15 +1,16 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';
-import { LayoutDashboard, Key, Users, Activity, FileText, Settings, ChevronLeft, ChevronRight, LogOut, Sun, Moon, Megaphone } from 'lucide-react';
+import { LayoutDashboard, Key, Users, Activity, FileText, Settings, ChevronLeft, ChevronRight, LogOut, Sun, Moon, Megaphone, Download } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -17,14 +18,55 @@ export function cn(...inputs: ClassValue[]) {
 
 export default function AdminSidebar({ children }: { children?: React.ReactNode }) {
     const pathname = usePathname();
+    const router = useRouter();
     const [isCollapsed, setIsCollapsed] = useState(false);
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+    // PWA Installation States
+    const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+    const [isIOS, setIsIOS] = useState(false);
+    const [isStandalone, setIsStandalone] = useState(false);
+    const [showIOSModal, setShowIOSModal] = useState(false);
+
     useEffect(() => {
         setMounted(true);
+
+        // Check if already installed
+        const _isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone === true;
+        setIsStandalone(_isStandalone);
+
+        // Detect iOS
+        const userAgent = window.navigator.userAgent.toLowerCase();
+        const isIosDevice = /iphone|ipad|ipod/.test(userAgent);
+        setIsIOS(isIosDevice);
+
+        // Capture Chrome/Android native install prompt
+        const handleBeforeInstallPrompt = (e: Event) => {
+            e.preventDefault();
+            setDeferredPrompt(e);
+        };
+
+        window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+        return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     }, []);
+
+    const handleInstallClick = async () => {
+        if (isIOS) {
+            setShowIOSModal(true);
+            setIsMobileMenuOpen(false);
+            return;
+        }
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                setDeferredPrompt(null);
+            }
+            setIsMobileMenuOpen(false);
+        }
+    };
 
     // Prevent body scroll when mobile menu is open
     useEffect(() => {
@@ -157,21 +199,37 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
                     })}
                 </nav>
 
-                <div className="p-4 border-t border-black/5 dark:border-white/10 flex flex-col gap-2 overflow-hidden">
-                    <Link href="/dashboard" className={cn("flex items-center gap-3 py-3 text-sm font-bold text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
+                <div className="p-4 border-t border-black/5 dark:border-white/10 flex flex-col gap-2 overflow-hidden shrink-0">
+                    {/* Desktop Web App Install Button */}
+                    {!isStandalone && (deferredPrompt || isIOS) && (
+                        <div className="w-full flex flex-col gap-2 mb-2">
+                            <Button 
+                                variant="ghost"
+                                onClick={handleInstallClick} 
+                                className={cn("flex items-center justify-center gap-2 py-3 text-sm font-bold bg-foreground text-background rounded-xl shadow-lg shadow-black/10 dark:shadow-white/5 hover:opacity-90 transition-all w-full", isCollapsed ? "px-0" : "px-3")}
+                            >
+                                <Download className="w-5 h-5 flex-shrink-0" />
+                                {!isCollapsed && <span className="whitespace-nowrap">Install Web App</span>}
+                            </Button>
+                        </div>
+                    )}
+
+                    <div className="w-full h-px bg-black/5 dark:bg-white/10 mb-1" />
+
+                    <Link href="/dashboard" className={cn("flex items-center justify-start gap-3 py-3 text-sm font-bold text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
                         <LayoutDashboard className="w-5 h-5 flex-shrink-0" />
                         {!isCollapsed && <span className="whitespace-nowrap">Back to App</span>}
                     </Link>
                     {mounted && (
-                        <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className={cn("flex items-center gap-3 py-3 text-sm font-bold text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
+                        <Button variant="ghost" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className={cn("flex items-center justify-start gap-3 py-3 h-auto text-sm font-bold text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
                             {theme === 'dark' ? <Sun className="w-5 h-5 flex-shrink-0 text-amber-400" /> : <Moon className="w-5 h-5 flex-shrink-0 text-blue-500" />}
-                            {!isCollapsed && <span className="whitespace-nowrap">{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>}
-                        </button>
+                            {!isCollapsed && <span className="whitespace-nowrap font-bold">{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>}
+                        </Button>
                     )}
-                    <button onClick={() => signOut({ callbackUrl: '/login' })} className={cn("flex items-center gap-3 py-3 text-sm font-bold text-red-500/80 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
+                    <Button variant="ghost" onClick={() => signOut({ callbackUrl: '/login' })} className={cn("flex items-center justify-start gap-3 py-3 h-auto text-sm font-bold text-red-500/80 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
                         <LogOut className="w-5 h-5 flex-shrink-0" />
-                        {!isCollapsed && <span className="whitespace-nowrap">Log Out</span>}
-                    </button>
+                        {!isCollapsed && <span className="whitespace-nowrap font-bold">Log Out</span>}
+                    </Button>
                 </div>
             </div>
 
@@ -182,7 +240,7 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
             </div>
 
             {/* Mobile Bottom Navigation (Floating Pill) */}
-            <div className="md:hidden fixed bottom-6 left-4 right-4 z-50">
+            <div className="md:hidden fixed bottom-6 left-4 right-4 z-50" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
                 <nav className="h-16 bg-white/80 dark:bg-[#1C1C1E]/80 backdrop-blur-3xl border border-black/5 dark:border-white/10 rounded-[2rem] flex items-center justify-around px-2 shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
                 {bottomBarItems.map((item) => {
                     const isActive = !isMobileMenuOpen && activeItem?.href === item.href;
@@ -251,6 +309,7 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
                             exit={{ y: "100%", opacity: 0.8 }}
                             transition={{ type: "spring", damping: 25, stiffness: 200 }}
                             className="md:hidden fixed bottom-0 left-0 right-0 h-[85vh] z-[45] bg-white/95 dark:bg-[#121214]/95 backdrop-blur-2xl border-t border-black/5 dark:border-white/10 rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_-10px_40px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden will-change-transform"
+                            style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
                         >
                             {/* Drag Indicator */}
                             <div className="w-full h-8 flex items-center justify-center shrink-0 cursor-pointer" 
@@ -298,7 +357,29 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
                                 <div className="h-px w-full bg-black/5 dark:bg-white/10 mb-8" />
 
                                 <div className="space-y-4 mb-8">
-                                    <h4 className="text-xs font-bold tracking-widest uppercase text-foreground/40 px-2">Quick Actions</h4>
+                                    <h4 className="text-xs font-bold tracking-widest uppercase text-foreground/40 px-2">Preferences</h4>
+
+                                    {/* Web App Install Button (Only show if not installed and prompt is available) */}
+                                    {!isStandalone && (deferredPrompt || isIOS) && (
+                                        <Button 
+                                            variant="ghost"
+                                            onClick={handleInstallClick} 
+                                            className="w-full h-auto flex items-center justify-between p-4 px-5 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 hover:from-cyan-500/20 hover:to-purple-500/20 text-foreground transition-colors rounded-[2rem] mb-6 border border-cyan-500/20"
+                                        >
+                                            <div className="flex items-center gap-4">
+                                                <div className="p-2 rounded-xl bg-gradient-to-br from-cyan-400 to-purple-600 text-white flex items-center justify-center shadow-lg shadow-purple-500/20">
+                                                    <Download className="w-5 h-5" />
+                                                </div>
+                                                <div className="flex flex-col items-start">
+                                                    <span className="text-base font-bold tracking-tight">Install Admin Toolkit</span>
+                                                    <span className="text-xs text-foreground/60 font-medium tracking-tight">Pro performance. Zero effort.</span>
+                                                </div>
+                                            </div>
+                                            <ChevronRight className="w-5 h-5 text-foreground/30" />
+                                        </Button>
+                                    )}
+
+                                    <h4 className="text-xs font-bold tracking-widest uppercase text-foreground/40 px-2 mt-4">Quick Actions</h4>
                                     
                                     <Link href="/dashboard" className="w-full flex items-center justify-center gap-3 py-4 text-sm font-bold text-foreground bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 active:bg-black/15 dark:active:bg-white/15 rounded-2xl transition-colors mt-2">
                                         <LayoutDashboard className="w-5 h-5" />
@@ -331,6 +412,89 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
                             </div>
                         </motion.div>
                     </>
+                )}
+            </AnimatePresence>
+
+            {/* iOS Installation Instructions Modal */}
+            <AnimatePresence>
+                {showIOSModal && (
+                    <div className="fixed inset-0 z-[200] flex items-end justify-center sm:items-center sm:p-4 pb-0">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 bg-background/80 backdrop-blur-sm"
+                            onClick={() => setShowIOSModal(false)}
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, y: 100, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 100, scale: 0.95 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                            className="relative w-full max-w-sm bg-white dark:bg-[#1C1C1E] border border-black/10 dark:border-white/10 rounded-t-[2.5rem] sm:rounded-[2.5rem] shadow-2xl overflow-hidden pb-8 sm:pb-0 z-10"
+                        >
+                            <div className="absolute top-4 right-4 z-10">
+                                <button 
+                                    onClick={() => setShowIOSModal(false)}
+                                    className="p-2 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 rounded-full transition-colors"
+                                    aria-label="Close iOS Install Modal"
+                                >
+                                    <X className="w-5 h-5 text-foreground/60" />
+                                </button>
+                            </div>
+
+                            <div className="p-8 pb-6 flex flex-col items-center text-center bg-gradient-to-b from-black/5 dark:from-white/5 to-transparent">
+                                <div className="w-20 h-20 rounded-[1.5rem] bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-xl shadow-purple-500/30 mb-6 border border-black/10 dark:border-white/10">
+                                    <div className="w-6 h-6 bg-white rounded-md transform rotate-45" />
+                                </div>
+                                <h2 className="text-2xl font-black tracking-tight text-foreground mb-2">Install Admin Toolkit</h2>
+                                <p className="text-foreground/60 text-sm font-medium">Install the control center on your home screen for quick and easy access when you're on the go.</p>
+                            </div>
+
+                            <div className="px-8 pb-8 space-y-6">
+                                <div className="flex items-start gap-4">
+                                    <div className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center shrink-0 mt-0.5">
+                                        <span className="text-sm font-bold text-foreground">1</span>
+                                    </div>
+                                    <div>
+                                        <p className="text-base text-foreground font-medium mb-1">Tap the Share button</p>
+                                        <p className="text-sm text-foreground/50">Look for the square with an arrow pointing up at the bottom of your screen.</p>
+                                    </div>
+                                </div>
+                                
+                                <div className="flex items-start gap-4">
+                                    <div className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center shrink-0 mt-0.5">
+                                        <span className="text-sm font-bold text-foreground">2</span>
+                                    </div>
+                                    <div>
+                                        <p className="text-base text-foreground font-medium mb-1">Scroll down and tap</p>
+                                        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-black/5 dark:bg-white/10 rounded-lg border border-black/10 dark:border-white/10">
+                                            <span className="text-sm font-bold text-foreground">Add to Home Screen</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="flex items-start gap-4">
+                                    <div className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center shrink-0 mt-0.5">
+                                        <span className="text-sm font-bold text-foreground">3</span>
+                                    </div>
+                                    <div>
+                                        <p className="text-base text-foreground font-medium mb-1">Confirm installation</p>
+                                        <p className="text-sm text-foreground/50">Tap "Add" in the top right corner to finish.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="p-6 pt-0">
+                                <button 
+                                    onClick={() => setShowIOSModal(false)}
+                                    className="w-full py-4 rounded-xl bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground font-bold text-base transition-colors"
+                                >
+                                    Got it, thanks
+                                </button>
+                            </div>
+                        </motion.div>
+                    </div>
                 )}
             </AnimatePresence>
         </>
