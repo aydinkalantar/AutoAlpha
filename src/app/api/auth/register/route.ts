@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from "@/lib/prisma";
-import { sendWelcomeBonusEmail } from "@/lib/emails";
+import { sendWelcomeEmail } from "@/lib/emails";
 import bcrypt from 'bcryptjs';
 
 
@@ -71,12 +71,6 @@ export async function POST(req: Request) {
 
                 return created;
             });
-            
-            // Asynchronously fire the Resend Template, do not block the API payload response
-            sendWelcomeBonusEmail(newUser.email, bonusAmount).catch(e => {
-                console.error("Non-fatal: Resend Background Job Failed", e);
-            });
-
         } else {
             newUser = await prisma.user.create({
                 data: {
@@ -86,6 +80,11 @@ export async function POST(req: Request) {
                 }
             });
         }
+
+        // Asynchronously fire the Universal Resend Template, do not block the API payload response
+        sendWelcomeEmail(newUser.email, isBonusEnabled, bonusAmount).catch((e: any) => {
+            console.error("Non-fatal: Resend Background Job Failed", e);
+        });
 
         return NextResponse.json({ message: "User created successfully", userId: newUser.id }, { status: 201 });
 
