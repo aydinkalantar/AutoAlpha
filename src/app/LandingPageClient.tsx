@@ -391,7 +391,40 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
         {/* 9. Public Leaderboard */}
         <PublicLeaderboard />
 
-        {/* 10. FAQ */}
+        {/* 10. Install the App */}
+        <section className="w-full max-w-5xl mx-auto px-6 py-20 z-10 text-center">
+          <GlassCard className="border-purple-500/30 bg-gradient-to-br from-purple-500/10 to-cyan-500/10 p-8 md:p-12 shadow-[0_0_80px_rgba(168,85,247,0.15)] flex flex-col md:flex-row items-center gap-12 text-left relative overflow-hidden group hover:border-purple-500/50 transition-colors">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -rotate-45 translate-x-[-150%] group-hover:translate-x-[150%] transition-transform duration-1000 ease-in-out" />
+            
+            <div className="flex-1 relative z-10 w-full">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/20 text-purple-600 dark:text-purple-400 font-bold text-sm tracking-wider uppercase mb-6 border border-purple-500/30">
+                <Download className="w-4 h-4" /> Available Now
+              </div>
+              <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4">Install the Web App</h2>
+              <p className="text-lg md:text-xl text-foreground/70 leading-relaxed mb-8">
+                Get the full native experience. Install AutoAlpha directly to your home screen for instant access, push notifications, and a distraction-free fullscreen trading environment.
+              </p>
+              <button 
+                onClick={handleInstallClick} 
+                className="w-full md:w-auto px-8 py-4 bg-foreground text-background rounded-full text-lg font-bold hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center justify-center gap-3"
+              >
+                <Download className="w-5 h-5 group-hover:-translate-y-1 transition-transform" />
+                Download For Free
+              </button>
+            </div>
+            
+            <div className="hidden md:flex w-64 h-64 shrink-0 bg-black/5 dark:bg-white/5 rounded-[3rem] items-center justify-center border border-black/5 dark:border-white/10 shadow-inner relative overflow-hidden backdrop-blur-3xl group-hover:rotate-3 transition-transform duration-500">
+               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+               <div className="w-32 h-32 rounded-[2rem] bg-gradient-to-br from-cyan-400 to-purple-600 shadow-[0_0_50px_rgba(168,85,247,0.5)] flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                 <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-xl transform rotate-45 border border-white/50 shadow-inner flex items-center justify-center">
+                    <div className="w-4 h-4 bg-white rounded-sm shadow-sm" />
+                 </div>
+               </div>
+            </div>
+          </GlassCard>
+        </section>
+
+        {/* 11. FAQ */}
         <section className="w-full max-w-4xl mx-auto px-6 py-20 z-10">
           <h2 className="text-4xl md:text-5xl font-black tracking-tight text-center mb-16">Frequently Asked Questions</h2>
           <Accordion items={faqItems} />
