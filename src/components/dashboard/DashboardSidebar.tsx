@@ -344,10 +344,11 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                                     <p className="text-sm text-foreground/50 font-medium">Access your account, settings, and more.</p>
                                 </div>
 
-                                <div className="space-y-1.5 mb-6">
-                                    {drawerItems.map((item) => {
+                                <div className="bg-black/5 dark:bg-white/5 rounded-[2rem] overflow-hidden mb-6">
+                                    {drawerItems.map((item, index) => {
                                         const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
                                         const Icon = item.icon;
+                                        const isLast = index === drawerItems.length - 1;
 
                                         return (
                                             <Link
@@ -355,62 +356,63 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                                                 href={item.href}
                                                 onClick={() => setIsMobileMenuOpen(false)}
                                                 className={cn(
-                                                    "flex items-center justify-between p-4 rounded-2xl transition-all duration-300 active:scale-[0.98]",
-                                                    isActive 
-                                                        ? "bg-foreground text-background shadow-lg shadow-black/10 dark:shadow-white/5" 
-                                                        : "bg-black/5 dark:bg-white/5 text-foreground hover:bg-black/10 dark:hover:bg-white/10"
+                                                    "flex items-center justify-between p-4 px-5 transition-colors active:bg-black/10 dark:active:bg-white/10",
+                                                    isActive ? "bg-black/5 dark:bg-white/5" : "hover:bg-black/5 dark:hover:bg-white/5",
+                                                    !isLast && "border-b border-black/5 dark:border-white/5"
                                                 )}
                                             >
-                                                <div className="flex items-center gap-3">
-                                                    <div className={cn("p-1.5 rounded-xl", isActive ? "bg-background/20" : "bg-black/5 dark:bg-white/10")}>
-                                                        <Icon className={cn("w-4 h-4", isActive ? "text-background" : "text-foreground")} />
+                                                <div className="flex items-center gap-4">
+                                                    <div className={cn("p-2 rounded-xl flex items-center justify-center transition-colors", isActive ? "bg-foreground text-background shadow-md shadow-black/10 dark:shadow-white/10" : "bg-black/5 dark:bg-white/10 text-foreground/70")}>
+                                                        <Icon className="w-5 h-5" />
                                                     </div>
-                                                    <span className="font-bold text-base">{item.name}</span>
+                                                    <span className={cn("text-base tracking-tight", isActive ? "font-bold text-foreground" : "font-medium text-foreground/80")}>{item.name}</span>
                                                 </div>
-                                                <ChevronRight className={cn("w-4 h-4", isActive ? "text-background/50" : "text-foreground/30")} />
+                                                <ChevronRight className={cn("w-5 h-5", isActive ? "text-foreground/50" : "text-foreground/30")} />
                                             </Link>
                                         )
                                     })}
                                 </div>
 
-                                <div className="h-px w-full bg-black/5 dark:bg-white/10 mb-6" />
+                                <div className="flex items-center justify-between px-2 mb-3 mt-4">
+                                    <h4 className="text-xs font-bold tracking-widest uppercase text-foreground/40">Preferences</h4>
+                                </div>
+                                <div className="bg-black/5 dark:bg-white/5 rounded-[2rem] overflow-hidden mb-6 p-2 flex gap-2">
+                                    <Button 
+                                        variant="ghost"
+                                        onClick={toggleSound} 
+                                        className={cn("flex-1 h-auto flex flex-col items-center justify-center gap-2.5 p-4 rounded-3xl transition-all", isSoundEnabled ? "bg-background shadow-sm" : "hover:bg-black/5 dark:hover:bg-white/5 text-foreground/60")}
+                                    >
+                                        {isSoundEnabled ? <Volume2 className="w-5 h-5 text-foreground" /> : <VolumeX className="w-5 h-5 text-foreground/50" />}
+                                        <span className="text-xs font-bold tracking-wide">{isSoundEnabled ? "Sound On" : "Sound Off"}</span>
+                                    </Button>
 
-                                <div className="space-y-3 mb-6">
-                                    <h4 className="text-xs font-bold tracking-widest uppercase text-foreground/40 px-2">Quick Actions</h4>
-                                    <div className="grid grid-cols-2 gap-3">                                        <Button 
-                                            variant="ghost"
-                                            onClick={toggleSound} 
-                                            className="h-auto flex flex-col items-center justify-center gap-2 p-4 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 active:bg-black/15 dark:active:bg-white/15 rounded-2xl transition-colors"
-                                        >
-                                            <div className="p-1.5 rounded-full bg-white dark:bg-[#1C1C1E] shadow-sm">
-                                                {isSoundEnabled ? <Volume2 className="w-4 h-4 text-foreground" /> : <VolumeX className="w-4 h-4 opacity-50 text-foreground" />}
-                                            </div>
-                                            <span className="text-xs font-bold">{isSoundEnabled ? "Sound On" : "Sound Off"}</span>
-                                        </Button>
-
-                                        {mounted && (
-                                            <Button 
-                                                variant="ghost"
-                                                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} 
-                                                className="h-auto flex flex-col items-center justify-center gap-2 p-4 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 active:bg-black/15 dark:active:bg-white/15 rounded-2xl transition-colors"
-                                            >
-                                                <div className="p-1.5 rounded-full bg-white dark:bg-[#1C1C1E] shadow-sm">
-                                                    {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-blue-500" />}
-                                                </div>
-                                                <span className="text-xs font-bold">{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
-                                            </Button>
-                                        )}
-                                    </div>
-
+                                    {mounted && (
                                         <Button 
                                             variant="ghost"
-                                            onClick={() => signOut({ callbackUrl: '/login' })} 
-                                            className="w-full flex items-center h-auto justify-center gap-2 py-3 text-sm font-bold text-red-500 bg-red-50 dark:bg-red-500/10 active:bg-red-100 dark:active:bg-red-500/20 rounded-2xl transition-colors mt-2"
+                                            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} 
+                                            className={cn("flex-1 h-auto flex flex-col items-center justify-center gap-2.5 p-4 rounded-3xl transition-all", "hover:bg-black/5 dark:hover:bg-white/5 text-foreground/60")}
                                         >
-                                            <LogOut className="w-4 h-4" />
-                                            Log Out
+                                            {theme === 'dark' ? <Sun className="w-5 h-5 text-amber-500" /> : <Moon className="w-5 h-5 text-blue-500" />}
+                                            <span className="text-xs font-bold tracking-wide">{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
                                         </Button>
-                                    </div>
+                                    )}
+                                </div>
+
+                                <div className="bg-black/5 dark:bg-white/5 rounded-[2rem] overflow-hidden mb-8">
+                                    <Button 
+                                        variant="ghost"
+                                        onClick={() => signOut({ callbackUrl: '/login' })} 
+                                        className="w-full h-auto flex items-center justify-between p-4 px-5 hover:bg-red-500/5 active:bg-red-500/10 transition-colors rounded-none"
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <div className="p-2 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center">
+                                                <LogOut className="w-5 h-5" />
+                                            </div>
+                                            <span className="text-base font-bold text-red-500 tracking-tight">Log Out</span>
+                                        </div>
+                                        <ChevronRight className="w-5 h-5 text-red-500/30" />
+                                    </Button>
+                                </div>
 
                                 <div className="flex flex-col items-center gap-2 pb-32 pt-4 border-t border-black/5 dark:border-white/10">
                                     <div className="flex justify-center gap-4 text-[11px] font-bold tracking-widest uppercase text-foreground/40">
