@@ -37,6 +37,10 @@ export const metadata: Metadata = {
     description: "Automated crypto trading, Binance API bot, algorithmic copy-trading, non-custodial.",
     images: ['/og-image.jpg'],
   },
+  icons: {
+    icon: '/icon',
+    apple: '/apple-icon',
+  },
 };
 
 export default function RootLayout({
