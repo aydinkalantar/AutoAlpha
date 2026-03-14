@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 import { LayoutDashboard, Store, FileText, Settings, User, ChevronLeft, ChevronRight, Gift, LogOut, Wallet, HelpCircle, Activity, Volume2, VolumeX, Sun, Moon } from 'lucide-react';
 import { useTheme } from 'next-themes';
@@ -19,6 +19,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export default function DashboardSidebar({ children, notificationBell, userId, balances }: { children?: React.ReactNode, notificationBell?: React.ReactNode, userId?: string, balances?: { usdtBalance: number; usdcBalance: number } }) {
     const pathname = usePathname();
+    const router = useRouter();
     const [isCollapsed, setIsCollapsed] = useState(false);
     const { isSoundEnabled, toggleSound } = useRealtime();
     const { theme, setTheme } = useTheme();
@@ -123,12 +124,23 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                 "flex md:hidden fixed top-0 w-full h-16 z-50 px-4 justify-between items-center bg-background/80 backdrop-blur-md border-b border-black/5 dark:border-white/10 transition-transform duration-300 ease-in-out md:translate-y-0 will-change-transform",
                 isHeaderVisible ? "translate-y-0" : "-translate-y-full"
             )}>
-                <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg outline-none flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
-                        <div className="w-3 h-3 bg-white rounded-sm transform rotate-45" />
+                {['/dashboard', '/dashboard/market', '/dashboard/accounting'].includes(pathname) ? (
+                    <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg outline-none flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
+                            <div className="w-3 h-3 bg-white rounded-sm transform rotate-45" />
+                        </div>
+                        <span className="font-bold text-lg text-foreground tracking-tight">AutoAlpha</span>
                     </div>
-                    <span className="font-bold text-lg text-foreground tracking-tight">AutoAlpha</span>
-                </div>
+                ) : (
+                    <button 
+                        onClick={() => router.back()}
+                        className="flex items-center gap-1.5 py-2 pr-4 text-foreground/80 hover:text-foreground active:opacity-70 transition-all -ml-2"
+                        aria-label="Go Back"
+                    >
+                        <ChevronLeft className="w-6 h-6" />
+                        <span className="text-base font-bold tracking-tight">Back</span>
+                    </button>
+                )}
                 <div className="flex items-center gap-1">
                     {notificationBell}
                     <button
