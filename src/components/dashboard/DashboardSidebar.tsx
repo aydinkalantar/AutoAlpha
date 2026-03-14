@@ -33,20 +33,36 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
     // Mobile Header Hide-on-Scroll Logic
     useEffect(() => {
         let lastScrollY = window.scrollY;
+        let ticking = false;
 
         const handleScroll = () => {
-            const currentScrollY = window.scrollY;
-            
-            // If scrolling down AND past the top bounce buffer
-            if (currentScrollY > lastScrollY && currentScrollY > 50) {
-                setIsHeaderVisible(false);
-            } 
-            // If scrolling up
-            else if (currentScrollY < lastScrollY) {
-                setIsHeaderVisible(true);
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const currentScrollY = window.scrollY;
+                    
+                    // Always show at the very top
+                    if (currentScrollY < 50) {
+                        setIsHeaderVisible(true);
+                    } 
+                    // Scrolling down (add 10px deadzone to prevent micro-stutter)
+                    else if (currentScrollY > lastScrollY && currentScrollY - lastScrollY > 10) {
+                        setIsHeaderVisible(false);
+                    } 
+                    // Scrolling up (add 10px deadzone)
+                    else if (currentScrollY < lastScrollY && lastScrollY - currentScrollY > 10) {
+                        setIsHeaderVisible(true);
+                    }
+                    
+                    // Only update lastScrollY if we moved more than the deadzone, 
+                    // or if we are at the very top to reset the anchor
+                    if (Math.abs(currentScrollY - lastScrollY) > 10 || currentScrollY < 50) {
+                        lastScrollY = currentScrollY;
+                    }
+                    
+                    ticking = false;
+                });
+                ticking = true;
             }
-            
-            lastScrollY = currentScrollY;
         };
 
         window.addEventListener('scroll', handleScroll, { passive: true });
@@ -104,7 +120,7 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
     return (
         <>
             <div className={cn(
-                "flex md:hidden fixed top-0 w-full h-16 z-50 px-4 justify-between items-center bg-background/80 backdrop-blur-md border-b border-black/5 dark:border-white/10 transition-transform duration-300 ease-in-out md:translate-y-0",
+                "flex md:hidden fixed top-0 w-full h-16 z-50 px-4 justify-between items-center bg-background/80 backdrop-blur-md border-b border-black/5 dark:border-white/10 transition-transform duration-300 ease-in-out md:translate-y-0 will-change-transform",
                 isHeaderVisible ? "translate-y-0" : "-translate-y-full"
             )}>
                 <div className="flex items-center gap-2">
