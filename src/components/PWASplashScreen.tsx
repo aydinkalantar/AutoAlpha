@@ -41,20 +41,10 @@ export default function PWASplashScreen() {
                     transition={{ duration: 0.6, ease: "easeInOut" }}
                     className="fixed inset-0 z-[9999] bg-[#0A0A0B] flex flex-col items-center justify-center overflow-hidden touch-none"
                 >
-                    {/* Glowing Orbs Background for Splash */}
-                    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-80">
-                       <motion.div 
-                           initial={{ scale: 0.8, opacity: 0 }}
-                           animate={{ scale: 1, opacity: 1 }}
-                           transition={{ duration: 1.5, ease: "easeOut" }}
-                           className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] bg-cyan-500/30 rounded-full blur-[100px] mix-blend-screen" 
-                       />
-                       <motion.div 
-                           initial={{ scale: 0.8, opacity: 0 }}
-                           animate={{ scale: 1, opacity: 1 }}
-                           transition={{ duration: 1.5, delay: 0.2, ease: "easeOut" }}
-                           className="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-purple-600/30 rounded-full blur-[100px] mix-blend-screen" 
-                       />
+                    {/* Ambient Animated Background (Global) */}
+                    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+                        <div className="absolute top-[-10%] left-[-20%] w-[100vw] h-[100vw] md:w-[60vw] md:h-[60vw] bg-cyan-500/20 blur-[100px] md:blur-[140px] rounded-full animate-ambient-float mix-blend-screen" />
+                        <div className="absolute bottom-[-10%] right-[-20%] w-[100vw] h-[100vw] md:w-[60vw] md:h-[60vw] bg-purple-600/20 blur-[100px] md:blur-[140px] rounded-full animate-ambient-float mix-blend-screen" style={{ animationDelay: '-7.5s' }} />
                     </div>
 
                     <motion.div
