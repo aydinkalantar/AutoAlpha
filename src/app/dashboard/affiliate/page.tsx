@@ -64,7 +64,7 @@ export default async function AffiliateHubPage() {
     const totalCommissionsEarned = user.ledgers.reduce((acc: number, ledger: any) => acc + ledger.amount, 0);
 
     return (
-        <div className="p-8 pt-8 md:p-12 md:pt-12 max-w-7xl mx-auto space-y-12">
+        <div className="p-4 pt-8 pb-32 md:p-10 md:pt-12 md:pb-32 max-w-7xl mx-auto space-y-8 md:space-y-12">
             <div className="flex flex-row items-start justify-between gap-4 w-full relative z-10">
                 <div className="flex flex-col gap-2 w-full break-words">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 w-fit text-sm font-semibold mb-2">

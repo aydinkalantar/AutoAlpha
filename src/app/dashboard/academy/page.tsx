@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 export default function AcademyPage() {
     return (
-        <div className="p-8 pt-[104px] md:p-12 md:pt-[104px] max-w-7xl mx-auto space-y-12">
+        <div className="p-4 pt-8 pb-32 md:p-10 md:pt-12 md:pb-32 max-w-7xl mx-auto space-y-8 md:space-y-12">
             <div className="flex flex-col gap-2 pr-16 md:pr-0">
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-indigo-500/10 rounded-xl flex items-center justify-center border border-indigo-500/20">

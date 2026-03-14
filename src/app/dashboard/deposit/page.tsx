@@ -223,7 +223,7 @@ function DepositContent() {
     };
 
     return (
-        <div className="p-8 pt-[104px] md:p-12 md:pt-[104px] max-w-3xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="p-4 pt-8 pb-32 md:p-10 md:pt-12 md:pb-32 max-w-3xl mx-auto space-y-8 md:space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="space-y-4">
                 <h1 className="text-4xl font-bold text-foreground tracking-tight">Fund Gas Tank</h1>
                 <p className="text-foreground/60 text-lg">Add capital to your AutoAlpha portfolio to begin automated trading.</p>

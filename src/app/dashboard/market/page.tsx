@@ -62,7 +62,7 @@ export default async function MarketPage() {
         .map((key: any) => key.exchange);
 
     return (
-        <div className="p-4 pt-8 pb-28 md:p-10 md:pt-12 md:pb-12 max-w-7xl mx-auto space-y-8 md:space-y-12">
+        <div className="p-4 pt-8 pb-32 md:p-10 md:pt-12 md:pb-32 max-w-7xl mx-auto space-y-8 md:space-y-12">
             <div className="flex flex-row items-start justify-between gap-4 w-full">
                 <div className="flex flex-col gap-2 w-full break-words">
                     <div className="flex flex-wrap items-center gap-3 w-full">

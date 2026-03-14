@@ -67,7 +67,7 @@ export default async function StrategyReportPage() {
         : user.usdtBalance + user.usdcBalance;
 
     return (
-        <div className="p-8 pt-8 md:p-12 md:pt-12 max-w-7xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="p-4 pt-8 pb-32 md:p-10 md:pt-12 md:pb-32 max-w-7xl mx-auto space-y-8 md:space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="flex flex-row items-start justify-between gap-4 w-full">
                 <div className="flex flex-col gap-2 w-full break-words">
                     <h1 className="text-4xl font-bold text-foreground tracking-tight break-words w-full">Strategy Report</h1>
