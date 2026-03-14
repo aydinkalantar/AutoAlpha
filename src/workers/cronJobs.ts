@@ -105,22 +105,33 @@ cron.schedule('*/5 * * * *', async () => {
                             });
 
                             if (user.referredById) {
-                                const commission = platformFee * 0.10;
-                                const updateField = pos.strategy.settlementCurrency === 'USDT' ? 'usdtBalance' : 'usdcBalance';
-                                await tx.user.update({
-                                    where: { id: user.referredById },
-                                    data: { [updateField]: { increment: commission } }
-                                });
+                                const sysConfig = await tx.systemConfig.findUnique({ where: { id: "global" } });
+                                const configRate = sysConfig?.affiliateCommissionRate || 0.10;
 
-                                await tx.ledger.create({
-                                    data: {
-                                        userId: user.referredById,
-                                        amount: commission,
-                                        currency: pos.strategy.settlementCurrency,
-                                        description: `Affiliate Commission from network trade`,
-                                        type: 'AFFILIATE_COMMISSION'
-                                    }
-                                });
+                                const commissionRaw = platformFee * configRate;
+                                const commission = Math.round(commissionRaw * 100) / 100;
+                                const updateField = pos.strategy.settlementCurrency === 'USDT' ? 'usdtBalance' : 'usdcBalance';
+                                
+                                if (commission > 0) {
+                                    await tx.user.update({
+                                        where: { id: user.referredById },
+                                        data: { 
+                                            [updateField]: { increment: commission },
+                                            affiliateBalance: { increment: commission },
+                                            totalAffiliateEarnings: { increment: commission }
+                                        }
+                                    });
+
+                                    await tx.ledger.create({
+                                        data: {
+                                            userId: user.referredById,
+                                            amount: commission,
+                                            currency: pos.strategy.settlementCurrency,
+                                            description: `Affiliate Commission from network trade`,
+                                            type: 'AFFILIATE_COMMISSION'
+                                        }
+                                    });
+                                }
                             }
 
                             await tx.notification.create({

@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { SessionProvider } from "@/components/SessionProvider";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { TrackingProvider } from "@/components/TrackingProvider";
 import PWASplashScreen from "@/components/PWASplashScreen";
 
 export const dynamic = 'force-dynamic';
@@ -81,9 +82,11 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <SessionProvider>
-            <TooltipProvider>
-                {children}
-            </TooltipProvider>
+            <TrackingProvider>
+              <TooltipProvider>
+                  {children}
+              </TooltipProvider>
+            </TrackingProvider>
           </SessionProvider>
         </ThemeProvider>
         </div>

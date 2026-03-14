@@ -95,7 +95,11 @@ async function handlePaperTrade(data: any, isExit: boolean, actionSide: string) 
             }
 
             if (netPnl > 0) {
-                const platformFee = netPnl * ((performanceFeePercentage || 30) / 100);
+                const sysConfig = await tx.systemConfig.findUnique({ where: { id: "global" } });
+                const configRate = sysConfig?.affiliateCommissionRate || 0.10;
+
+                const platformFeeRaw = netPnl * ((performanceFeePercentage || 30) / 100);
+                const platformFee = Math.round(platformFeeRaw * 100) / 100;
                 const updateField = settlementCurrency === 'USDT' ? 'paperUsdtBalance' : 'paperUsdcBalance';
 
                 const user = await tx.user.update({
@@ -116,22 +120,30 @@ async function handlePaperTrade(data: any, isExit: boolean, actionSide: string) 
                 });
 
                 if (user.referredById) {
-                    const commission = platformFee * 0.10;
-                    await tx.user.update({
-                        where: { id: user.referredById },
-                        data: { [updateField]: { increment: commission } }
-                    });
+                    const commissionRaw = platformFee * configRate;
+                    const commission = Math.round(commissionRaw * 100) / 100;
                     
-                    await tx.ledger.create({
-                        data: {
-                            userId: user.referredById,
-                            amount: commission,
-                            currency: settlementCurrency,
-                            description: `[PAPER] Affiliate Commission from network trade`,
-                            type: 'AFFILIATE_COMMISSION',
-                            isPaper: true
-                        }
-                    });
+                    if (commission > 0) {
+                        await tx.user.update({
+                            where: { id: user.referredById },
+                            data: { 
+                                [updateField]: { increment: commission },
+                                affiliateBalance: { increment: commission },
+                                totalAffiliateEarnings: { increment: commission }
+                            }
+                        });
+                        
+                        await tx.ledger.create({
+                            data: {
+                                userId: user.referredById,
+                                amount: commission,
+                                currency: settlementCurrency,
+                                description: `[PAPER] Affiliate Commission from network trade`,
+                                type: 'AFFILIATE_COMMISSION',
+                                isPaper: true
+                            }
+                        });
+                    }
                 }
             }
 
@@ -321,6 +333,9 @@ const worker = new Worker('qa-test-queue', async (job: Job) => {
 
                 // 3. Fee Routing (If Profitable)
                 if (netPnl > 0) {
+                    const sysConfig = await tx.systemConfig.findUnique({ where: { id: "global" } });
+                    const configRate = sysConfig?.affiliateCommissionRate || 0.10;
+
                     const platformFeeRaw = netPnl * (performanceFeePercentage / 100);
                     const platformFee = Math.round(platformFeeRaw * 100) / 100; // Fix floating point precision
                     let user;
@@ -351,22 +366,30 @@ const worker = new Worker('qa-test-queue', async (job: Job) => {
                     });
 
                     if (user.referredById) {
-                        const commission = platformFee * 0.10;
+                        const commissionRaw = platformFee * configRate;
+                        const commission = Math.round(commissionRaw * 100) / 100;
                         const updateField = settlementCurrency === 'USDT' ? 'usdtBalance' : 'usdcBalance';
-                        await tx.user.update({
-                            where: { id: user.referredById },
-                            data: { [updateField]: { increment: commission } }
-                        });
                         
-                        await tx.ledger.create({
-                            data: {
-                                userId: user.referredById,
-                                amount: commission,
-                                currency: settlementCurrency,
-                                description: `Affiliate Commission from network trade`,
-                                type: 'AFFILIATE_COMMISSION'
-                            }
-                        });
+                        if (commission > 0) {
+                            await tx.user.update({
+                                where: { id: user.referredById },
+                                data: { 
+                                    [updateField]: { increment: commission },
+                                    affiliateBalance: { increment: commission },
+                                    totalAffiliateEarnings: { increment: commission }
+                                }
+                            });
+                            
+                            await tx.ledger.create({
+                                data: {
+                                    userId: user.referredById,
+                                    amount: commission,
+                                    currency: settlementCurrency,
+                                    description: `Affiliate Commission from network trade`,
+                                    type: 'AFFILIATE_COMMISSION'
+                                }
+                            });
+                        }
                     }
                 }
 

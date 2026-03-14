@@ -6,9 +6,9 @@ import { prisma } from "@/lib/prisma";
 import { Users, DollarSign, Link as LinkIcon, Gift } from 'lucide-react';
 import NotificationBell from '@/components/dashboard/NotificationBell';
 
+import { CopyLinkClient } from './CopyLinkClient';
+
 export const dynamic = 'force-dynamic';
-
-
 
 function StatCard({ title, value, icon: Icon, subtext, colorGroup = "default" }: { title: string, value: string, icon: any, subtext?: string, colorGroup?: "default" | "green" }) {
     const isGreen = colorGroup === "green";
@@ -103,24 +103,7 @@ export default async function AffiliateHubPage() {
 
                     <div className="space-y-2">
                         <label className="text-sm font-medium text-foreground/80">Referral Code</label>
-                        <div className="flex flex-col sm:flex-row gap-4">
-                            <div className="relative flex-1">
-                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <LinkIcon className="h-5 w-5 text-foreground/40" />
-                                </div>
-                                <input
-                                    type="text"
-                                    readOnly
-                                    title="Referral Code"
-                                    placeholder="Referral Code"
-                                    className="w-full bg-white/50 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-xl pl-12 pr-4 py-4 text-foreground font-mono text-lg focus:outline-none focus:ring-2 focus:ring-cyan-500/50 shadow-inner"
-                                    value={user.referralCode || "Generating..."}
-                                />
-                            </div>
-                            <button className="px-8 py-4 rounded-xl bg-gradient-to-br from-cyan-400 to-purple-600 shadow-lg shadow-purple-500/20 text-white font-bold hover:opacity-90 transition-opacity">
-                                Copy
-                            </button>
-                        </div>
+                        <CopyLinkClient referralCode={user.referralCode || "Generating..."} />
                     </div>
                 </div>
             </div>

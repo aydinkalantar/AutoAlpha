@@ -2,12 +2,11 @@ import { NextResponse } from 'next/server';
 import { prisma } from "@/lib/prisma";
 import { sendWelcomeEmail } from "@/lib/emails";
 import bcrypt from 'bcryptjs';
-
-
+import { cookies } from 'next/headers';
 
 export async function POST(req: Request) {
     try {
-        const { email, password, referralCode } = await req.json();
+        const { email, password, referralCode: bodyReferralCode } = await req.json();
 
         if (!email || !password) {
             return NextResponse.json({ message: "Email and password are required." }, { status: 400 });
@@ -21,6 +20,10 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "An account with this email already exists." }, { status: 400 });
         }
 
+        const cookieStore = await cookies();
+        const cookieReferralCode = cookieStore.get('autoalpha_ref')?.value;
+        const referralCode = bodyReferralCode || cookieReferralCode;
+
         let referredById = null;
 
         if (referralCode) {
@@ -29,17 +32,16 @@ export async function POST(req: Request) {
             });
             if (referrer) {
                 referredById = referrer.id;
-            } else {
-                return NextResponse.json({ message: "Invalid referral code." }, { status: 400 });
             }
         }
 
         const passwordHash = await bcrypt.hash(password, 12);
 
         // Fetch Global System Configuration for Welcome Bonus
-        const config = await prisma.systemConfig.findUnique({
+        const rawConfig = await prisma.systemConfig.findUnique({
             where: { id: "global" }
         });
+        const config = rawConfig as any;
 
         const isBonusEnabled = config?.welcomeBonusEnabled ?? false;
         const bonusAmount = config?.welcomeBonusAmount || 50.0;

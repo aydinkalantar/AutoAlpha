@@ -58,6 +58,10 @@ model User {
   createdAt           DateTime       @default(now())
   updatedAt           DateTime       @updatedAt
 
+  // Affiliate & Referrals
+  affiliateBalance        Float          @default(0)
+  totalAffiliateEarnings  Float          @default(0)
+
   // Auto-Deposit & Billing Fields
   stripeCustomerId    String?
   autoDepositEnabled  Boolean        @default(false)
@@ -237,6 +241,7 @@ model SystemConfig {
   stripeLiveWebhookSecret String?
   welcomeBonusEnabled     Boolean  @default(false)
   welcomeBonusAmount      Float    @default(50.0)
+  affiliateCommissionRate Float    @default(0.10)
   updatedAt               DateTime @updatedAt
 }
 

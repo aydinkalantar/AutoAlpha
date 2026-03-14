@@ -39,11 +39,21 @@ export async function updateMarketingConfig(formData: FormData) {
         }
     }
 
+    const affiliateCommissionRateStr = formData.get('affiliateCommissionRate');
+    let affiliateCommissionRate = 0.10; // Default 10%
+    if (affiliateCommissionRateStr) {
+        affiliateCommissionRate = parseFloat(affiliateCommissionRateStr.toString());
+        if (isNaN(affiliateCommissionRate) || affiliateCommissionRate < 0 || affiliateCommissionRate > 1) {
+            affiliateCommissionRate = 0.10;
+        }
+    }
+
     await prisma.systemConfig.update({
         where: { id: config.id },
         data: {
             welcomeBonusEnabled,
             welcomeBonusAmount,
+            affiliateCommissionRate,
         },
     });
 
