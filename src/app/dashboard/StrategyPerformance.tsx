@@ -194,7 +194,7 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                                     <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Win Rate</h3>
                                     <ShadcnTooltip>
                                         <TooltipTrigger asChild>
-                                            <button aria-label="Info about Win Rate" className="cursor-help focus:outline-none">
+                                            <button aria-label="Info about Win Rate" className="cursor-help focus:outline-none hidden md:block">
                                                 <Info className="w-3.5 h-3.5 text-muted-foreground/50 hover:text-cyan-500 transition-colors" />
                                             </button>
                                         </TooltipTrigger>
@@ -214,7 +214,7 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                                     <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Max Drawdown</h3>
                                     <ShadcnTooltip>
                                         <TooltipTrigger asChild>
-                                            <button aria-label="Info about Max Drawdown" className="cursor-help focus:outline-none">
+                                            <button aria-label="Info about Max Drawdown" className="cursor-help focus:outline-none hidden md:block">
                                                 <Info className="w-3.5 h-3.5 text-muted-foreground/50 hover:text-cyan-500 transition-colors" />
                                             </button>
                                         </TooltipTrigger>
@@ -233,7 +233,7 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                                     <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Profit Factor</h3>
                                     <ShadcnTooltip>
                                         <TooltipTrigger asChild>
-                                            <button aria-label="Info about Profit Factor" className="cursor-help focus:outline-none">
+                                            <button aria-label="Info about Profit Factor" className="cursor-help focus:outline-none hidden md:block">
                                                 <Info className="w-3.5 h-3.5 text-muted-foreground/50 hover:text-cyan-500 transition-colors" />
                                             </button>
                                         </TooltipTrigger>

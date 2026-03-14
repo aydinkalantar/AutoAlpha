@@ -196,7 +196,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
                             <h4 className="text-sm font-medium text-foreground/50 truncate">Win Rate</h4>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <button aria-label="Info about Win Rate" className="text-foreground/30 hover:text-cyan-500 cursor-help transition-colors focus:outline-none">
+                                    <button aria-label="Info about Win Rate" className="text-foreground/30 hover:text-cyan-500 cursor-help transition-colors focus:outline-none hidden md:block">
                                         <Info className="w-4 h-4" />
                                     </button>
                                 </TooltipTrigger>
@@ -225,7 +225,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
                             <h4 className="text-sm font-medium text-foreground/50 truncate">Profit Factor</h4>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <Button variant="ghost" size="icon" className="h-4 w-4 text-foreground/30 hover:bg-transparent hover:text-cyan-500 cursor-help p-0">
+                                    <Button variant="ghost" size="icon" className="h-4 w-4 text-foreground/30 hover:bg-transparent hover:text-cyan-500 cursor-help p-0 hidden md:inline-flex">
                                         <Info className="w-4 h-4" />
                                     </Button>
                                 </TooltipTrigger>
@@ -254,7 +254,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
                             <h4 className="text-sm font-medium text-foreground/50 truncate">Max Drawdown</h4>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <button className="text-foreground/30 hover:text-cyan-500 cursor-help transition-colors focus:outline-none">
+                                    <button className="text-foreground/30 hover:text-cyan-500 cursor-help transition-colors focus:outline-none hidden md:block">
                                         <Info className="w-4 h-4" />
                                     </button>
                                 </TooltipTrigger>
@@ -283,7 +283,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
                             <h4 className="text-sm font-medium text-foreground/50 truncate">Total Return</h4>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <button className="text-foreground/30 hover:text-cyan-500 cursor-help transition-colors focus:outline-none">
+                                    <button className="text-foreground/30 hover:text-cyan-500 cursor-help transition-colors focus:outline-none hidden md:block">
                                         <Info className="w-4 h-4" />
                                     </button>
                                 </TooltipTrigger>
@@ -314,7 +314,7 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
                             <h4 className="text-sm font-medium text-foreground/50 truncate">Total Revenue</h4>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <button className="text-foreground/30 hover:text-cyan-500 cursor-help transition-colors focus:outline-none">
+                                    <button className="text-foreground/30 hover:text-cyan-500 cursor-help transition-colors focus:outline-none hidden md:block">
                                         <Info className="w-4 h-4" />
                                     </button>
                                 </TooltipTrigger>
