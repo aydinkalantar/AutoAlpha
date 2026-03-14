@@ -22,7 +22,7 @@ export default function TestnetToggle({ initialMode, userId }: { initialMode: bo
     };
 
     return (
-        <div className="flex items-center gap-4 bg-white/60 dark:bg-[#111] backdrop-blur-2xl px-6 py-3 rounded-full border border-black/5 dark:border-white/10 shadow-sm w-fit relative z-10 transition-all">
+        <div className="flex items-center gap-3 md:gap-4 bg-white/60 dark:bg-[#111] backdrop-blur-2xl px-4 md:px-6 py-2.5 md:py-3 rounded-full border border-black/5 dark:border-white/10 shadow-sm w-fit relative z-10 transition-all max-w-[100vw]">
             <span className={`text-sm tracking-tight transition-colors duration-300 font-bold ${!initialMode ? 'text-black dark:text-white' : 'text-black/40 dark:text-white/40'}`}>
                 Live
             </span>
@@ -48,14 +48,14 @@ export default function TestnetToggle({ initialMode, userId }: { initialMode: bo
                 )}
             </div>
 
-            {/* Paper Reset Button Container - Fixed width prevents layout shift */}
-            <div className="w-28 md:w-32 flex justify-end">
+            {/* Paper Reset Button Container - Fixed width prevents layout shift on desktop, collapses on mobile when inactive */}
+            <div className={`flex justify-end transition-all duration-300 overflow-hidden ${initialMode ? 'w-28 md:w-32 opacity-100' : 'w-0 md:w-32 md:opacity-100 opacity-0'}`}>
                 {initialMode && (
-                    <div className="pl-4 ml-2 border-l border-black/10 dark:border-white/10 flex-1 flex justify-end">
+                    <div className="pl-3 md:pl-4 ml-2 border-l border-black/10 dark:border-white/10 flex-1 flex justify-end">
                         <button
                             onClick={handleReset}
                             disabled={isResetting || isPending}
-                            className="flex items-center gap-1.5 text-xs font-bold text-foreground/50 hover:text-cyan-500 transition-colors disabled:opacity-50 whitespace-nowrap"
+                            className="flex items-center gap-1.5 text-[10px] md:text-xs font-bold text-foreground/50 hover:text-cyan-500 transition-colors disabled:opacity-50 whitespace-nowrap"
                             title="Reset Paper Capital to default ($20k)"
                         >
                             <RotateCw className={`w-3.5 h-3.5 ${isResetting ? 'animate-spin' : ''}`} />
