@@ -145,23 +145,23 @@ export default function ApiKeyForm({ userId, existingKeys }: ApiKeyFormProps) {
             </form>
 
             {existingKeys.filter(k => k.isValid).length > 0 && (
-                <div className="mt-10 border-t border-black/5 pt-8">
-                    <h3 className="text-lg font-bold text-[#1D1D1F] mb-4">Active Connections</h3>
+                <div className="mt-10 border-t border-black/5 dark:border-white/10 pt-8">
+                    <h3 className="text-lg font-bold text-foreground mb-4">Active Connections</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {existingKeys.filter(k => k.isValid).map((key) => (
-                            <div key={key.id} className="p-5 rounded-[1.2rem] bg-[#F5F5F7]/80 border border-black/5 flex justify-between items-center transition-all hover:bg-[#F5F5F7]">
+                            <div key={key.id} className="p-5 rounded-[1.2rem] bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 flex justify-between items-center transition-all hover:bg-black/10 dark:hover:bg-white/10">
                                 <div className="flex items-center space-x-3">
                                     <div className="w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
-                                    <span className="font-bold text-[#1D1D1F] tracking-tight">{key.exchange}</span>
+                                    <span className="font-bold text-foreground tracking-tight">{key.exchange}</span>
                                     {key.isTestnet && (
-                                        <span className="px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-600 text-[10px] font-bold uppercase tracking-wider">Testnet</span>
+                                        <span className="px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] font-bold uppercase tracking-wider">Testnet</span>
                                     )}
                                 </div>
                                 <div className="flex items-center space-x-4">
-                                    <span className="text-sm font-semibold text-black/40">Secured</span>
+                                    <span className="text-sm font-semibold text-foreground/40">Secured</span>
                                     <button
                                         onClick={() => handleDelete(key.id)}
-                                        className="text-red-500 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors"
+                                        className="text-red-500 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors"
                                         title="Delete Connection"
                                     >
                                         Delete
