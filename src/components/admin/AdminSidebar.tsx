@@ -59,9 +59,23 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
         { name: 'Live Executions', href: '/admin/executions', icon: Activity },
         { name: 'Master Ledger', href: '/admin/ledger', icon: FileText },
         { name: 'Marketing', href: '/admin/marketing', icon: Megaphone },
+        { name: 'Social Proof', href: '/admin/marketing/social', icon: Activity },
         { name: 'Blog CMS', href: '/admin/marketing/blog', icon: FileText },
         { name: 'Settings', href: '/admin/settings', icon: Settings },
     ];
+
+    // Find the most specific active item
+    const activeItem = navItems.reduce((acc, item) => {
+        if (item.href === '/admin') {
+            return pathname === '/admin' ? item : acc;
+        }
+        if (pathname.startsWith(item.href)) {
+            if (!acc || item.href.length > acc.href.length) {
+                return item;
+            }
+        }
+        return acc;
+    }, null as typeof navItems[0] | null);
 
     // Split nav items for mobile
     const bottomBarItems = navItems.filter(item => ['Overview', 'Strategy Command', 'Investor CRM', 'Live Executions'].includes(item.name));
@@ -113,9 +127,7 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
 
                 <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto overflow-x-hidden">
                     {navItems.map((item) => {
-                        const isActive = item.href === '/admin'
-                            ? pathname === '/admin'
-                            : pathname.startsWith(item.href);
+                        const isActive = activeItem?.href === item.href;
 
                         const Icon = item.icon;
                         return (
@@ -173,9 +185,7 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
             <div className="md:hidden fixed bottom-6 left-4 right-4 z-50">
                 <nav className="h-16 bg-white/80 dark:bg-[#1C1C1E]/80 backdrop-blur-3xl border border-black/5 dark:border-white/10 rounded-[2rem] flex items-center justify-around px-2 shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
                 {bottomBarItems.map((item) => {
-                    const isActive = item.href === '/admin'
-                        ? !isMobileMenuOpen && pathname === '/admin'
-                        : !isMobileMenuOpen && pathname.startsWith(item.href);
+                    const isActive = !isMobileMenuOpen && activeItem?.href === item.href;
 
                     const Icon = item.icon;
                     return (
@@ -258,7 +268,7 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
 
                                 <div className="space-y-2 mb-8">
                                     {drawerItems.map((item) => {
-                                        const isActive = pathname.startsWith(item.href);
+                                        const isActive = activeItem?.href === item.href;
                                         const Icon = item.icon;
 
                                         return (
