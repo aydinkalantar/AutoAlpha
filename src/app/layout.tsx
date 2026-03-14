@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { SessionProvider } from "@/components/SessionProvider";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import PWASplashScreen from "@/components/PWASplashScreen";
 
 export const dynamic = 'force-dynamic';
 
@@ -57,6 +58,7 @@ export default function RootLayout({
            <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] max-w-[800px] max-h-[800px] bg-cyan-500/20 dark:bg-cyan-600/20 rounded-full blur-[120px] mix-blend-screen" />
            <div className="absolute top-[20%] right-[10%] w-[40vw] h-[40vw] max-w-[600px] max-h-[600px] bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-[120px] mix-blend-screen" />
         </div>
+        <PWASplashScreen />
         <script
           dangerouslySetInnerHTML={{
             __html: `
