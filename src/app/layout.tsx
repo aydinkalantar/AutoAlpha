@@ -15,9 +15,8 @@ const inter = Inter({
 });
 
 import { getSEOForRoute } from "./actions/seo";
-import { Metadata } from "next";
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata() {
   const seo = await getSEOForRoute("/layout-fallback");
 
   const defaultTitle = "AutoAlpha | Institutional Crypto Copy-Trading";
