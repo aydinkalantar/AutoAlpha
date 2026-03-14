@@ -116,7 +116,7 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
                   href={(session.user as any)?.role === 'ADMIN' ? '/admin' : '/dashboard'}
                   className="px-6 py-2.5 text-sm font-semibold bg-gradient-to-r from-cyan-500 to-purple-600 text-white rounded-full hover:opacity-90 transition-opacity shadow-lg shadow-purple-500/25"
                 >
-                  Go to Dashboard
+                  Dashboard
                 </Link>
                 <ThemeToggle />
               </>
