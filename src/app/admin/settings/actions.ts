@@ -73,9 +73,6 @@ export async function updateSystemConfig(formData: FormData) {
     const stripeLivePublicKey = formData.get('stripeLivePublicKey') as string | null;
     const stripeLiveSecretKey = formData.get('stripeLiveSecretKey') as string | null;
     const stripeLiveWebhookSecret = formData.get('stripeLiveWebhookSecret') as string | null;
-    // Welcome Bonus
-    const welcomeBonusEnabled = formData.get('welcomeBonusEnabled') === 'true';
-    const welcomeBonusAmount = parseFloat(formData.get('welcomeBonusAmount') as string) || 50.0;
 
     if (stripeMode !== "TEST" && stripeMode !== "LIVE") {
         throw new Error("Invalid Stripe Mode");
@@ -92,8 +89,6 @@ export async function updateSystemConfig(formData: FormData) {
                 stripeLivePublicKey: stripeLivePublicKey || null,
                 stripeLiveSecretKey: stripeLiveSecretKey || null,
                 stripeLiveWebhookSecret: stripeLiveWebhookSecret || null,
-                welcomeBonusEnabled,
-                welcomeBonusAmount,
             },
             create: {
                 id: "global",
@@ -104,8 +99,6 @@ export async function updateSystemConfig(formData: FormData) {
                 stripeLivePublicKey: stripeLivePublicKey || null,
                 stripeLiveSecretKey: stripeLiveSecretKey || null,
                 stripeLiveWebhookSecret: stripeLiveWebhookSecret || null,
-                welcomeBonusEnabled,
-                welcomeBonusAmount,
             }
         });
 

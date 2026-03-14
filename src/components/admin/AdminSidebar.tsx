@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
-import { LayoutDashboard, Key, Users, Activity, FileText, Settings, ChevronLeft, ChevronRight, LogOut, Sun, Moon } from 'lucide-react';
+import { LayoutDashboard, Key, Users, Activity, FileText, Settings, ChevronLeft, ChevronRight, LogOut, Sun, Moon, Megaphone } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { useState, useEffect } from 'react';
@@ -58,6 +58,7 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
         { name: 'Investor CRM', href: '/admin/investors', icon: Users },
         { name: 'Live Executions', href: '/admin/executions', icon: Activity },
         { name: 'Master Ledger', href: '/admin/ledger', icon: FileText },
+        { name: 'Marketing', href: '/admin/marketing', icon: Megaphone },
         { name: 'Settings', href: '/admin/settings', icon: Settings },
     ];
 
