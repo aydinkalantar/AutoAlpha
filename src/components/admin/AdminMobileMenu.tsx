@@ -146,7 +146,9 @@ export default function AdminMobileMenu({ isMobileMenuOpen, setIsMobileMenuOpen 
 
                                 <div className="space-y-2 mb-8">
                                     {drawerItems.map((item) => {
-                                        const isActive = activeItem?.href === item.href;
+                                        const isActive = item.href === '/admin/marketing'
+                                            ? pathname === item.href
+                                            : activeItem?.href === item.href;
                                         const Icon = item.icon;
 
                                         return (

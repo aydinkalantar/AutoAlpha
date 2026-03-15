@@ -75,7 +75,12 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
 
     // Determine which groups should be open by default
     const defaultOpenGroups = navGroups
-        .filter(group => group.items.some(item => pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href))))
+        .filter(group => group.items.some(item => {
+            if (item.href === '/admin/marketing') {
+                return pathname === item.href;
+            }
+            return pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));
+        }))
         .map(group => group.title);
 
     return (
@@ -133,7 +138,9 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
                                 <div key={group.title} className="flex flex-col space-y-2 mb-4">
                                     <div className="w-full h-px bg-black/5 dark:bg-white/10 my-1" />
                                     {group.items.map((item) => {
-                                        const isActive = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));
+                                        const isActive = item.href === '/admin/marketing'
+                                            ? pathname === item.href
+                                            : pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));
                                         const Icon = item.icon;
                                         return (
                                             <Link
@@ -184,7 +191,9 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
                                         <Accordion.Content className="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
                                             <div className="space-y-1 mt-1">
                                                 {group.items.map((item) => {
-                                                    const isActive = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));
+                                                    const isActive = item.href === '/admin/marketing'
+                                                        ? pathname === item.href
+                                                        : pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));
                                                     const Icon = item.icon;
                                                     return (
                                                         <Link
