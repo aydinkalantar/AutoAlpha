@@ -53,7 +53,7 @@ export default async function DashboardLayout({
                 
                 <div className="flex-1 flex flex-col min-h-screen w-full md:w-auto max-w-[100vw] md:max-w-none overflow-x-hidden relative z-10 transition-all duration-300 pt-20 pb-28 md:pt-0 md:pb-0 md:ml-64">
                     {/* Desktop Fixed Header */}
-                    <header className="hidden md:flex w-full h-16 bg-white/50 dark:bg-white/5 backdrop-blur-xl border-b border-black/5 dark:border-white/10 items-center justify-end px-4 md:px-6 sticky top-0 z-40">
+                    <header className="hidden md:flex w-full h-16 bg-white/50 dark:bg-white/5 backdrop-blur-xl border-b border-black/5 dark:border-white/10 items-center justify-end px-4 md:px-6 sticky top-0 z-[60]">
                         <NotificationBell userId={user.id} />
                     </header>
 
