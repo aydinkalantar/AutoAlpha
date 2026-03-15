@@ -86,7 +86,7 @@ export default function SEOTable({ initialSettings }: { initialSettings: SEOSett
         </Button>
       </div>
 
-      <div className="rounded-md border overflow-x-auto">
+      <div className="w-full rounded-md border overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>

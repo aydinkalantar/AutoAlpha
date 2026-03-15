@@ -35,7 +35,7 @@ export default function PromoCodeTable({ initialCodes }: { initialCodes: PromoCo
   }
 
   return (
-    <div className="rounded-md border overflow-x-auto">
+    <div className="w-full rounded-md border overflow-x-auto">
       <Table>
         <TableHeader>
           <TableRow>

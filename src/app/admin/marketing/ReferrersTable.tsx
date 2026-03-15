@@ -23,7 +23,7 @@ export default function ReferrersTable({ referrers }: { referrers: any[] }) {
                 </div>
             </div>
 
-            <div className="overflow-x-auto">
+            <div className="w-full overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                     <thead>
                         <tr className="border-b border-black/5 dark:border-white/10 text-foreground/60 text-sm">

@@ -99,35 +99,37 @@ export default function ZombieTable({ pendingUsers, contactedUsers }: ZombieTabl
                                 <p className="text-muted-foreground text-sm max-w-sm">No new Zombie users found. All inactive users have been contacted.</p>
                             </div>
                         ) : (
-                            <Table>
-                                <TableHeader className="bg-black/5 dark:bg-white/5">
-                                    <TableRow className="border-black/5 dark:border-white/10 hover:bg-transparent">
-                                        <TableHead>Trader</TableHead>
-                                        <TableHead>Registration Date</TableHead>
-                                        <TableHead>Status</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {pendingUsers.map((user) => (
-                                        <TableRow key={user.id} className="border-black/5 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 transition-colors group">
-                                            <TableCell>
-                                                <div className="flex flex-col">
-                                                    <span className="font-bold group-hover:text-emerald-500 transition-colors">{user.name || 'Anonymous TRADER'}</span>
-                                                    <span className="text-xs text-muted-foreground truncate max-w-[200px]">{user.email}</span>
-                                                </div>
-                                            </TableCell>
-                                            <TableCell className="text-muted-foreground whitespace-nowrap">
-                                                {format(new Date(user.createdAt), "MMM d, yyyy \u2022 h:mm a")}
-                                            </TableCell>
-                                            <TableCell>
-                                                <Badge variant="outline" className="text-amber-500 border-amber-500/20 bg-amber-500/10 font-bold uppercase tracking-wider text-[10px]">
-                                                    Awaiting Sweep
-                                                </Badge>
-                                            </TableCell>
+                            <div className="w-full overflow-x-auto">
+                                <Table>
+                                    <TableHeader className="bg-black/5 dark:bg-white/5">
+                                        <TableRow className="border-black/5 dark:border-white/10 hover:bg-transparent">
+                                            <TableHead>Trader</TableHead>
+                                            <TableHead>Registration Date</TableHead>
+                                            <TableHead>Status</TableHead>
                                         </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {pendingUsers.map((user) => (
+                                            <TableRow key={user.id} className="border-black/5 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 transition-colors group">
+                                                <TableCell>
+                                                    <div className="flex flex-col">
+                                                        <span className="font-bold group-hover:text-emerald-500 transition-colors">{user.name || 'Anonymous TRADER'}</span>
+                                                        <span className="text-xs text-muted-foreground truncate max-w-[200px]">{user.email}</span>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell className="text-muted-foreground whitespace-nowrap">
+                                                    {format(new Date(user.createdAt), "MMM d, yyyy \u2022 h:mm a")}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Badge variant="outline" className="text-amber-500 border-amber-500/20 bg-amber-500/10 font-bold uppercase tracking-wider text-[10px]">
+                                                        Awaiting Sweep
+                                                    </Badge>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </div>
                         )}
                     </div>
                 </TabsContent>
@@ -139,36 +141,38 @@ export default function ZombieTable({ pendingUsers, contactedUsers }: ZombieTabl
                                 No history found.
                             </div>
                         ) : (
-                            <Table>
-                                <TableHeader className="bg-black/5 dark:bg-white/5">
-                                    <TableRow className="border-black/5 dark:border-white/10 hover:bg-transparent">
-                                        <TableHead>Trader</TableHead>
-                                        <TableHead>Timestamp</TableHead>
-                                        <TableHead>Status</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {contactedUsers.map((user) => (
-                                        <TableRow key={user.id} className="border-black/5 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-                                            <TableCell>
-                                                <div className="flex flex-col">
-                                                    <span className="font-bold transition-colors">{user.name || 'Anonymous TRADER'}</span>
-                                                    <span className="text-xs text-muted-foreground truncate max-w-[200px]">{user.email}</span>
-                                                </div>
-                                            </TableCell>
-                                            <TableCell className="text-muted-foreground whitespace-nowrap">
-                                                {user.zombieEmailSentAt ? format(new Date(user.zombieEmailSentAt), "MMM d, yyyy \u2022 h:mm a") : 'Unknown'}
-                                            </TableCell>
-                                            <TableCell>
-                                                <Badge variant="outline" className="text-emerald-500 border-emerald-500/20 bg-emerald-500/10 font-bold uppercase tracking-wider text-[10px] gap-1.5 flex w-fit items-center">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                                                    Delivered
-                                                </Badge>
-                                            </TableCell>
+                            <div className="w-full overflow-x-auto">
+                                <Table>
+                                    <TableHeader className="bg-black/5 dark:bg-white/5">
+                                        <TableRow className="border-black/5 dark:border-white/10 hover:bg-transparent">
+                                            <TableHead>Trader</TableHead>
+                                            <TableHead>Timestamp</TableHead>
+                                            <TableHead>Status</TableHead>
                                         </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {contactedUsers.map((user) => (
+                                            <TableRow key={user.id} className="border-black/5 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                                                <TableCell>
+                                                    <div className="flex flex-col">
+                                                        <span className="font-bold transition-colors">{user.name || 'Anonymous TRADER'}</span>
+                                                        <span className="text-xs text-muted-foreground truncate max-w-[200px]">{user.email}</span>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell className="text-muted-foreground whitespace-nowrap">
+                                                    {user.zombieEmailSentAt ? format(new Date(user.zombieEmailSentAt), "MMM d, yyyy \u2022 h:mm a") : 'Unknown'}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Badge variant="outline" className="text-emerald-500 border-emerald-500/20 bg-emerald-500/10 font-bold uppercase tracking-wider text-[10px] gap-1.5 flex w-fit items-center">
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                                                        Delivered
+                                                    </Badge>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </div>
                         )}
                     </div>
                 </TabsContent>

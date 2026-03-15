@@ -26,7 +26,7 @@ export default function BlogTable({ posts }: { posts: BlogPost[] }) {
 
     return (
         <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-[2rem] overflow-hidden shadow-2xl">
-            <div className="overflow-x-auto">
+            <div className="w-full overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                     <thead>
                         <tr className="border-b border-black/5 dark:border-white/10 bg-black/5 dark:bg-white/5">

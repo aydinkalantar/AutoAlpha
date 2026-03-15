@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { getTradeQueue } from '@/lib/queue';
-import { DollarSign, Activity, Users, Box, Info } from 'lucide-react';
-import RevenueChart from './RevenueChart';
+import { DollarSign, Activity, Users, Box, Info, Network } from 'lucide-react';
+import DashboardCharts from './DashboardCharts';
 import Link from 'next/link';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -16,27 +16,13 @@ export default async function AdminOverviewPage() {
     if (!session?.user || (session.user as any).role !== "ADMIN") {
         return <div>Access Denied</div>;
     }
-    // 1. Total Revenue (Sum of positive Ledger amounts, assuming platform fees are positive in our context or recorded specifically)
+    
     let totalRevenue = 0;
     let platformAUM = 0;
-    let activeUsersCount = 0;
+    let activeApiConnections = 0;
     let waitingJobsCount = 0;
-    let recentLedgers: any[] = [];
+    let allLedgers: any[] = [];
     
-    // Group by Day securely
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 29); // Include today as the 30th day
-    thirtyDaysAgo.setHours(0, 0, 0, 0); // Start of day
-
-    const chartDataMap: Record<string, number> = {};
-    for (let i = 0; i < 30; i++) {
-        const d = new Date(thirtyDaysAgo);
-        d.setDate(d.getDate() + i);
-        // Format as YYYY-MM-DD strictly in UTC to avoid server timezone mismatches
-        const dateStr = d.toISOString().split('T')[0];
-        chartDataMap[dateStr] = 0;
-    }
-
     try {
         const revenueEntries = await prisma.ledger.aggregate({
             _sum: {
@@ -49,10 +35,8 @@ export default async function AdminOverviewPage() {
                 isPaper: false
             }
         });
-        // The amount is negative in the ledger (subtracting from user). So we take absolute value.
         totalRevenue = Math.abs(revenueEntries._sum.amount || 0);
 
-        // 2. Platform AUM (Sum of currentVirtualBalance across all active Subscriptions)
         const activeSubAUM = await prisma.subscription.aggregate({
             _sum: {
                 currentVirtualBalance: true
@@ -64,18 +48,16 @@ export default async function AdminOverviewPage() {
         });
         platformAUM = activeSubAUM._sum.currentVirtualBalance || 0;
 
-        // 3. Active Users
-        activeUsersCount = await prisma.user.count({ where: { isActive: true } });
+        activeApiConnections = await prisma.exchangeKey.count({ 
+            where: { isValid: true } 
+        });
 
-        // 4. Pending Queue Jobs
         const tradeQueue = getTradeQueue();
         waitingJobsCount = await tradeQueue.getWaitingCount();
 
-        // Fetch Last 30 Days Revenue for Chart
-        recentLedgers = await prisma.ledger.findMany({
+        allLedgers = await prisma.ledger.findMany({
             where: {
                 description: { contains: 'Performance Fee Deducted' },
-                createdAt: { gte: thirtyDaysAgo },
                 isPaper: false
             },
             select: {
@@ -86,23 +68,9 @@ export default async function AdminOverviewPage() {
                 createdAt: 'asc'
             }
         });
-
-        recentLedgers.forEach(l => {
-            // Match the YYYY-MM-DD format strictly in UTC
-            const dateStr = l.createdAt.toISOString().split('T')[0];
-            if (chartDataMap[dateStr] !== undefined) {
-                chartDataMap[dateStr] += Math.abs(l.amount);
-            }
-        });
     } catch (e) {
         console.warn("Could not connect to database on admin page. Returning default 0 metrics.");
     }
-
-    // Accumulate for running total chart or just daily bars. Let's do daily revenue area chart.
-    const chartData = Object.entries(chartDataMap).map(([date, amount]) => ({
-        date: new Date(date + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        revenue: amount
-    }));
 
     return (
         <div className="p-4 pt-8 pb-32 md:p-10 md:pt-12 md:pb-32 max-w-7xl mx-auto space-y-8">
@@ -119,13 +87,6 @@ export default async function AdminOverviewPage() {
             {/* KPI Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <KPICard
-                    title="Total Revenue"
-                    value={`$${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
-                    subtitle="Lifetime API Fees"
-                    icon={<DollarSign className="w-5 h-5 text-foreground/50" />}
-                    tooltip="The aggregate sum of all performance fees collected by the platform across all users."
-                />
-                <KPICard
                     title="Platform AUM"
                     value={`$${platformAUM.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                     subtitle="Active Subscriptions"
@@ -133,16 +94,23 @@ export default async function AdminOverviewPage() {
                     tooltip="Assets Under Management. The total virtual capital currently allocated to active strategies across all platform users."
                 />
                 <KPICard
-                    title="Active Users"
-                    value={activeUsersCount.toString()}
-                    subtitle="Registered Accounts"
-                    icon={<Users className="w-5 h-5 text-foreground/50" />}
-                    tooltip="The total number of active users registered on the platform."
+                    title="Gas Tank Revenue"
+                    value={`$${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                    subtitle="Lifetime API Fees"
+                    icon={<DollarSign className="w-5 h-5 text-foreground/50" />}
+                    tooltip="The aggregate sum of all performance fees collected by the platform across all users."
+                />
+                <KPICard
+                    title="Active APIs"
+                    value={activeApiConnections.toString()}
+                    subtitle="Connected Exchange Valid"
+                    icon={<Network className="w-5 h-5 text-foreground/50" />}
+                    tooltip="The total number of valid exchange API connections driving live markets."
                 />
                 <KPICard
                     title="Queue Health"
                     value={waitingJobsCount.toString()}
-                    subtitle="Pending Pending Trade Jobs"
+                    subtitle="Pending Trade Jobs"
                     icon={<Box className="w-5 h-5 text-foreground/50" />}
                     alert={waitingJobsCount > 10}
                     tooltip="Real-time count of pending trade execution jobs waiting in the internal BullMQ Redis queue."
@@ -150,16 +118,7 @@ export default async function AdminOverviewPage() {
             </div>
 
             {/* Chart Section */}
-            <div className="bg-white/50 dark:bg-white/5 backdrop-blur-2xl p-8 rounded-[2rem] shadow-xl border border-black/5 dark:border-white/10 relative overflow-hidden">
-                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/20 to-transparent" />
-                <div className="mb-6 relative z-10">
-                    <h3 className="text-2xl font-bold text-foreground">30-Day Revenue Validation</h3>
-                    <p className="text-sm font-medium text-foreground/50">Daily trailing performance fee capture.</p>
-                </div>
-                <div className="h-[350px] w-full relative z-10">
-                    <RevenueChart data={chartData} />
-                </div>
-            </div>
+            <DashboardCharts ledgers={allLedgers} />
         </div>
     );
 }

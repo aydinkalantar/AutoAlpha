@@ -9,7 +9,7 @@ import Link from 'next/link';
 export default function StrategyTable({ strategies }: { strategies: Strategy[] }) {
     return (
         <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-[2rem] overflow-hidden shadow-2xl shadow-black-[0.03] dark:shadow-white/5">
-            <div className="overflow-x-auto">
+            <div className="w-full overflow-x-auto">
                 <table className="w-full text-left text-sm text-foreground">
                     <thead className="bg-black/5 dark:bg-white/5 text-xs font-bold uppercase text-muted-foreground border-b border-black/5 dark:border-white/10">
                         <tr>
