@@ -82,19 +82,19 @@ export default async function SettingsPage() {
                     
                     {/* Tab List / Nav (Horizontal on Mobile, Vertical on Desktop) */}
                     <TabsList className="flex flex-row md:flex-col h-auto max-w-full overflow-x-auto no-scrollbar md:w-64 shrink-0 bg-transparent gap-2 p-0 justify-start items-start border-b md:border-b-0 border-black/10 dark:border-white/10 md:pr-4 md:border-r pb-2 md:pb-0">
-                        <TabsTrigger value="account" className="w-full justify-start text-left px-4 py-3 text-base rounded-xl data-[state=active]:bg-white/50 dark:data-[state=active]:bg-white/10 data-[state=active]:shadow-sm">
+                        <TabsTrigger value="account" className="w-auto md:w-full flex-none h-auto justify-start text-left px-4 py-3 text-base rounded-xl data-[state=active]:bg-white/50 dark:data-[state=active]:bg-white/10 data-[state=active]:shadow-sm">
                             <User className="w-5 h-5 mr-3" /> Account Hub
                         </TabsTrigger>
-                        <TabsTrigger value="api-keys" className="w-full justify-start text-left px-4 py-3 text-base rounded-xl data-[state=active]:bg-white/50 dark:data-[state=active]:bg-white/10 data-[state=active]:shadow-sm">
+                        <TabsTrigger value="api-keys" className="w-auto md:w-full flex-none h-auto justify-start text-left px-4 py-3 text-base rounded-xl data-[state=active]:bg-white/50 dark:data-[state=active]:bg-white/10 data-[state=active]:shadow-sm">
                             <Key className="w-5 h-5 mr-3" /> Exchange APIs
                         </TabsTrigger>
-                        <TabsTrigger value="accounting" className="w-full justify-start text-left px-4 py-3 text-base rounded-xl data-[state=active]:bg-white/50 dark:data-[state=active]:bg-white/10 data-[state=active]:shadow-sm">
+                        <TabsTrigger value="accounting" className="w-auto md:w-full flex-none h-auto justify-start text-left px-4 py-3 text-base rounded-xl data-[state=active]:bg-white/50 dark:data-[state=active]:bg-white/10 data-[state=active]:shadow-sm">
                             <Receipt className="w-5 h-5 mr-3" /> Accounting
                         </TabsTrigger>
-                        <TabsTrigger value="affiliates" className="w-full justify-start text-left px-4 py-3 text-base rounded-xl data-[state=active]:bg-white/50 dark:data-[state=active]:bg-white/10 data-[state=active]:shadow-sm">
+                        <TabsTrigger value="affiliates" className="w-auto md:w-full flex-none h-auto justify-start text-left px-4 py-3 text-base rounded-xl data-[state=active]:bg-white/50 dark:data-[state=active]:bg-white/10 data-[state=active]:shadow-sm">
                             <Users className="w-5 h-5 mr-3" /> Affiliates
                         </TabsTrigger>
-                        <TabsTrigger value="notifications" className="w-full justify-start text-left px-4 py-3 text-base rounded-xl data-[state=active]:bg-white/50 dark:data-[state=active]:bg-white/10 data-[state=active]:shadow-sm">
+                        <TabsTrigger value="notifications" className="w-auto md:w-full flex-none h-auto justify-start text-left px-4 py-3 text-base rounded-xl data-[state=active]:bg-white/50 dark:data-[state=active]:bg-white/10 data-[state=active]:shadow-sm">
                             <Bell className="w-5 h-5 mr-3" /> Notifications
                         </TabsTrigger>
                     </TabsList>

@@ -10,6 +10,7 @@ import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import { Button } from '@/components/ui/button';
 import * as Accordion from '@radix-ui/react-accordion';
+import AdminHeader from './AdminHeader';
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -236,6 +237,7 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
             </div>
 
             <div className={cn("flex-1 flex flex-col min-h-screen w-full md:w-auto max-w-[100vw] md:max-w-none overflow-x-hidden relative z-10 transition-all duration-300 md:pt-0 pb-20 md:pb-0", isCollapsed ? "md:ml-20" : "md:ml-64 lg:ml-64")}>
+                <AdminHeader />
                 <main className="flex-1 transition-all duration-300 w-full overflow-hidden">
                     {children}
                 </main>

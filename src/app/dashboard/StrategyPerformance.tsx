@@ -400,7 +400,6 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                                             <tr>
                                                 <th className="py-3 px-4 font-semibold">Date / Time</th>
                                                 <th className="py-3 px-4 font-semibold">Asset</th>
-                                                <th className="py-3 px-4 font-semibold">Exchange</th>
                                                 <th className="py-3 px-4 font-semibold">Side</th>
                                                 <th className="py-3 px-4 font-semibold text-right">Entry Price</th>
                                                 <th className="py-3 px-4 font-semibold text-right">Exit Price</th>
@@ -413,7 +412,6 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                                                 <tr key={trade.id} className="border-b border-black/5 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
                                                     <td className="py-4 px-4 font-medium text-foreground/80 lowercase">{format(new Date(trade.updatedAt || trade.createdAt), 'MMM dd HH:mm')}</td>
                                                     <td className="py-4 px-4 font-bold text-foreground uppercase">{trade.symbol}</td>
-                                                    <td className="py-4 px-4 font-bold text-foreground/60 uppercase">{trade.exchange || 'N/A'}</td>
                                                     <td className="py-4 px-4">
                                                         <span className={`px-2 py-1 text-[10px] font-bold rounded-full ${trade.side === 'LONG' || trade.side === 'BUY' ? 'bg-blue-500/10 text-blue-500' : 'bg-rose-500/10 text-rose-500'}`}>
                                                             {trade.side} {trade.leverage}x
@@ -429,7 +427,7 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                                             ))}
                                             {reversedHistory.length === 0 && (
                                                 <tr>
-                                                    <td colSpan={8} className="py-8 text-center text-muted-foreground italic">No historical trades found. Waiting for engine to execute...</td>
+                                                    <td colSpan={7} className="py-8 text-center text-muted-foreground italic">No historical trades found. Waiting for engine to execute...</td>
                                                 </tr>
                                             )}
                                         </tbody>
@@ -445,7 +443,6 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                                                     <span className={`px-2 py-0.5 text-[10px] uppercase font-bold rounded ${trade.side === 'LONG' || trade.side === 'BUY' ? 'bg-blue-500/10 text-blue-500' : 'bg-rose-500/10 text-rose-500'}`}>
                                                         {trade.symbol} {trade.side}
                                                     </span>
-                                                    <span className="text-[10px] font-bold text-foreground/50 uppercase tracking-wider">{trade.exchange || 'N/A'}</span>
                                                     <span className="text-xs text-muted-foreground">{format(new Date(trade.updatedAt || trade.createdAt), 'MMM dd')}</span>
                                                 </div>
                                                 <div className={`text-lg font-bold text-right ${(trade.realizedPnl || 0) >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>

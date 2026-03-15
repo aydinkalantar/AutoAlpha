@@ -339,3 +339,12 @@ model BlogPost {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }
+
+model AdminNotification {
+  id        String   @id @default(cuid())
+  type      String   // "SUCCESS", "WARNING", "CRITICAL"
+  message   String
+  isRead    Boolean  @default(false)
+  link      String?  // Optional routing destination
+  createdAt DateTime @default(now())
+}

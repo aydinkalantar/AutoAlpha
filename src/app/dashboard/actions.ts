@@ -40,6 +40,69 @@ export async function saveApiKey(formData: FormData) {
     revalidatePath('/dashboard');
 }
 
+export async function saveTestnetApiKey(formData: FormData) {
+    const userId = formData.get('userId') as string;
+    const exchange = formData.get('exchange') as SupportedExchange;
+    const apiKey = formData.get('apiKey') as string;
+    const apiSecret = formData.get('apiSecret') as string;
+
+    if (!userId || !exchange || !apiKey || !apiSecret) {
+        throw new Error('Missing required fields');
+    }
+
+    const encryptedKeyRaw = encryptKey(apiKey, process.env.MASTER_ENCRYPTION_KEY!);
+    const encryptedSecretRaw = encryptKey(apiSecret, process.env.MASTER_ENCRYPTION_KEY!);
+
+    // Deactivate any existing key for this exchange
+    await prisma.exchangeKey.updateMany({
+        where: { userId, exchange },
+        data: { isValid: false }
+    });
+
+    await prisma.exchangeKey.create({
+        data: {
+            userId,
+            exchange,
+            encryptedApiKey: encryptedKeyRaw,
+            encryptedSecret: encryptedSecretRaw,
+            iv: encryptedKeyRaw.split(':')[0],
+            isValid: true,
+            isTestnet: true
+        }
+    });
+
+    revalidatePath('/dashboard');
+}
+
+export async function enableOneClickPaperTrading(userId: string) {
+    if (!userId) throw new Error("Unauthorized");
+
+    const dummyKey = "PAPER_TRADING_MOCK_KEY_" + Date.now();
+    const dummySecret = "PAPER_TRADING_MOCK_SECRET_" + Date.now();
+
+    const encryptedKeyRaw = encryptKey(dummyKey, process.env.MASTER_ENCRYPTION_KEY!);
+    const encryptedSecretRaw = encryptKey(dummySecret, process.env.MASTER_ENCRYPTION_KEY!);
+
+    await prisma.exchangeKey.updateMany({
+        where: { userId, exchange: 'BINANCE' },
+        data: { isValid: false }
+    });
+
+    await prisma.exchangeKey.create({
+        data: {
+            userId,
+            exchange: 'BINANCE',
+            encryptedApiKey: encryptedKeyRaw,
+            encryptedSecret: encryptedSecretRaw,
+            iv: encryptedKeyRaw.split(':')[0],
+            isValid: true,
+            isTestnet: true
+        }
+    });
+
+    revalidatePath('/dashboard');
+}
+
 export async function getActiveStrategies() {
     return await prisma.strategy.findMany({
         where: { isActive: true }
