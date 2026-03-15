@@ -5,11 +5,8 @@ import { redirect } from 'next/navigation';
 import { prisma } from "@/lib/prisma";
 import DashboardClientWrapper from '../DashboardClientWrapper';
 import { getActiveStrategies } from '../actions';
-import NotificationBell from '@/components/dashboard/NotificationBell';
 
 export const dynamic = 'force-dynamic';
-
-
 
 export default async function MarketPage() {
     const session = await getServerSession(authOptions);
@@ -76,9 +73,6 @@ export default async function MarketPage() {
                             </div>
                         )}
                     </div>
-                </div>
-                <div className="flex-shrink-0">
-                    <NotificationBell userId={user.id} className="hidden md:block" />
                 </div>
             </div>
 

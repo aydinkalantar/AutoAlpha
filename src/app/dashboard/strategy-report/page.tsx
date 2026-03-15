@@ -4,7 +4,6 @@ import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { prisma } from "@/lib/prisma";
 import StrategyReportClient from './StrategyReportClient';
-import NotificationBell from '@/components/dashboard/NotificationBell';
 
 export const dynamic = 'force-dynamic';
 
@@ -72,9 +71,6 @@ export default async function StrategyReportPage() {
                 <div className="flex flex-col gap-2 w-full break-words">
                     <h1 className="text-4xl font-bold text-foreground tracking-tight break-words w-full">Strategy Report</h1>
                     <p className="text-foreground/60 text-lg">Analyze individual algorithmic performance and historical execution logs.</p>
-                </div>
-                <div className="flex-shrink-0">
-                    <NotificationBell userId={user.id} className="hidden md:block" />
                 </div>
             </div>
 

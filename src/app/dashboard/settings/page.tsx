@@ -3,7 +3,6 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { prisma } from "@/lib/prisma";
-import NotificationBell from '@/components/dashboard/NotificationBell';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { User, Key, Receipt, Users, Bell } from 'lucide-react';
@@ -70,9 +69,6 @@ export default async function SettingsPage() {
                 <div className="flex flex-col gap-2 w-full break-words">
                     <h1 className="text-4xl font-bold text-foreground tracking-tight break-words w-full">Settings & Preferences</h1>
                     <p className="text-foreground/60 text-lg">Manage your account, API connections, and billing.</p>
-                </div>
-                <div className="flex-shrink-0">
-                    <NotificationBell userId={user.id} className="hidden md:block" />
                 </div>
             </div>
 

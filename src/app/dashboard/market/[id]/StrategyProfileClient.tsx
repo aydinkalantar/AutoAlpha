@@ -7,7 +7,6 @@ import CapitalAllocationModal from "../../CapitalAllocationModal";
 import { updateSubscriptionCapital } from "../../subscriptionActions";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import NotificationBell from '@/components/dashboard/NotificationBell';
 import { Button } from "@/components/ui/button";
 import MobileBackButton from "@/components/nav/MobileBackButton";
 import {
@@ -80,9 +79,6 @@ export default function StrategyProfileClient({
                             Manage Allocation
                         </Button>
                     </div>
-                </div>
-                <div className="flex-shrink-0">
-                    <NotificationBell userId={userId} className="hidden md:block" />
                 </div>
             </div>
 

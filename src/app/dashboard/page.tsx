@@ -5,7 +5,6 @@ import { redirect } from 'next/navigation';
 import { prisma } from "@/lib/prisma";
 import Link from 'next/link';
 import { Info, AlertTriangle, ArrowRight, LayoutDashboard } from 'lucide-react';
-import NotificationBell from '@/components/dashboard/NotificationBell';
 import TestnetToggle from './TestnetToggle';
 import WelcomeModal from './WelcomeModal';
 
@@ -104,9 +103,6 @@ export default async function DashboardPage() {
                     </div>
 
                     <div className="flex flex-row md:flex-col items-center md:items-end gap-3 w-full md:w-auto shrink-0 relative z-50">
-                        <div className="hidden md:block mb-4">
-                            <NotificationBell userId={user.id} />
-                        </div>
                         <TestnetToggle initialMode={isPaperMode} userId={user.id} />
                     </div>
                 </div>
