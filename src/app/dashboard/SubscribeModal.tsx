@@ -105,7 +105,7 @@ export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBala
                         </div>
                     </div>
 
-                    {(strategy.targetExchange as string) === 'UNIVERSAL' && (
+                    {(strategy.targetExchange as string) === 'UNIVERSAL' && !isPaperMode && (
                         <div className="space-y-4">
                             <div className="flex justify-between px-1">
                                 <label className="text-sm font-semibold text-foreground/60">Execution Exchange</label>
@@ -122,12 +122,12 @@ export default function SubscribeModal({ strategy, userId, usdtBalance, usdcBala
                                         </option>
                                     ))
                                 ) : (
-                                    <option value="" disabled>No {isPaperMode ? 'Testnet' : 'Live'} API Keys Connected</option>
+                                    <option value="" disabled>No Live API Keys Connected</option>
                                 )}
                             </select>
                             {connectedExchanges.length === 0 && (
                                 <p className="text-xs font-semibold text-rose-500/80 px-2 mt-2">
-                                    You are currently in {isPaperMode ? 'Sandbox' : 'Live'} mode. You must connect a {isPaperMode ? 'Testnet' : 'Live'} exchange API key in Settings to subscribe.
+                                    You are currently in Live mode. You must connect a Live exchange API key in Settings to subscribe.
                                 </p>
                             )}
                         </div>

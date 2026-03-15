@@ -258,7 +258,7 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
             </div>
 
             {/* Mobile Bottom Navigation (Floating Pill) */}
-            <div className="md:hidden fixed bottom-6 left-4 right-4 z-50" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+            <div className="md:hidden fixed left-4 right-4 z-50 [@media(max-height:600px)]:hidden" style={{ bottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}>
                 <nav className="h-16 bg-white/80 dark:bg-[#1C1C1E]/80 backdrop-blur-3xl border border-black/5 dark:border-white/10 rounded-[2rem] flex items-center justify-around px-2 shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
                 {bottomBarItems.map((item) => {
                     const isActive = !isMobileMenuOpen && activeItem?.href === item.href;

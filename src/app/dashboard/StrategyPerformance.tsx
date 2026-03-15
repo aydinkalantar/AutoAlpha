@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Area, AreaChart, ResponsiveContainer, Tooltip as RechartsTooltip, XAxis, YAxis } from "recharts";
 import { format } from "date-fns";
-import { Info } from "lucide-react";
+import { Info, Download } from "lucide-react";
 import { Tooltip as ShadcnTooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 type PositionRecord = {
@@ -42,6 +42,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export default function StrategyPerformance({ closedPositions = [], currentBalance = 0 }: StrategyPerformanceProps) {
     const [activeTab, setActiveTab] = useState<'overview' | 'trades'>('overview');
+    const [downloadTimeframe, setDownloadTimeframe] = useState<'7D' | '30D' | '90D' | 'ALL'>('30D');
 
     // 1. Calculate Real-Time Mathematical KPIs based entirely on the Prisma objects
     const stats = React.useMemo(() => {
@@ -146,6 +147,47 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
     // 3. Reverse chronological map for Trade Logs (Latest history at the top)
     const reversedHistory = [...closedPositions].reverse();
 
+    const handleDownloadCSV = () => {
+        const now = new Date();
+        const cutoffDate = new Date();
+        if (downloadTimeframe === '7D') cutoffDate.setDate(now.getDate() - 7);
+        else if (downloadTimeframe === '30D') cutoffDate.setDate(now.getDate() - 30);
+        else if (downloadTimeframe === '90D') cutoffDate.setDate(now.getDate() - 90);
+        else cutoffDate.setTime(0);
+
+        const filteredTrades = reversedHistory.filter(trade => {
+            const date = new Date(trade.updatedAt || trade.createdAt);
+            return date >= cutoffDate;
+        });
+
+        let csvContent = "data:text/csv;charset=utf-8,";
+        csvContent += "Date,Asset,Exchange,Side,Leverage,Entry Price,Exit Price,Size,Net P&L\n";
+
+        filteredTrades.forEach(trade => {
+            const dateStr = new Date(trade.updatedAt || trade.createdAt).toISOString();
+            const row = [
+                dateStr,
+                trade.symbol,
+                trade.exchange || 'N/A',
+                trade.side,
+                trade.leverage,
+                trade.entryPrice,
+                trade.exitPrice || '',
+                trade.filledAmount,
+                trade.realizedPnl || 0
+            ].join(",");
+            csvContent += row + "\n";
+        });
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `strategy_trades_${downloadTimeframe}_${now.toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     return (
         <div className="w-full space-y-6">
             {/* Native Tailwind Tabs */}
@@ -223,9 +265,9 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                                         </TooltipContent>
                                     </ShadcnTooltip>
                                 </div>
-                                <div className="text-2xl font-bold text-rose-500">
-                                    {Math.abs(maxDrawdown) === 0 ? "0.00" : maxDrawdown}%
-                                </div>
+                                <span className={`text-2xl font-black tracking-tight ${maxDrawdown === 0 ? "text-foreground" : "text-rose-500"}`}>
+                                    {Math.abs(maxDrawdown).toFixed(2) === "0.00" ? "0.00" : maxDrawdown}%
+                                </span>
                             </div>
 
                             <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl p-6 shadow-lg">
@@ -323,9 +365,32 @@ export default function StrategyPerformance({ closedPositions = [], currentBalan
                 {activeTab === 'trades' && (
                     <div className="animate-in fade-in slide-in-from-bottom-2">
                         <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-xl shadow-lg overflow-hidden">
-                            <div className="p-6 border-b border-black/5 dark:border-white/10">
-                                <h3 className="text-lg font-bold text-foreground">Trade History</h3>
-                                <p className="text-sm text-muted-foreground">Recent algorithmic executions.</p>
+                            <div className="p-6 border-b border-black/5 dark:border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <div>
+                                    <h3 className="text-lg font-bold text-foreground">Trade History</h3>
+                                    <p className="text-sm text-muted-foreground">Recent algorithmic executions.</p>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <select 
+                                        aria-label="Download Timeframe"
+                                        title="Download Timeframe"
+                                        value={downloadTimeframe} 
+                                        onChange={(e) => setDownloadTimeframe(e.target.value as any)}
+                                        className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-sm font-semibold text-foreground px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                                    >
+                                        <option value="7D">Last 7 Days</option>
+                                        <option value="30D">Last 30 Days</option>
+                                        <option value="90D">Last 90 Days</option>
+                                        <option value="ALL">All Time</option>
+                                    </select>
+                                    <button 
+                                        onClick={handleDownloadCSV}
+                                        className="flex items-center gap-2 bg-foreground text-background text-sm font-bold px-4 py-2 rounded-lg shadow hover:opacity-90 transition-opacity whitespace-nowrap"
+                                    >
+                                        <Download className="w-4 h-4" />
+                                        <span>Export CSV</span>
+                                    </button>
+                                </div>
                             </div>
                             <div className="p-0 md:p-6">
                                 {/* Desktop Table View */}

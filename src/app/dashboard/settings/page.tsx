@@ -50,7 +50,11 @@ export default async function SettingsPage() {
                 </div>
             </div>
 
-            <ApiKeyForm userId={user.id} existingKeys={user.exchangeKeys as any} />
+            <ApiKeyForm 
+                userId={user.id} 
+                existingKeys={user.exchangeKeys as any} 
+                isTestnetMode={user.isTestnetMode}
+            />
         </div>
     );
 }

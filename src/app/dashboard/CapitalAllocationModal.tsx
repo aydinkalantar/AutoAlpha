@@ -160,10 +160,7 @@ export default function CapitalAllocationModal({
                                 value={allocationAmount}
                                 onChange={handleSliderChange}
                                 disabled={isSaving}
-                                style={{
-                                    backgroundImage: `linear-gradient(to right, #06b6d4 ${totalMasterBalance > 0 ? (allocationAmount / totalMasterBalance) * 100 : 0}%, transparent ${totalMasterBalance > 0 ? (allocationAmount / totalMasterBalance) * 100 : 0}%)`
-                                }}
-                                className="w-full h-2.5 bg-gray-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                                className="w-full h-2.5 bg-gray-200 dark:bg-white/10 rounded-full cursor-pointer accent-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                             />
                             <div className="flex justify-between items-center text-xs font-semibold text-foreground/40">
                                 <span>$0</span>
