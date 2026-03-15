@@ -9,7 +9,7 @@ import Link from 'next/link';
 export default function MarketingForm({ config }: { config: SystemConfig | null }) {
     const [welcomeBonusEnabled, setWelcomeBonusEnabled] = useState(config?.welcomeBonusEnabled || false);
     const [welcomeBonusAmount, setWelcomeBonusAmount] = useState(config?.welcomeBonusAmount || 50);
-    const [affiliateCommissionRate, setAffiliateCommissionRate] = useState(config?.affiliateCommissionRate || 0.10);
+    const [affiliateCommissionRate, setAffiliateCommissionRate] = useState((config?.affiliateCommissionRate || 0.10) * 100);
     const [isSaving, setIsSaving] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
@@ -21,7 +21,7 @@ export default function MarketingForm({ config }: { config: SystemConfig | null 
         const formData = new FormData(e.currentTarget);
         formData.set('welcomeBonusEnabled', welcomeBonusEnabled.toString());
         formData.set('welcomeBonusAmount', welcomeBonusAmount.toString());
-        formData.set('affiliateCommissionRate', affiliateCommissionRate.toString());
+        formData.set('affiliateCommissionRate', (affiliateCommissionRate / 100).toString());
 
         try {
             await updateMarketingConfig(formData);
@@ -90,22 +90,41 @@ export default function MarketingForm({ config }: { config: SystemConfig | null 
                     </div>
 
                     <div className="opacity-100 transition-opacity">
-                        <label className="block text-sm font-semibold mb-2 ml-1">Commission Rate (Decimal 0.00 - 1.00)</label>
+                        <label className="block text-sm font-semibold mb-2 ml-1">Commission Rate (%)</label>
                         <div className="relative">
                             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/50 font-bold">%</span>
                             <input
                                 type="number"
                                 name="affiliateCommissionRate"
                                 value={affiliateCommissionRate}
-                                onChange={(e) => setAffiliateCommissionRate(parseFloat(e.target.value))}
+                                onChange={(e) => setAffiliateCommissionRate(parseInt(e.target.value) || 0)}
                                 className="w-full bg-white/50 dark:bg-black/20 border justify-center border-black/10 dark:border-white/10 rounded-2xl px-12 py-4 font-mono font-bold text-lg focus:outline-none focus:ring-2 focus:ring-fuchsia-500/50 transition-all placeholder:text-foreground/30"
-                                placeholder="0.10"
-                                step="0.01"
+                                placeholder="10"
+                                step="1"
                                 min="0" 
-                                max="1"
+                                max="100"
                             />
                         </div>
                     </div>
+                </div>
+                
+                {/* Notification / Submit */}
+                <div className="flex flex-col sm:flex-row items-center justify-between mt-10 pt-8 border-t border-black/5 dark:border-white/10 gap-6">
+                    <div className="flex-1">
+                        {message && (
+                            <p className={message.type === 'success' ? "text-emerald-500 font-medium ml-2" : "text-rose-500 font-medium ml-2"}>
+                                {message.text}
+                            </p>
+                        )}
+                    </div>
+                    <button 
+                        type="submit" 
+                        disabled={isSaving}
+                        className="flex items-center gap-2 bg-foreground text-background font-bold py-4 px-8 rounded-2xl hover:scale-105 active:scale-95 disabled:scale-100 disabled:opacity-50 transition-all shadow-xl shadow-black/10 dark:shadow-white/5"
+                    >
+                        {isSaving && <Loader2 className="w-5 h-5 animate-spin" />}
+                        {isSaving ? 'Saving Configurations...' : 'Save Marketing Strategy'}
+                    </button>
                 </div>
             </div>
 
@@ -155,24 +174,6 @@ export default function MarketingForm({ config }: { config: SystemConfig | null 
                 </div>
             </div>
 
-            {/* Notification / Submit */}
-            <div className="flex items-center justify-between pt-6">
-                <div className="flex-1">
-                    {message && (
-                        <p className={message.type === 'success' ? "text-emerald-500 font-medium ml-4" : "text-red-500 font-medium ml-4"}>
-                            {message.text}
-                        </p>
-                    )}
-                </div>
-                <button 
-                    type="submit" 
-                    disabled={isSaving}
-                    className="flex items-center gap-2 bg-foreground text-background font-bold py-4 px-8 rounded-2xl hover:scale-105 active:scale-95 disabled:scale-100 disabled:opacity-50 transition-all shadow-xl shadow-black/10 dark:shadow-white/5"
-                >
-                    {isSaving && <Loader2 className="w-5 h-5 animate-spin" />}
-                    {isSaving ? 'Saving Configurations...' : 'Save Marketing Strategy'}
-                </button>
-            </div>
         </form>
     );
 }

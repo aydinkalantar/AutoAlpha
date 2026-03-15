@@ -4,9 +4,20 @@ import { Users, DollarSign, TrendingUp } from 'lucide-react';
 export default function ReferrersTable({ referrers }: { referrers: any[] }) {
     if (referrers.length === 0) {
         return (
-            <div className="text-center p-12 bg-white/5 dark:bg-black/20 rounded-[2.5rem] border border-black/5 dark:border-white/5 border-dashed">
-                <Users className="w-12 h-12 text-foreground/20 mx-auto mb-4" />
-                <p className="text-foreground/40 font-medium">No active referrers found in the network.</p>
+            <div className="bg-white/40 dark:bg-white/5 backdrop-blur-2xl rounded-[2.5rem] p-8 border border-black/5 dark:border-white/10 shadow-2xl shadow-black/5 dark:shadow-black/20">
+                <div className="flex items-center gap-4 mb-6 pb-6 border-b border-black/5 dark:border-white/10">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-white">
+                        <TrendingUp className="w-6 h-6" />
+                    </div>
+                    <div>
+                        <h2 className="text-2xl font-bold tracking-tight">Affiliate Network</h2>
+                        <p className="text-foreground/60">Monitor performance and payout statistics for your referral network.</p>
+                    </div>
+                </div>
+                <div className="text-center p-12 bg-white/5 dark:bg-black/20 rounded-[2.5rem] border border-black/5 dark:border-white/5 border-dashed">
+                    <Users className="w-12 h-12 text-foreground/20 mx-auto mb-4" />
+                    <p className="text-foreground/40 font-medium">No active referrers found in the network.</p>
+                </div>
             </div>
         );
     }
@@ -18,7 +29,7 @@ export default function ReferrersTable({ referrers }: { referrers: any[] }) {
                     <TrendingUp className="w-6 h-6" />
                 </div>
                 <div>
-                    <h2 className="text-2xl font-bold tracking-tight">Top Affiliates</h2>
+                    <h2 className="text-2xl font-bold tracking-tight">Affiliate Network</h2>
                     <p className="text-foreground/60">Monitor performance and payout statistics for your referral network.</p>
                 </div>
             </div>
