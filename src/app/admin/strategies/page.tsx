@@ -17,21 +17,21 @@ export default async function AdminStrategiesPage() {
                     <h1 className="text-4xl font-bold text-foreground tracking-tight">Strategy Management</h1>
                     <p className="text-foreground/60 mt-2 text-lg">Create new trading strategies and manage webhook connections.</p>
                 </div>
-                <Dialog>
-                    <DialogTrigger asChild>
-                        <Button className="font-bold text-sm bg-foreground text-background hover:bg-foreground/80 rounded-full px-6 py-5">+ New Strategy</Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-4xl bg-white/70 dark:bg-white/10 backdrop-blur-3xl border-black/5 dark:border-white/10 rounded-[2rem] p-0 overflow-hidden shadow-2xl">
-                        <DialogTitle className="sr-only">Create New Strategy</DialogTitle>
-                        <DialogDescription className="sr-only">Form to create a new trading strategy.</DialogDescription>
-                        <CreateStrategyForm />
-                    </DialogContent>
-                </Dialog>
             </div>
 
             <div className="relative z-10 w-full">
                 <div className="flex items-center justify-between mb-6">
                     <h2 className="text-2xl font-black text-foreground tracking-tight">Active Strategies</h2>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button className="font-bold text-sm bg-foreground text-background hover:bg-foreground/80 rounded-full px-6 py-5">+ New Strategy</Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-4xl bg-white/70 dark:bg-white/10 backdrop-blur-3xl border-black/5 dark:border-white/10 rounded-[2rem] p-0 overflow-hidden shadow-2xl">
+                            <DialogTitle className="sr-only">Create New Strategy</DialogTitle>
+                            <DialogDescription className="sr-only">Form to create a new trading strategy.</DialogDescription>
+                            <CreateStrategyForm />
+                        </DialogContent>
+                    </Dialog>
                 </div>
                 <StrategyTable strategies={strategies} />
             </div>

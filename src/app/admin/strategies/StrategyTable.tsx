@@ -12,6 +12,7 @@ import {
     DropdownMenuSeparator, 
     DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
+import { Badge } from '@/components/ui/badge';
 import { MoreHorizontal } from 'lucide-react';
 
 export default function StrategyTable({ strategies }: { strategies: Strategy[] }) {
@@ -103,21 +104,21 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                     <button
                         onClick={handlePublicToggle}
                         disabled={isPending}
-                        className={`px-3 py-1 font-bold rounded-full transition-all disabled:opacity-50 ring-1 ring-inset ${strategy.isPublic
-                            ? 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 ring-blue-500/20 hover:bg-blue-100 dark:hover:bg-blue-500/20'
-                            : 'bg-black/5 dark:bg-white/5 text-muted-foreground ring-black/10 dark:ring-white/10 hover:bg-black/10 dark:hover:bg-white/10'
+                        className={`px-3 py-1 font-bold rounded-full transition-all disabled:opacity-50 text-xs shadow-sm ${strategy.isPublic
+                            ? 'bg-blue-600 text-white hover:bg-blue-700 border border-blue-600/20 shadow-blue-500/20'
+                            : 'bg-secondary text-muted-foreground border border-black/10 dark:border-white/10 hover:bg-secondary/80'
                             }`}
                     >
                         {strategy.isPublic ? 'Public' : 'Private'}
                     </button>
                 </td>
                 <td className="px-8 py-5 whitespace-nowrap">
-                    <span className={`px-3 py-1 text-xs font-bold rounded-full ${strategy.isActive
-                        ? 'bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400'
-                        : 'bg-black/5 dark:bg-white/5 text-foreground/40'
+                    <Badge variant="outline" className={`px-2.5 py-0.5 text-xs font-bold rounded-full border ${strategy.isActive
+                        ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20'
+                        : 'bg-black/5 dark:bg-white/5 text-foreground/40 border-transparent'
                         }`}>
                         {strategy.isActive ? 'Active' : 'Paused'}
-                    </span>
+                    </Badge>
                 </td>
                 <td className="px-8 py-5 text-right w-48">
                     <DropdownMenu>
