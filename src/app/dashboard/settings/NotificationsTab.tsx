@@ -4,7 +4,7 @@ export default function NotificationsTab({ user }: { user: any }) {
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="relative z-10 space-y-6">
-                <h3 className="text-xl font-bold text-foreground">Notification Preferences</h3>
+                <h3 className="text-lg font-semibold text-foreground border-b border-black/10 dark:border-white/10 pb-2 mb-4">Notification Preferences</h3>
                 <div className="grid md:w-1/2">
                     <NotificationSettings initialEnabled={user.tradeEmailNotifications ?? true} />
                 </div>
