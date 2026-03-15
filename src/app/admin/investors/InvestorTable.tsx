@@ -4,7 +4,9 @@ import { useState, useTransition, useMemo } from 'react';
 import CreditDebitModal from './CreditDebitModal';
 import { User, ExchangeKey } from '@prisma/client';
 import { updateUserStatus } from './actions';
-import { Search } from 'lucide-react';
+import { Search, MoreHorizontal } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
 
 type UserWithKeys = User & {
     exchangeKeys: ExchangeKey[];
@@ -54,32 +56,31 @@ export default function InvestorTable({ users }: InvestorTableProps) {
 
     return (
         <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row gap-4">
-                <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40" />
-                    <input 
-                        type="text" 
-                        placeholder="Search by email..." 
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 bg-white/50 dark:bg-black/20 border border-black/10 dark:border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all text-sm font-medium"
-                    />
-                </div>
-                <select 
-                    aria-label="Filter Users by Status"
-                    value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value)}
-                    className="px-4 py-2 bg-white/50 dark:bg-black/20 border border-black/10 dark:border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all text-sm font-medium sm:w-48 appearance-none"
-                    style={{ backgroundImage: 'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22currentColor%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right .7rem top 50%', backgroundSize: '.65rem auto' }}
-                >
-                    <option value="ALL">All Statuses</option>
-                    <option value="PENDING">Pending Approval</option>
-                    <option value="API_CONNECTED">API Connected</option>
-                    <option value="API_MISSING">API Missing</option>
-                </select>
-            </div>
-
             <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-[2rem] overflow-hidden shadow-2xl shadow-black-[0.03] dark:shadow-white/5">
+                <div className="p-4 border-b border-black/5 dark:border-white/10 flex flex-col sm:flex-row gap-4 bg-white/30 dark:bg-black/10">
+                    <div className="relative flex-1">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40" />
+                        <input 
+                            type="text" 
+                            placeholder="Search by email..." 
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full pl-10 pr-4 py-2 bg-white/50 dark:bg-black/20 border border-black/10 dark:border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all text-sm font-medium"
+                        />
+                    </div>
+                    <select 
+                        aria-label="Filter Users by Status"
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                        className="px-4 py-2 bg-white/50 dark:bg-black/20 border border-black/10 dark:border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all text-sm font-medium sm:w-48 appearance-none"
+                        style={{ backgroundImage: 'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22currentColor%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right .7rem top 50%', backgroundSize: '.65rem auto' }}
+                    >
+                        <option value="ALL">All Statuses</option>
+                        <option value="PENDING">Pending Approval</option>
+                        <option value="API_CONNECTED">API Connected</option>
+                        <option value="API_MISSING">API Missing</option>
+                    </select>
+                </div>
                 <div className="w-full overflow-x-auto">
                     <table className="w-full text-left text-sm text-foreground">
                         <thead className="bg-black/5 dark:bg-white/5 text-xs font-bold uppercase text-muted-foreground border-b border-black/5 dark:border-white/10">
@@ -121,26 +122,32 @@ export default function InvestorTable({ users }: InvestorTableProps) {
                                         <td className="px-8 py-6 font-mono font-bold text-foreground whitespace-nowrap">
                                             ${user.usdcBalance.toFixed(2)}
                                         </td>
-                                        <td className="px-8 py-6 flex items-center justify-end gap-2">
-                                            {!(user as any).isActive && user.role !== 'ADMIN' && (
-                                                <button
-                                                    onClick={() => handleToggleStatus(user.id, (user as any).isActive)}
-                                                    disabled={isPending}
-                                                    className="text-background bg-foreground px-4 py-2 rounded-full hover:bg-foreground/80 transition-colors flex items-center gap-2 font-bold text-xs uppercase tracking-tight disabled:opacity-50 whitespace-nowrap"
-                                                    title="Approve Account"
-                                                >
-                                                    Approve
-                                                </button>
-                                            )}
-                                            <button
-                                                onClick={() => openAdjustModal(user.id, user.email)}
-                                                className="text-foreground bg-black/5 dark:bg-white/5 px-4 py-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors flex items-center gap-2 font-bold text-xs uppercase tracking-tight whitespace-nowrap"
-                                                title="Adjust Balance"
-                                            >
-                                                <span>
-                                                    Credit/Debit
-                                                </span>
-                                            </button>
+                                        <td className="px-8 py-6 text-right">
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" className="h-8 w-8 p-0 border border-black/5 dark:border-white/10 rounded-md">
+                                                        <span className="sr-only">Open menu</span>
+                                                        <MoreHorizontal className="h-4 w-4" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end" className="bg-white dark:bg-[#1C1C1E] border border-black/10 dark:border-white/10 rounded-xl shadow-xl">
+                                                    {!(user as any).isActive && user.role !== 'ADMIN' && (
+                                                        <DropdownMenuItem 
+                                                            onClick={() => handleToggleStatus(user.id, (user as any).isActive)} 
+                                                            disabled={isPending}
+                                                            className="cursor-pointer text-sm font-medium focus:bg-black/5 dark:focus:bg-white/5"
+                                                        >
+                                                            Approve User
+                                                        </DropdownMenuItem>
+                                                    )}
+                                                    <DropdownMenuItem 
+                                                        onClick={() => openAdjustModal(user.id, user.email)}
+                                                        className="cursor-pointer text-sm font-medium focus:bg-black/5 dark:focus:bg-white/5"
+                                                    >
+                                                        Adjust Ledger (Credit/Debit)
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
                                         </td>
                                     </tr>
                                 );
