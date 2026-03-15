@@ -3,6 +3,8 @@
 import { useState, useTransition } from "react";
 import { changePassword, deleteAccount } from "./accountActions";
 import { signOut } from "next-auth/react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export default function SecurityActions({ hasPassword }: { hasPassword: boolean }) {
     const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
@@ -46,22 +48,29 @@ export default function SecurityActions({ hasPassword }: { hasPassword: boolean 
 
     return (
         <>
-            <div className="bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl p-6 flex flex-col sm:flex-row gap-4">
-                <button
-                    onClick={() => setIsChangePasswordOpen(true)}
-                    disabled={!hasPassword}
-                    className="px-6 py-3 rounded-xl bg-white/10 dark:bg-white/5 hover:bg-white/20 dark:hover:bg-white/10 text-foreground font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    title={!hasPassword ? "Account uses external authentication" : "Change Password"}
-                >
-                    Change Password
-                </button>
-                <button
-                    onClick={() => setIsDeleteAccountOpen(true)}
-                    className="px-6 py-3 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 font-bold transition-colors border border-red-500/20"
-                >
-                    Delete Account
-                </button>
-            </div>
+            <Card className="bg-white/50 dark:bg-white/5 backdrop-blur-2xl border-black/5 dark:border-white/10 rounded-[2rem] shadow-xl overflow-hidden mt-8">
+                <CardHeader>
+                    <CardTitle className="text-xl font-bold text-foreground">Security Actions</CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-col sm:flex-row gap-4">
+                    <Button
+                        variant="secondary"
+                        onClick={() => setIsChangePasswordOpen(true)}
+                        disabled={!hasPassword}
+                        className="w-full sm:w-auto font-bold"
+                        title={!hasPassword ? "Account uses external authentication" : "Change Password"}
+                    >
+                        Change Password
+                    </Button>
+                    <Button
+                        variant="destructive"
+                        onClick={() => setIsDeleteAccountOpen(true)}
+                        className="w-full sm:w-auto font-bold"
+                    >
+                        Delete Account
+                    </Button>
+                </CardContent>
+            </Card>
 
             {/* Change Password Modal */}
             {isChangePasswordOpen && (

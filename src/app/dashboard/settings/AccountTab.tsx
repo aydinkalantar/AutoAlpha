@@ -1,9 +1,10 @@
 import React from 'react';
-import { User, Mail, Shield, Calendar, Key } from 'lucide-react';
+import { User, Mail, Shield, Calendar, Key, Copy } from 'lucide-react';
 import SecurityActions from './SecurityActions';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 
-function DetailCard({ icon: Icon, label, value, isSensitive = false }: { icon: any, label: string, value: string, isSensitive?: boolean }) {
+function DetailCard({ icon: Icon, label, value, isSensitive = false, copyable = false }: { icon: any, label: string, value: string, isSensitive?: boolean, copyable?: boolean }) {
     return (
         <div className="bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl p-6 relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
@@ -13,9 +14,23 @@ function DetailCard({ icon: Icon, label, value, isSensitive = false }: { icon: a
                 </div>
                 <div className="flex-1 w-full overflow-hidden">
                     <p className="text-sm font-medium text-foreground/50">{label}</p>
-                    <p className={cn("text-lg font-bold text-foreground truncate mt-0.5", isSensitive ? "font-mono" : "")}>
-                        {value}
-                    </p>
+                    <div className="flex items-center gap-2 mt-0.5">
+                        <p className={cn("text-lg font-bold text-foreground truncate", isSensitive ? "font-mono" : "")}>
+                            {value}
+                        </p>
+                        {copyable && (
+                            <button
+                                onClick={() => {
+                                    navigator.clipboard.writeText(value);
+                                    toast.success("UUID copied");
+                                }}
+                                className="p-1.5 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 rounded-md transition-colors text-foreground focus:outline-none"
+                                title="Copy UUID"
+                            >
+                                <Copy className="w-4 h-4" />
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
@@ -55,6 +70,7 @@ export default function AccountTab({ user }: { user: any }) {
                     label="Account Identifier (UUID)"
                     value={user.id}
                     isSensitive={true}
+                    copyable={true}
                 />
 
                 <DetailCard
@@ -64,8 +80,7 @@ export default function AccountTab({ user }: { user: any }) {
                 />
             </div>
 
-            <div className="relative z-10 space-y-6">
-                <h3 className="text-xl font-bold text-foreground">Security Actions</h3>
+            <div className="relative z-10 mt-8">
                 <SecurityActions hasPassword={!!user.passwordHash} />
             </div>
         </div>
