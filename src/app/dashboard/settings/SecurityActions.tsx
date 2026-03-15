@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { changePassword, deleteAccount } from "./actions";
+import { useState, useTransition } from "react";
+import { changePassword, deleteAccount } from "./accountActions";
 import { signOut } from "next-auth/react";
 
 export default function SecurityActions({ hasPassword }: { hasPassword: boolean }) {

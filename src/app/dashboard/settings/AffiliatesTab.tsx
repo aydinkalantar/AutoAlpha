@@ -1,14 +1,6 @@
 import React from 'react';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { redirect } from 'next/navigation';
-import { prisma } from "@/lib/prisma";
-import { Users, DollarSign, Link as LinkIcon, Gift } from 'lucide-react';
-import NotificationBell from '@/components/dashboard/NotificationBell';
-
+import { Users, DollarSign, Gift } from 'lucide-react';
 import { CopyLinkClient } from './CopyLinkClient';
-
-export const dynamic = 'force-dynamic';
 
 function StatCard({ title, value, icon: Icon, subtext, colorGroup = "default" }: { title: string, value: string, icon: any, subtext?: string, colorGroup?: "default" | "green" }) {
     const isGreen = colorGroup === "green";
@@ -28,71 +20,27 @@ function StatCard({ title, value, icon: Icon, subtext, colorGroup = "default" }:
     );
 }
 
-export default async function AffiliateHubPage() {
-    const session = await getServerSession(authOptions);
-    if (!session?.user) {
-        redirect("/api/auth/signin");
-    }
-
-    const userId = (session.user as any).id;
-
-    let user: any = null;
-    try {
-        user = await prisma.user.findUnique({
-            where: { id: userId },
-            include: {
-                referrals: true,
-                ledgers: {
-                    where: { type: 'AFFILIATE_COMMISSION' }
-                }
-            }
-        });
-    } catch (e) {
-        console.warn("Could not fetch user affiliates from database. Returning empty data.");
-        user = {
-            id: userId,
-            referrals: [],
-            ledgers: []
-        };
-    }
-
-    if (!user) {
-        redirect("/api/auth/signin");
-    }
-
+export default function AffiliatesTab({ user }: { user: any }) {
     const totalReferrals = user.referrals.length;
-    const totalCommissionsEarned = user.ledgers.reduce((acc: number, ledger: any) => acc + ledger.amount, 0);
+    const affiliateLedgers = user.ledgers.filter((l: any) => l.type === 'AFFILIATE_COMMISSION');
+    const totalCommissionsEarned = affiliateLedgers.reduce((acc: number, ledger: any) => acc + ledger.amount, 0);
 
     return (
-        <div className="p-4 pt-8 pb-32 md:p-10 md:pt-12 md:pb-32 max-w-7xl mx-auto space-y-8 md:space-y-12">
-            <div className="flex flex-row items-start justify-between gap-4 w-full relative z-10">
-                <div className="flex flex-col gap-2 w-full break-words">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 w-fit text-sm font-semibold mb-2">
-                        <Gift className="w-4 h-4" />
-                        Partner Program
-                    </div>
-                    <h1 className="text-4xl font-bold text-foreground tracking-tight break-words w-full">Affiliate Hub</h1>
-                    <p className="text-foreground/60 text-lg">Invite traders to AutoAlpha and earn 10% of their generated performance fees.</p>
-                </div>
-                <div className="flex-shrink-0">
-                    <NotificationBell userId={user.id} className="hidden md:block" />
-                </div>
-            </div>
-
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
                 <StatCard
                     title="Total Referred Users"
                     value={totalReferrals.toString()}
                     icon={Users}
                     subtext="Active Network"
-                    colorGroup="default" // Keeps the purple/blue
+                    colorGroup="default"
                 />
                 <StatCard
                     title="Total Lifetime Commissions"
                     value={`$${totalCommissionsEarned.toFixed(2)}`}
                     icon={DollarSign}
                     subtext="Sent directly to your Gas Tank"
-                    colorGroup="green" // Distinct green for money earned
+                    colorGroup="green"
                 />
             </div>
 
@@ -110,14 +58,14 @@ export default async function AffiliateHubPage() {
 
             <div className="relative z-10 pt-8">
                 <h3 className="text-xl font-bold text-foreground mb-6">Recent Commission Payouts</h3>
-                {user.ledgers.length === 0 ? (
+                {affiliateLedgers.length === 0 ? (
                     <div className="text-center p-12 bg-white/5 dark:bg-black/20 rounded-3xl border border-black/5 dark:border-white/5 border-dashed">
                         <Gift className="w-12 h-12 text-foreground/20 mx-auto mb-4" />
                         <p className="text-foreground/40">No commissions earned yet. Start sharing your code!</p>
                     </div>
                 ) : (
                     <div className="space-y-4">
-                        {user.ledgers.map((ledger: any) => (
+                        {affiliateLedgers.map((ledger: any) => (
                             <div key={ledger.id} className="flex items-center justify-between p-6 bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl">
                                 <div>
                                     <p className="text-foreground font-medium">{ledger.description}</p>

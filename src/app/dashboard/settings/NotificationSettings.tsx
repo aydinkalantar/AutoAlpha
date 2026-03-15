@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { toggleTradeEmailNotifications } from "./actions";
+import { useState, useTransition } from "react";
+import { toggleTradeEmailNotifications } from "./accountActions";
 import { Mail, Loader2 } from "lucide-react";
 
 export default function NotificationSettings({ initialEnabled }: { initialEnabled: boolean }) {

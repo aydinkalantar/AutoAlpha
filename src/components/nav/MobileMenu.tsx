@@ -35,8 +35,7 @@ export default function MobileMenu({ notificationBell }: { notificationBell?: Re
     }, [isMobileMenuOpen]);
 
     const drawerItems = [
-        { name: 'Accounting', href: '/dashboard/accounting', icon: FileText },
-        { name: 'API Keys', href: '/dashboard/settings', icon: Settings },
+        { name: 'Settings & Preferences', href: '/dashboard/settings', icon: Settings },
     ];
 
     return (
