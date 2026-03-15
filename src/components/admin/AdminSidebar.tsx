@@ -217,7 +217,7 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
                         {!isCollapsed && <span className="whitespace-nowrap">Admin Settings</span>}
                     </Link>
 
-                    <Link href="/" className={cn("flex items-center justify-start gap-3 py-3 text-sm font-bold text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")} title={isCollapsed ? "Exit Admin Mode" : undefined}>
+                    <Link href="/dashboard" className={cn("flex items-center justify-start gap-3 py-3 text-sm font-bold text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")} title={isCollapsed ? "Exit Admin Mode" : undefined}>
                         <Monitor className="w-5 h-5 flex-shrink-0" />
                         {!isCollapsed && <span className="whitespace-nowrap">Exit Admin Mode</span>}
                     </Link>

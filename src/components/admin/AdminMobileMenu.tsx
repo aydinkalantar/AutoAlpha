@@ -222,7 +222,7 @@ export default function AdminMobileMenu({ isMobileMenuOpen, setIsMobileMenuOpen 
                                     </div>
 
                                     <Link 
-                                        href="/" 
+                                        href="/dashboard" 
                                         onClick={() => setIsMobileMenuOpen(false)}
                                         className="w-full flex items-center justify-center gap-3 py-4 text-sm font-bold text-foreground/80 bg-black/5 dark:bg-white/5 active:bg-black/10 dark:active:bg-white/10 rounded-2xl transition-colors mt-4"
                                     >
