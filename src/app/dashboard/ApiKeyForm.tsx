@@ -73,9 +73,7 @@ export default function ApiKeyForm({ userId, existingKeys, isTestnetMode }: ApiK
                 <fieldset disabled={isTestnetMode} className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
                 <input type="hidden" name="userId" value={userId} />
 
-                {/* Honey-pot inputs to aggressively disable Chrome/Safari password managers from prompting to save non-password API tokens */}
-                <input type="text" name="fakeusernameremembered" className="hidden" aria-hidden="true" autoComplete="off" />
-                <input type="password" name="fakepasswordremembered" className="hidden" aria-hidden="true" autoComplete="off" />
+                {/* Switched to text-security styling to evade password managers entirely */}
 
                 <div className="space-y-3 relative z-10">
                     <label className="text-sm font-semibold text-foreground/60">Exchange</label>
@@ -103,7 +101,7 @@ export default function ApiKeyForm({ userId, existingKeys, isTestnetMode }: ApiK
                         type="text"
                         name="apiKey"
                         required
-                        autoComplete="new-password"
+                        autoComplete="off"
                         spellCheck="false"
                         data-lpignore="true"
                         data-1p-ignore="true"
@@ -115,13 +113,14 @@ export default function ApiKeyForm({ userId, existingKeys, isTestnetMode }: ApiK
                 <div className="space-y-3 relative z-10">
                     <label className="text-sm font-semibold text-foreground/60">API Secret</label>
                     <input
-                        type="password"
+                        type="text"
                         name="apiSecret"
                         required
-                        autoComplete="new-password"
+                        autoComplete="off"
                         spellCheck="false"
                         data-lpignore="true"
                         data-1p-ignore="true"
+                        style={{ WebkitTextSecurity: 'disc' } as any}
                         className="w-full bg-white/40 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-[1rem] px-5 py-4 text-foreground font-medium placeholder-foreground/30 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all backdrop-blur-md"
                         placeholder="e.g. z9y8x7w6v5u4t3s2r1q0p9o8n7m6l5k4j3i2h1g0..."
                     />
