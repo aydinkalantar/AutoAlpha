@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
-import { LayoutDashboard, Store, Settings, Wallet, HelpCircle, LogOut, Sun, Moon, Download } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { LayoutDashboard, Store, Settings, Wallet, HelpCircle, LogOut, Sun, Moon, Download, Shield } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
@@ -11,6 +12,7 @@ import { cn } from '@/lib/utils';
 
 export default function DesktopSidebar() {
     const pathname = usePathname();
+    const { data: session } = useSession();
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
 
@@ -109,6 +111,16 @@ export default function DesktopSidebar() {
                         </Link>
                     )
                 })}
+
+                {(session?.user as any)?.role === 'ADMIN' && (
+                    <Link
+                        href="/admin"
+                        className="flex items-center gap-3 py-3 px-3 rounded-xl text-sm font-bold transition-all relative group bg-foreground/5 dark:bg-foreground/10 text-foreground hover:bg-black/10 dark:hover:bg-white/10 mt-4 border border-black/5 dark:border-white/5"
+                    >
+                        <Shield className="w-5 h-5 flex-shrink-0 text-foreground/70" />
+                        <span className="whitespace-nowrap">Admin Panel</span>
+                    </Link>
+                )}
             </nav>
 
             <div className="pt-4 pb-8 border-t border-black/5 dark:border-white/10 flex flex-col items-center gap-2 shrink-0">

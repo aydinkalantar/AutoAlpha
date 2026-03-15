@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';
-import { Menu, X, Wallet, FileText, Settings, ChevronLeft, HelpCircle, Sun, Moon, Volume2, VolumeX, LogOut } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { Menu, X, Wallet, FileText, Settings, ChevronLeft, HelpCircle, Sun, Moon, Volume2, VolumeX, LogOut, Shield } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -14,6 +15,7 @@ import { cn } from '@/lib/utils';
 export default function MobileMenu({ notificationBell }: { notificationBell?: React.ReactNode }) {
     const pathname = usePathname();
     const router = useRouter();
+    const { data: session } = useSession();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { isSoundEnabled, toggleSound } = useRealtime();
     const { theme, setTheme } = useTheme();
@@ -135,6 +137,21 @@ export default function MobileMenu({ notificationBell }: { notificationBell?: Re
                                             </Link>
                                         )
                                     })}
+
+                                    {(session?.user as any)?.role === 'ADMIN' && (
+                                        <Link
+                                            href="/admin"
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                            className="flex items-center justify-between p-4 px-5 transition-colors hover:bg-black/5 dark:hover:bg-white/5 border-t border-black/5 dark:border-white/5"
+                                        >
+                                            <div className="flex items-center gap-4">
+                                                <div className="p-2 rounded-xl flex items-center justify-center transition-colors bg-black/5 dark:bg-white/10 text-foreground/70">
+                                                    <Shield className="w-5 h-5" />
+                                                </div>
+                                                <span className="text-base tracking-tight font-bold text-foreground">Admin Panel</span>
+                                            </div>
+                                        </Link>
+                                    )}
                                 </div>
 
                                 {/* Footer Icon Row */}

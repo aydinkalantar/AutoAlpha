@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 import { useTheme } from 'next-themes';
-import { Key, FileText, Settings, ChevronRight, LogOut, Sun, Moon, Megaphone, Download, Menu, X, Terminal, Activity } from 'lucide-react';
+import { Key, FileText, Settings, ChevronRight, LogOut, Sun, Moon, Megaphone, Download, Menu, X, Terminal, Activity, Monitor } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
@@ -85,6 +85,12 @@ export default function AdminMobileMenu({ isMobileMenuOpen, setIsMobileMenuOpen 
         }
     }, [isMobileMenuOpen]);
 
+    useEffect(() => {
+        const toggleMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+        window.addEventListener('toggle-admin-mobile-menu', toggleMenu);
+        return () => window.removeEventListener('toggle-admin-mobile-menu', toggleMenu);
+    }, [isMobileMenuOpen, setIsMobileMenuOpen]);
+
     const drawerItems = [
         { name: 'Active Strategies', href: '/admin/strategies', icon: Key },
         { name: 'Master Ledger', href: '/admin/ledger', icon: FileText },
@@ -105,25 +111,6 @@ export default function AdminMobileMenu({ isMobileMenuOpen, setIsMobileMenuOpen 
 
     return (
         <>
-            {/* Mobile Top Header */}
-            <div className="flex md:hidden fixed top-0 w-full h-16 z-[60] px-4 justify-between items-center bg-background/80 backdrop-blur-md border-b border-black/5 dark:border-white/10 transition-transform duration-300">
-                <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg outline-none flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
-                        <span className="text-white font-bold text-[22px] leading-none pb-[2px]">α</span>
-                    </div>
-                    <span className="font-bold text-lg text-foreground tracking-tight">Admin Console</span>
-                </div>
-                <div className="flex items-center gap-1">
-                    <button
-                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        className="p-2 text-foreground/80 hover:text-foreground active:scale-95 transition-all"
-                        aria-label={isMobileMenuOpen ? "Close Menu" : "Open Menu"}
-                    >
-                        {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-                    </button>
-                </div>
-            </div>
-
             {/* Premium Mobile Menu Drawer */}
             <AnimatePresence>
                 {isMobileMenuOpen && (
@@ -233,6 +220,15 @@ export default function AdminMobileMenu({ isMobileMenuOpen, setIsMobileMenuOpen 
                                             </button>
                                         )}
                                     </div>
+
+                                    <Link 
+                                        href="/" 
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className="w-full flex items-center justify-center gap-3 py-4 text-sm font-bold text-foreground/80 bg-black/5 dark:bg-white/5 active:bg-black/10 dark:active:bg-white/10 rounded-2xl transition-colors mt-4"
+                                    >
+                                        <Monitor className="w-5 h-5" />
+                                        Exit Admin Mode
+                                    </Link>
 
                                     <button 
                                         onClick={() => signOut({ callbackUrl: '/login' })} 

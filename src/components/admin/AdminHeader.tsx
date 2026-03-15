@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Bell, CheckCircle2, AlertTriangle, ShieldAlert, Check } from 'lucide-react';
+import { Bell, CheckCircle2, AlertTriangle, ShieldAlert, Check, Menu } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 type AdminNotification = {
     id: string;
@@ -80,9 +81,23 @@ export default function AdminHeader() {
         }
     };
 
+    const handleMobileMenuToggle = () => {
+        window.dispatchEvent(new Event('toggle-admin-mobile-menu'));
+    };
+
     return (
-        <div className="w-full h-16 bg-white/50 dark:bg-white/5 backdrop-blur-xl border-b border-black/5 dark:border-white/10 flex items-center justify-end px-4 md:px-6 sticky top-0 z-40">
-            <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <div className="w-full h-16 bg-background/80 md:bg-white/50 dark:md:bg-white/5 backdrop-blur-md md:backdrop-blur-xl border-b border-black/5 dark:border-white/10 flex items-center justify-between md:justify-end px-4 py-3 md:px-6 sticky top-0 z-[60] transition-transform duration-300">
+            {/* Left Group (Mobile Only): Logo & App Title */}
+            <div className="flex items-center gap-2 md:hidden">
+                <Link href="/" className="w-8 h-8 rounded-lg outline-none flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20 active:scale-95 transition-transform">
+                    <span className="text-white font-bold text-[22px] leading-none pb-[2px]">α</span>
+                </Link>
+                <span className="font-bold text-lg text-foreground tracking-tight">Admin Console</span>
+            </div>
+
+            {/* Right Group: Notification Bell + Mobile Hamburger */}
+            <div className="flex items-center gap-1 md:gap-4">
+                <Popover open={isOpen} onOpenChange={setIsOpen}>
                 <PopoverTrigger asChild>
                     <Button variant="ghost" size="icon" className="relative text-foreground/70 hover:text-foreground">
                         <Bell className="w-5 h-5" />
@@ -142,6 +157,16 @@ export default function AdminHeader() {
                     </div>
                 </PopoverContent>
             </Popover>
+
+            {/* Mobile Hamburger Trigger */}
+            <button
+                onClick={handleMobileMenuToggle}
+                className="p-2 text-foreground/80 hover:text-foreground active:scale-95 transition-transform md:hidden self-center"
+                aria-label="Open Admin Menu"
+            >
+                <Menu className="w-6 h-6" />
+            </button>
+            </div>
         </div>
     );
 }
