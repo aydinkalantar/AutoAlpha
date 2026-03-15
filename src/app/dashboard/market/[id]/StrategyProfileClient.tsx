@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import NotificationBell from '@/components/dashboard/NotificationBell';
 import { Button } from "@/components/ui/button";
+import MobileBackButton from "@/components/nav/MobileBackButton";
 import {
     Area,
     AreaChart,
@@ -55,6 +56,7 @@ export default function StrategyProfileClient({
 
     return (
         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-6 duration-700">
+            <MobileBackButton />
             {/* Header / Nav */}
             <div className="flex flex-row items-start justify-between gap-4 w-full">
                 <div className="flex flex-wrap md:flex-nowrap items-center gap-4 w-full break-words">

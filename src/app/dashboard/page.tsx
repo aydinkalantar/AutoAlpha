@@ -77,11 +77,13 @@ export default async function DashboardPage() {
                 
                 {/* 1. The Macro Header (The Money) */}
                 <div className="flex flex-col md:flex-row items-start justify-between gap-6 w-full">
-                    <div className="flex flex-col w-full relative z-10">
-                        <span className="text-sm font-bold tracking-wider uppercase text-foreground/50 mb-1">
-                            {isPaperMode ? 'Paper Portfolio Value' : 'Live Portfolio Value'}
-                        </span>
-                        <div className="flex flex-wrap items-baseline gap-4 md:gap-6">
+                    <div className="flex flex-col w-full relative z-10 pointer-events-none">
+                        <div className="pointer-events-auto">
+                            <span className="text-sm font-bold tracking-wider uppercase text-foreground/50 mb-1">
+                                {isPaperMode ? 'Paper Portfolio Value' : 'Live Portfolio Value'}
+                            </span>
+                        </div>
+                        <div className="flex flex-wrap items-baseline gap-4 md:gap-6 pointer-events-auto">
                             <h1 className="text-5xl md:text-7xl font-black text-foreground tracking-tighter">
                                 ${totalBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </h1>

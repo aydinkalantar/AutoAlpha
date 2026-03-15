@@ -216,7 +216,7 @@ export default function ApiKeyForm({ userId, existingKeys, isTestnetMode }: ApiK
                     <fieldset className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end text-left">
                     <input type="hidden" name="userId" value={userId} />
 
-                    <div className="space-y-3 relative z-10 md:col-span-1">
+                    <div className="space-y-3 relative z-10 md:col-span-1 pointer-events-auto">
                         <label className="text-sm font-semibold text-foreground/60 w-full text-left inline-block">Exchange</label>
                         <select
                             name="exchange"
@@ -236,7 +236,7 @@ export default function ApiKeyForm({ userId, existingKeys, isTestnetMode }: ApiK
                         </select>
                     </div>
 
-                    <div className="space-y-3 relative z-10 md:col-span-1">
+                    <div className="space-y-3 relative z-10 md:col-span-1 pointer-events-auto">
                         <label className="text-sm font-semibold text-foreground/60 w-full text-left inline-block">API Key</label>
                         <input
                             type="text"
@@ -251,7 +251,7 @@ export default function ApiKeyForm({ userId, existingKeys, isTestnetMode }: ApiK
                         />
                     </div>
 
-                    <div className="space-y-3 relative z-10 md:col-span-1">
+                    <div className="space-y-3 relative z-10 md:col-span-1 pointer-events-auto">
                         <label className="text-sm font-semibold text-foreground/60 w-full text-left inline-block">API Secret</label>
                         <input
                             type="text"
@@ -267,7 +267,7 @@ export default function ApiKeyForm({ userId, existingKeys, isTestnetMode }: ApiK
                         />
                     </div>
 
-                    <div className="md:col-span-4 mt-6">
+                    <div className="md:col-span-4 mt-6 pointer-events-auto">
 
                         <div className="bg-orange-500/10 border border-orange-500/20 rounded-[1rem] p-5 mb-6 text-left">
                             <h4 className="flex items-center gap-2 text-sm font-bold text-orange-600 dark:text-orange-400 mb-2">

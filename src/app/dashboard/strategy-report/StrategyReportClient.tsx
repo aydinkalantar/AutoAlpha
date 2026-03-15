@@ -5,6 +5,7 @@ import StrategyPerformance from '../StrategyPerformance';
 import { Activity } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import MobileBackButton from '@/components/nav/MobileBackButton';
 
 export default function StrategyReportClient({ subscriptions, positions, totalBalance }: { subscriptions: any[], positions: any[], totalBalance: number }) {
     const searchParams = useSearchParams();
@@ -14,6 +15,7 @@ export default function StrategyReportClient({ subscriptions, positions, totalBa
     if (subscriptions.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center p-12 py-24 text-center bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl shadow-xl">
+                <MobileBackButton />
                 <Activity className="w-16 h-16 text-foreground/20 mb-4" />
                 <h2 className="text-2xl font-bold text-foreground tracking-tight">No Active Subscriptions</h2>
                 <p className="text-foreground/60 mt-2 max-w-lg mx-auto">You are not currently subscribed to any algorithmic vaults in this environment. Visit the Marketplace to allocate capital to a strategy and generate detailed performance reports.</p>
@@ -42,6 +44,7 @@ export default function StrategyReportClient({ subscriptions, positions, totalBa
 
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
+            <MobileBackButton />
             {/* Multi-Strategy Glassmorphism Tab Selector Component */}
             <div className="flex overflow-x-auto pb-2 gap-3 hide-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
                 {subscriptions.map((sub) => (

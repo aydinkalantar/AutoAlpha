@@ -41,23 +41,16 @@ export default function MobileMenu({ notificationBell }: { notificationBell?: Re
     return (
         <>
             <div className="flex md:hidden fixed top-0 w-full h-16 z-[60] px-4 justify-between items-center bg-background/80 backdrop-blur-md border-b border-black/5 dark:border-white/10">
-                {['/dashboard', '/dashboard/market', '/dashboard/settings', '/dashboard/accounting'].includes(pathname) ? (
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg outline-none flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
-                            <span className="text-white font-bold text-lg leading-none pb-[2px]">α</span>
-                        </div>
-                        <span className="font-bold text-lg text-foreground tracking-tight">AutoAlpha</span>
+                <Link 
+                    href="/dashboard" 
+                    className="flex items-center gap-2 active:scale-95 transition-transform"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                >
+                    <div className="w-8 h-8 rounded-lg outline-none flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
+                        <span className="text-white font-bold text-lg leading-none pb-[2px]">α</span>
                     </div>
-                ) : (
-                    <button 
-                        onClick={() => router.back()}
-                        className="flex items-center gap-1.5 py-2 pr-4 text-foreground/80 hover:text-foreground active:opacity-70 transition-all -ml-2"
-                        aria-label="Go Back"
-                    >
-                        <ChevronLeft className="w-6 h-6" />
-                        <span className="text-base font-bold tracking-tight">Back</span>
-                    </button>
-                )}
+                    <span className="font-bold text-lg text-foreground tracking-tight">AutoAlpha</span>
+                </Link>
                 <div className="flex items-center gap-1">
                     {notificationBell}
                     <button
