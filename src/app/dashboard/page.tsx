@@ -232,7 +232,7 @@ export default async function DashboardPage() {
                                 return (
                                     <Link 
                                         key={sub.id} 
-                                        href={`/dashboard/strategy-report/${sub.strategyId}`}
+                                        href={`/dashboard/strategy-report?subId=${sub.id}`}
                                         className="group block bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-[2rem] p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden"
                                     >
                                         <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/0 via-transparent to-transparent group-hover:from-cyan-500/5 transition-colors duration-500" />

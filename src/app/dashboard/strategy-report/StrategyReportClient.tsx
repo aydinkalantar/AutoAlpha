@@ -4,8 +4,11 @@ import React, { useState, useMemo } from 'react';
 import StrategyPerformance from '../StrategyPerformance';
 import { Activity } from 'lucide-react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
 export default function StrategyReportClient({ subscriptions, positions, totalBalance }: { subscriptions: any[], positions: any[], totalBalance: number }) {
+    const searchParams = useSearchParams();
+    const initialSubId = searchParams.get('subId');
     
     // Fail-safe view for a zero-subscription user clicking through the sidebar
     if (subscriptions.length === 0) {
@@ -18,8 +21,13 @@ export default function StrategyReportClient({ subscriptions, positions, totalBa
         );
     }
 
-    // Default to initializing the first actively subscribed algorithmic vault
-    const [selectedSubscriptionId, setSelectedSubscriptionId] = useState(subscriptions[0].id);
+    // Default to initializing the first actively subscribed algorithmic vault, or the one requested in the URL
+    const [selectedSubscriptionId, setSelectedSubscriptionId] = useState(() => {
+        if (initialSubId && subscriptions.some(s => s.id === initialSubId)) {
+            return initialSubId;
+        }
+        return subscriptions[0].id;
+    });
 
     const activeSubscription = subscriptions.find(s => s.id === selectedSubscriptionId);
     

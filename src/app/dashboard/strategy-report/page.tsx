@@ -78,11 +78,13 @@ export default async function StrategyReportPage() {
                 </div>
             </div>
 
-            <StrategyReportClient 
-                subscriptions={modeSubscriptions} 
-                positions={closedPositions} 
-                totalBalance={totalBalance} 
-            />
+            <React.Suspense fallback={<div className="animate-pulse h-64 bg-white/5 rounded-[2rem] w-full" />}>
+                <StrategyReportClient 
+                    subscriptions={modeSubscriptions} 
+                    positions={closedPositions} 
+                    totalBalance={totalBalance} 
+                />
+            </React.Suspense>
         </div>
     );
 }
