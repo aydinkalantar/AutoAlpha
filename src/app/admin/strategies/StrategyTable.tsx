@@ -132,7 +132,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                                 </Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem asChild className="cursor-pointer font-medium p-2">
-                                <Link href={`/strategy/${strategy.id}`}>
+                                <Link href={`/dashboard/strategy-report?id=${strategy.id}`}>
                                     View Strategy Report
                                 </Link>
                             </DropdownMenuItem>
