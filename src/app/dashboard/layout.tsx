@@ -1,12 +1,12 @@
-import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
+import DesktopSidebar from '@/components/nav/DesktopSidebar';
+import MobileMenu from '@/components/nav/MobileMenu';
+import BottomTabBar from '@/components/nav/BottomTabBar';
 import NotificationBell from '@/components/dashboard/NotificationBell';
 import RealtimeProvider from '@/components/dashboard/RealtimeProvider';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from "@/lib/prisma";
 import { redirect } from 'next/navigation';
-
-
 
 export default async function DashboardLayout({
     children,
@@ -48,13 +48,16 @@ export default async function DashboardLayout({
             </div>
 
             <RealtimeProvider>
-                <DashboardSidebar
-                    notificationBell={<NotificationBell userId={user?.id} />}
-                    userId={user?.id}
-                    balances={{ usdtBalance: user?.usdtBalance ?? 0, usdcBalance: user?.usdcBalance ?? 0 }}
-                >
-                    {children}
-                </DashboardSidebar>
+                <DesktopSidebar />
+                <MobileMenu notificationBell={<NotificationBell userId={user.id} />} />
+                
+                <div className="flex-1 flex flex-col min-h-screen w-full md:w-auto max-w-[100vw] md:max-w-none overflow-x-hidden relative z-10 transition-all duration-300 pt-20 pb-28 md:pt-0 md:pb-0 md:ml-64">
+                    <main className="flex-1 transition-all duration-300 w-full">
+                        {children}
+                    </main>
+                </div>
+
+                <BottomTabBar />
             </RealtimeProvider>
         </div>
     );
