@@ -72,7 +72,7 @@ export default async function MarketPage() {
                         </p>
                         {isPaperMode && (
                             <div className="w-fit inline-flex items-center px-3 py-1 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20 text-xs sm:text-sm font-bold uppercase tracking-wider">
-                                Testnet Mode
+                                Sandbox Mode
                             </div>
                         )}
                     </div>

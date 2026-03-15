@@ -49,6 +49,31 @@ export async function getActiveStrategies() {
 export async function deleteApiKey(keyId: string) {
     if (!keyId) throw new Error("Key ID required");
 
+    const key = await prisma.exchangeKey.findUnique({
+        where: { id: keyId },
+        select: { userId: true, exchange: true, isValid: true }
+    });
+
+    if (!key) throw new Error("Key not found");
+
+    if (key.isValid) {
+        const activeSub = await prisma.subscription.findFirst({
+            where: {
+                userId: key.userId,
+                isActive: true,
+                isPaper: false,
+                OR: [
+                    { exchange: key.exchange },
+                    { strategy: { targetExchange: key.exchange } }
+                ]
+            }
+        });
+
+        if (activeSub) {
+            throw new Error("Cannot delete this exchange. It is currently connected to an active strategy. Please disconnect the strategy first.");
+        }
+    }
+
     await prisma.exchangeKey.update({
         where: { id: keyId },
         data: { isValid: false }

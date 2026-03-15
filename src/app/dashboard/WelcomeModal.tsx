@@ -66,7 +66,7 @@ export default function WelcomeModal({ userId, hasCompletedOnboarding }: Welcome
                         </div>
                     )}
 
-                    {/* Step 2: Testnet Sandbox */}
+                    {/* Step 2: Paper Sandbox */}
                     {step === 2 && (
                         <div className="animate-in fade-in slide-in-from-right-4 duration-500">
                             <div className="w-12 h-12 bg-cyan-500/10 rounded-2xl flex items-center justify-center mb-6 border border-cyan-500/20">
@@ -74,7 +74,7 @@ export default function WelcomeModal({ userId, hasCompletedOnboarding }: Welcome
                             </div>
                             <h2 className="text-2xl font-bold tracking-tight mb-2">The $20k Sandbox.</h2>
                             <p className="text-foreground/60 leading-relaxed text-sm">
-                                We've credited your account with <strong>$10,000 Paper USDT</strong> and <strong>$10,000 Paper USDC</strong>. Look for the "Testnet Sandbox" toggle on your dashboard. Use this safe environment to test strategies risk-free before connecting real API keys.
+                                We've credited your account with <strong>$10,000 Paper USDT</strong> and <strong>$10,000 Paper USDC</strong>. Look for the "Sandbox" toggle on your dashboard. Use this safe environment to test strategies risk-free before connecting real API keys.
                             </p>
                         </div>
                     )}

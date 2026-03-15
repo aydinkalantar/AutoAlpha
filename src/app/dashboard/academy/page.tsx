@@ -104,14 +104,14 @@ export default function AcademyPage() {
                 <div className="bg-white/50 dark:bg-white/5 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-3xl p-8 shadow-sm">
                     <div className="flex items-center gap-3 mb-6">
                         <Layers className="w-6 h-6 text-indigo-500" />
-                        <h2 className="text-2xl font-bold tracking-tight">Testnet Sandbox vs. Live</h2>
+                        <h2 className="text-2xl font-bold tracking-tight">Sandbox vs. Live</h2>
                     </div>
                     <p className="text-foreground/80 leading-relaxed text-base mb-6">
-                        The Testnet Sandbox is a simulated environment utilizing live market data. While extremely accurate, there are slight mechanical differences to note:
+                        The Sandbox is a simulated environment utilizing live market data. While extremely accurate, there are slight mechanical differences to note:
                     </p>
                     <div className="grid md:grid-cols-2 gap-6">
                         <div className="p-6 bg-cyan-500/5 rounded-2xl border border-cyan-500/10">
-                            <h3 className="font-bold text-cyan-600 dark:text-cyan-400 mb-2">Testnet Mechanics</h3>
+                            <h3 className="font-bold text-cyan-600 dark:text-cyan-400 mb-2">Sandbox Mechanics</h3>
                             <ul className="list-disc list-inside space-y-2 text-sm text-foreground/70">
                                 <li>Instant execution with zero latency</li>
                                 <li>Zero slippage guaranteed</li>

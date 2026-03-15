@@ -2,19 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { Queue } from 'bullmq';
-import Redis from 'ioredis';
-
-const redisConnection: any = process.env.REDIS_URL 
-    ? new Redis(process.env.REDIS_URL, { maxRetriesPerRequest: null, family: 0 }) 
-    : {
-        host: process.env.REDIS_HOST || 'localhost',
-        port: parseInt(process.env.REDIS_PORT || '6379'),
-    };
-
-export const tradeQueue = new Queue('qa-test-queue', {
-    connection: redisConnection
-});
+import { getTradeQueue } from "@/lib/queue";
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
@@ -94,6 +82,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
                         };
                     });
 
+                const tradeQueue = getTradeQueue();
                 if (jobs.length > 0) {
                     await tradeQueue.addBulk(jobs);
                     exitsQueued = jobs.length;

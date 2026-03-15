@@ -159,7 +159,7 @@ export default function SettingsForm({ config }: { config: SystemConfig | null }
                         <AlertTriangle className="w-5 h-5" />
                     </h2>
                     <p className="text-red-600/70 text-sm mt-1 font-medium">
-                        Instantly permanently delete all Sandbox (Testnet) Trades, Positions, and simulated Ledgers. This action cannot be undone, but will not affect Live Capital revenue.
+                        Instantly permanently delete all Sandbox Trades, Positions, and simulated Ledgers. This action cannot be undone, but will not affect Live Capital revenue.
                     </p>
                 </div>
                 <button

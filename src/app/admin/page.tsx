@@ -1,17 +1,9 @@
 import { prisma } from "@/lib/prisma";
-import { Queue } from 'bullmq';
+import { getTradeQueue } from '@/lib/queue';
 import { DollarSign, Activity, Users, Box, Info } from 'lucide-react';
 import RevenueChart from './RevenueChart';
 import Link from 'next/link';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-
-
-const tradeQueue = new Queue('qa-test-queue', {
-    connection: process.env.REDIS_URL ? new (require('ioredis'))(process.env.REDIS_URL, { maxRetriesPerRequest: null, family: 0 }) : {
-        host: process.env.REDIS_HOST || 'localhost',
-        port: parseInt(process.env.REDIS_PORT || '6379'),
-    }
-});
 
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -76,6 +68,7 @@ export default async function AdminOverviewPage() {
         activeUsersCount = await prisma.user.count({ where: { isActive: true } });
 
         // 4. Pending Queue Jobs
+        const tradeQueue = getTradeQueue();
         waitingJobsCount = await tradeQueue.getWaitingCount();
 
         // Fetch Last 30 Days Revenue for Chart

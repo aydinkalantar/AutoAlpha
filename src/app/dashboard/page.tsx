@@ -104,7 +104,7 @@ export default async function DashboardPage() {
                     <p className="text-foreground/60 text-lg">Manage your capital and monitor active positions.</p>
                 </div>
 
-                <div className="flex flex-row md:flex-col items-center md:items-end gap-3 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 scrollbar-hide shrink-0">
+                <div className="flex flex-row md:flex-col items-center md:items-end gap-3 w-full md:w-auto pb-2 md:pb-0 shrink-0 relative z-50">
                     <NotificationBell userId={user.id} className="hidden md:block" />
                     <TestnetToggle initialMode={user.isTestnetMode} userId={user.id} />
                 </div>

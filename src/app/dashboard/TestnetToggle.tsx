@@ -38,7 +38,7 @@ export default function TestnetToggle({ initialMode, userId }: { initialMode: bo
 
             <div className="flex items-center gap-2">
                 <span className={`text-sm tracking-tight transition-colors duration-300 font-bold ${initialMode ? 'text-cyan-600 dark:text-cyan-400' : 'text-black/40 dark:text-white/40'}`}>
-                    Testnet
+                    Sandbox
                 </span>
                 {initialMode && (
                     <span className="relative flex h-2 w-2">

@@ -2,16 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { Queue } from "bullmq";
-
-
-
-const tradeQueue = new Queue('qa-test-queue', {
-    connection: process.env.REDIS_URL ? new (require('ioredis'))(process.env.REDIS_URL, { maxRetriesPerRequest: null, family: 0 }) : {
-        host: process.env.REDIS_HOST || 'localhost',
-        port: parseInt(process.env.REDIS_PORT || '6379'),
-    }
-});
+import { getTradeQueue } from "@/lib/queue";
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
@@ -50,6 +41,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
         const execExchange = (strategy.targetExchange as string) === 'UNIVERSAL' ? position.subscription.exchange : strategy.targetExchange;
 
         // Enqueue Exit Job specifically for this user's subscription
+        const tradeQueue = getTradeQueue();
         await tradeQueue.add('exit-trade', {
             positionId: position.id,
             strategyId: strategy.id,

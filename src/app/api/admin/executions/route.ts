@@ -1,20 +1,8 @@
 import { NextResponse } from 'next/server';
-import { Queue } from 'bullmq';
+import { getTradeQueue } from "@/lib/queue";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-
-
-const redisConnection: any = process.env.REDIS_URL 
-    ? new (require('ioredis'))(process.env.REDIS_URL, { maxRetriesPerRequest: null, family: 0 }) 
-    : {
-        host: process.env.REDIS_HOST || 'localhost',
-        port: parseInt(process.env.REDIS_PORT || '6379'),
-    };
-
-const tradeQueue = new Queue('qa-test-queue', {
-    connection: redisConnection
-});
 
 export const dynamic = 'force-dynamic';
 
@@ -26,6 +14,7 @@ export async function GET() {
         }
 
         // Fetch last 50 jobs from BullMQ (completed, failed, active, waiting)
+        const tradeQueue = getTradeQueue();
         const jobs = await tradeQueue.getJobs(['completed', 'failed', 'active', 'waiting'], 0, 50, true);
 
         const serializedJobs = jobs
@@ -72,6 +61,7 @@ export async function DELETE() {
         }
 
         // Clean up to 1000 completed and failed jobs
+        const tradeQueue = getTradeQueue();
         await tradeQueue.clean(0, 1000, 'completed');
         await tradeQueue.clean(0, 1000, 'failed');
 

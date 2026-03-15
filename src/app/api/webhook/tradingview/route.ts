@@ -1,23 +1,10 @@
 import { prisma } from "@/lib/prisma";
-import { Queue } from 'bullmq';
+import { getTradeQueue } from "@/lib/queue";
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import Redis from 'ioredis';
 import { sendTradeNotificationEmail } from "@/lib/emails";
 import { checkRateLimit } from "@/lib/rateLimit";
-
-
-
-const redisConnection: any = process.env.REDIS_URL 
-    ? new Redis(process.env.REDIS_URL, { maxRetriesPerRequest: null, family: 0 }) 
-    : {
-        host: process.env.REDIS_HOST || 'localhost',
-        port: parseInt(process.env.REDIS_PORT || '6379'),
-    };
-
-export const tradeQueue = new Queue('qa-test-queue', {
-    connection: redisConnection
-});
 
 const redisClient = process.env.REDIS_URL 
     ? new Redis(process.env.REDIS_URL, { maxRetriesPerRequest: null, lazyConnect: true, family: 0 }) 
@@ -152,6 +139,7 @@ export async function POST(req: Request) {
                     };
                 });
 
+            const tradeQueue = getTradeQueue();
             await tradeQueue.addBulk(jobs);
 
             return NextResponse.json({
@@ -229,6 +217,7 @@ export async function POST(req: Request) {
                 });
 
             if (exitJobs.length > 0) {
+                const tradeQueue = getTradeQueue();
                 // Auto-closing opposing positions
                 await tradeQueue.addBulk(exitJobs);
             }
@@ -265,6 +254,7 @@ export async function POST(req: Request) {
                 };
             });
 
+        const tradeQueue = getTradeQueue();
         await tradeQueue.addBulk(jobs);
 
         // --- PHASE 28: ASYNC EMAIL NOTIFICATIONS ---
