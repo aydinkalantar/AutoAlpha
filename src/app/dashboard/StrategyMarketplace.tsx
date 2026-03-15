@@ -29,7 +29,7 @@ export default function StrategyMarketplace({ strategies, subscriptions, userId,
 
     return (
         <div id="strategy-marketplace" className="space-y-8 mt-12">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                 <h2 className="text-3xl font-bold text-foreground tracking-tight">Active Strategies</h2>
 
                 {/* iOS Style Segmented Control */}
@@ -109,38 +109,30 @@ export default function StrategyMarketplace({ strategies, subscriptions, userId,
                                                 />
                                             ))}
                                         </div>
-                                        <div className="grid grid-cols-2 gap-3 mt-1 pt-2 border-t border-black/5 dark:border-white/5">
-                                            <Link
-                                                href={`/dashboard/market/${strategy.id}`}
-                                                className="w-full py-2.5 flex items-center justify-center bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-xl text-sm font-bold transition-all"
-                                            >
-                                                Details
-                                            </Link>
+                                        <div className="mt-2 pt-3 border-t border-black/5 dark:border-white/5">
                                             <Button
                                                 variant="secondary"
-                                                onClick={() => setSelectedStrategy(strategy)}
-                                                className="w-full h-auto py-2.5 flex items-center justify-center bg-gradient-to-br from-cyan-400/10 to-purple-600/10 hover:from-cyan-400/20 hover:to-purple-600/20 text-foreground dark:text-white rounded-xl text-sm font-bold transition-all border border-purple-500/30"
+                                                asChild
+                                                className="w-full bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 text-foreground font-bold"
                                             >
-                                                Manage Allocation
+                                                <Link href={`/dashboard/market/${strategy.id}`}>
+                                                    View Strategy Details
+                                                </Link>
                                             </Button>
                                         </div>
                                     </div>
                                 );
                             } else {
                                 return (
-                                    <div className="grid grid-cols-2 gap-3 mt-2 relative z-10 border-t border-black/5 dark:border-white/5 pt-4">
-                                        <Link
-                                            href={`/dashboard/market/${strategy.id}`}
-                                            className="w-full py-4 flex items-center justify-center bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 text-foreground rounded-xl font-bold transition-colors"
-                                        >
-                                            Details
-                                        </Link>
+                                    <div className="mt-4 relative z-10 border-t border-black/5 dark:border-white/5 pt-4">
                                         <Button
-                                            size="lg"
-                                            onClick={() => setSelectedStrategy(strategy)}
-                                            className="w-full h-auto py-4 bg-gradient-to-br from-cyan-400 to-purple-600 shadow-lg shadow-purple-500/20 text-white rounded-xl font-bold hover:opacity-90 transition-opacity"
+                                            variant="secondary"
+                                            asChild
+                                            className="w-full py-6 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 text-foreground font-bold text-base rounded-xl"
                                         >
-                                            Manage Allocation
+                                            <Link href={`/dashboard/market/${strategy.id}`}>
+                                                View Strategy Details
+                                            </Link>
                                         </Button>
                                     </div>
                                 );
