@@ -226,9 +226,16 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                 </nav>
 
                 <div className="p-4 pb-8 border-t border-black/5 dark:border-white/10 flex flex-col items-center gap-2 shrink-0">
+                    <div className="w-full flex flex-col gap-2 mt-2">
+                        <Link href="/dashboard/deposit" className={cn("flex items-center gap-3 py-3 text-sm font-bold text-white bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 shadow-md shadow-purple-500/20 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
+                            <Wallet className="w-5 h-5 flex-shrink-0" />
+                            {!isCollapsed && <span className="whitespace-nowrap">Fund Gas Tank</span>}
+                        </Link>
+                    </div>
+
                     {/* Desktop Web App Install Button */}
                     {!isStandalone && !hasInstalled && (deferredPrompt || isIOS) && (
-                        <div className="w-full flex flex-col gap-2 mb-2">
+                        <div className="w-full flex flex-col gap-2">
                             <Button 
                                 variant="ghost"
                                 onClick={handleInstallClick} 
@@ -240,14 +247,9 @@ export default function DashboardSidebar({ children, notificationBell, userId, b
                         </div>
                     )}
 
-                    <div className="w-full h-px bg-black/5 dark:bg-white/10" />
+                    <div className="w-full h-px bg-black/5 dark:bg-white/10 my-2" />
 
-                    <div className="w-full flex flex-col gap-1 mt-3">
-                        <Link href="/dashboard/deposit" className={cn("flex items-center gap-3 py-3 text-sm font-bold text-white bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 shadow-md shadow-purple-500/20 rounded-xl transition-all w-full mb-1", isCollapsed ? "justify-center px-0" : "px-3")}>
-                            <Wallet className="w-5 h-5 flex-shrink-0" />
-                            {!isCollapsed && <span className="whitespace-nowrap">Fund Gas Tank</span>}
-                        </Link>
-
+                    <div className="w-full flex flex-col gap-1">
                         <Link href="/" className={cn("flex items-center gap-3 py-3 text-sm font-bold text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all w-full", isCollapsed ? "justify-center px-0" : "px-3")}>
                             <ChevronLeft className="w-5 h-5 flex-shrink-0" />
                             {!isCollapsed && <span className="whitespace-nowrap">Home</span>}
