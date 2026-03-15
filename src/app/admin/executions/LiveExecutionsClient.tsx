@@ -151,12 +151,12 @@ export default function LiveExecutionsClient() {
                                 {envFilter === 'ALL' ? 'All Environments' : envFilter === 'LIVE' ? 'Live Only' : 'Sandbox Only'}
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="start" className="rounded-xl">
+                        <DropdownMenuContent align="start" className="w-[200px] z-[100] bg-white dark:bg-[#1C1C1E] border border-black/10 dark:border-white/10 rounded-xl shadow-xl">
                             <DropdownMenuLabel>Environment</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => setEnvFilter('ALL')} className="font-medium cursor-pointer">All Environments</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setEnvFilter('LIVE')} className="font-medium cursor-pointer text-emerald-600 dark:text-emerald-400">Live Only</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setEnvFilter('SANDBOX')} className="font-medium cursor-pointer text-purple-600 dark:text-purple-400">Sandbox Only</DropdownMenuItem>
+                            <DropdownMenuSeparator className="bg-black/10 dark:bg-white/10" />
+                            <DropdownMenuItem onClick={() => setEnvFilter('ALL')} className="font-medium cursor-pointer focus:bg-black/5 dark:focus:bg-white/5">All Environments</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setEnvFilter('LIVE')} className="font-medium cursor-pointer text-emerald-600 dark:text-emerald-400 focus:bg-emerald-50 dark:focus:bg-emerald-500/10">Live Only</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setEnvFilter('SANDBOX')} className="font-medium cursor-pointer text-purple-600 dark:text-purple-400 focus:bg-purple-50 dark:focus:bg-purple-500/10">Sandbox Only</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
 
@@ -168,11 +168,11 @@ export default function LiveExecutionsClient() {
                                 {statusFilter === 'ALL' ? 'All Status' : 'Errors Only'}
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="start" className="rounded-xl">
+                        <DropdownMenuContent align="start" className="w-[180px] z-[100] bg-white dark:bg-[#1C1C1E] border border-black/10 dark:border-white/10 rounded-xl shadow-xl">
                             <DropdownMenuLabel>Log Status</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => setStatusFilter('ALL')} className="font-medium cursor-pointer">All Logs</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setStatusFilter('ERROR')} className="font-medium cursor-pointer text-rose-500">Errors Only</DropdownMenuItem>
+                            <DropdownMenuSeparator className="bg-black/10 dark:bg-white/10" />
+                            <DropdownMenuItem onClick={() => setStatusFilter('ALL')} className="font-medium cursor-pointer focus:bg-black/5 dark:focus:bg-white/5">All Logs</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setStatusFilter('ERROR')} className="font-medium cursor-pointer text-rose-500 focus:bg-rose-50 dark:focus:bg-rose-500/10">Errors Only</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
