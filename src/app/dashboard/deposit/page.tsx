@@ -11,6 +11,8 @@ import { parseUnits } from 'viem';
 import { mainnet, arbitrum, optimism, base, polygon } from 'wagmi/chains';
 import dynamic from 'next/dynamic';
 import PromoRedemptionForm from './PromoRedemptionForm';
+import QRCode from 'react-qr-code';
+import { toast } from 'sonner';
 
 const ClientWeb3Provider = dynamic(
     () => import('@/app/providers/Web3Provider').then(mod => mod.Web3Provider),
@@ -316,9 +318,30 @@ function DepositContent() {
                             </select>
                         </div>
 
-                        <div className="p-6 bg-white/50 dark:bg-white/5 rounded-2xl border border-black/5 dark:border-white/10 space-y-3">
-                            <p className="text-xs text-foreground/60 font-bold uppercase tracking-wider">Deposit Address</p>
-                            <p className="font-mono text-base break-all text-foreground select-all bg-black/5 dark:bg-white/5 p-4 rounded-xl border border-black/5 dark:border-white/5 shadow-inner">{ADMIN_WALLET}</p>
+                        <div className="p-6 bg-white/50 dark:bg-white/5 rounded-2xl border border-black/5 dark:border-white/10 space-y-4">
+                            <div className="flex flex-col md:flex-row gap-6 items-center">
+                                <div className="bg-white p-3 rounded-xl shadow-sm shrink-0">
+                                    <QRCode value={ADMIN_WALLET} size={120} />
+                                </div>
+                                <div className="w-full space-y-3">
+                                    <p className="text-xs text-foreground/60 font-bold uppercase tracking-wider">Deposit Address</p>
+                                    <div className="relative flex items-center w-full">
+                                        <p className="font-mono text-xs md:text-sm break-all text-foreground select-all bg-black/5 dark:bg-white/5 p-4 pr-12 rounded-xl border border-black/5 dark:border-white/5 shadow-inner w-full">
+                                            {ADMIN_WALLET}
+                                        </p>
+                                        <button
+                                            title="Copy deposit address"
+                                            onClick={() => {
+                                                navigator.clipboard.writeText(ADMIN_WALLET);
+                                                toast.success("Address copied to clipboard");
+                                            }}
+                                            className="absolute right-2 p-2 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground rounded-lg transition-colors focus:outline-none"
+                                        >
+                                            <Copy className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                             <div className="mt-6 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-start gap-4">
                                 <AlertCircle className="w-6 h-6 text-red-500 shrink-0 mt-0.5" />
                                 <div className="space-y-1">
