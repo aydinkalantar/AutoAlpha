@@ -50,6 +50,7 @@ async function executeCexTrade(exchangeName, symbol, side, amountUsd, marketType
     apiKey,
     secret: apiSecret,
     enableRateLimit: true,
+    timeout: 3e4,
     options: {
       defaultType: marketType === "FUTURES" ? "future" : "spot"
     }
@@ -244,11 +245,15 @@ async function handlePaperTrade(data, isExit, actionSide) {
         });
       }
       if (netPnl > 0) {
-        const platformFee = netPnl * ((performanceFeePercentage || 30) / 100);
+        const sysConfig = await tx.systemConfig.findUnique({ where: { id: "global" } });
+        const configRate = sysConfig?.affiliateCommissionRate || 0.1;
+        const platformFeeRaw = netPnl * ((performanceFeePercentage || 30) / 100);
+        const platformFee = Math.round(platformFeeRaw * 100) / 100;
         const updateField = settlementCurrency === "USDT" ? "paperUsdtBalance" : "paperUsdcBalance";
-        await tx.user.update({
+        const user = await tx.user.update({
           where: { id: userId },
-          data: { [updateField]: { decrement: platformFee } }
+          data: { [updateField]: { decrement: platformFee } },
+          select: { referredById: true }
         });
         await tx.ledger.create({
           data: {
@@ -256,11 +261,34 @@ async function handlePaperTrade(data, isExit, actionSide) {
             amount: -platformFee,
             currency: settlementCurrency,
             description: `[PAPER] Performance Fee Deducted for ${symbol} Trade`,
-            type: "FEE",
-            status: "COMPLETED",
+            type: "FEE_DEDUCTION",
             isPaper: true
           }
         });
+        if (user.referredById) {
+          const commissionRaw = platformFee * configRate;
+          const commission = Math.round(commissionRaw * 100) / 100;
+          if (commission > 0) {
+            await tx.user.update({
+              where: { id: user.referredById },
+              data: {
+                [updateField]: { increment: commission },
+                affiliateBalance: { increment: commission },
+                totalAffiliateEarnings: { increment: commission }
+              }
+            });
+            await tx.ledger.create({
+              data: {
+                userId: user.referredById,
+                amount: commission,
+                currency: settlementCurrency,
+                description: `[PAPER] Affiliate Commission from network trade`,
+                type: "AFFILIATE_COMMISSION",
+                isPaper: true
+              }
+            });
+          }
+        }
       }
       await tx.notification.create({
         data: {
@@ -357,11 +385,13 @@ var worker = new import_bullmq.Worker("qa-test-queue", async (job) => {
     let apiKey = "";
     let apiSecret = "";
     let privateKey = void 0;
+    const secretKey = process.env.MASTER_ENCRYPTION_KEY;
+    if (!secretKey) throw new Error("MASTER_ENCRYPTION_KEY is missing from environment variables.");
     if (encryptedApiKey && encryptedSecret) {
-      apiKey = decryptKey(encryptedApiKey, iv);
-      apiSecret = decryptKey(encryptedSecret, iv);
+      apiKey = decryptKey(encryptedApiKey, secretKey);
+      apiSecret = decryptKey(encryptedSecret, secretKey);
       if (encryptedPrivateKey) {
-        privateKey = decryptKey(encryptedPrivateKey, iv);
+        privateKey = decryptKey(encryptedPrivateKey, secretKey);
       }
     } else {
       throw new Error("Exchange key missing encrypted payload");
@@ -421,16 +451,22 @@ var worker = new import_bullmq.Worker("qa-test-queue", async (job) => {
           });
         }
         if (netPnl > 0) {
-          const platformFee = netPnl * (performanceFeePercentage / 100);
+          const sysConfig = await tx.systemConfig.findUnique({ where: { id: "global" } });
+          const configRate = sysConfig?.affiliateCommissionRate || 0.1;
+          const platformFeeRaw = netPnl * (performanceFeePercentage / 100);
+          const platformFee = Math.round(platformFeeRaw * 100) / 100;
+          let user;
           if (settlementCurrency === "USDT") {
-            await tx.user.update({
+            user = await tx.user.update({
               where: { id: userId },
-              data: { usdtBalance: { decrement: platformFee } }
+              data: { usdtBalance: { decrement: platformFee } },
+              select: { referredById: true }
             });
           } else {
-            await tx.user.update({
+            user = await tx.user.update({
               where: { id: userId },
-              data: { usdcBalance: { decrement: platformFee } }
+              data: { usdcBalance: { decrement: platformFee } },
+              select: { referredById: true }
             });
           }
           await tx.ledger.create({
@@ -438,9 +474,34 @@ var worker = new import_bullmq.Worker("qa-test-queue", async (job) => {
               userId,
               amount: -platformFee,
               currency: settlementCurrency,
-              description: `Performance Fee Deducted for ${symbol} Trade`
+              description: `Performance Fee Deducted for ${symbol} Trade`,
+              type: "FEE_DEDUCTION"
             }
           });
+          if (user.referredById) {
+            const commissionRaw = platformFee * configRate;
+            const commission = Math.round(commissionRaw * 100) / 100;
+            const updateField = settlementCurrency === "USDT" ? "usdtBalance" : "usdcBalance";
+            if (commission > 0) {
+              await tx.user.update({
+                where: { id: user.referredById },
+                data: {
+                  [updateField]: { increment: commission },
+                  affiliateBalance: { increment: commission },
+                  totalAffiliateEarnings: { increment: commission }
+                }
+              });
+              await tx.ledger.create({
+                data: {
+                  userId: user.referredById,
+                  amount: commission,
+                  currency: settlementCurrency,
+                  description: `Affiliate Commission from network trade`,
+                  type: "AFFILIATE_COMMISSION"
+                }
+              });
+            }
+          }
         }
         await tx.notification.create({
           data: {
@@ -453,6 +514,14 @@ var worker = new import_bullmq.Worker("qa-test-queue", async (job) => {
         await updateStrategyMetrics(tx, strategyId);
       });
     } else {
+      const userRecord = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { usdtBalance: true, usdcBalance: true }
+      });
+      if (!userRecord || userRecord.usdtBalance <= 0 && userRecord.usdcBalance <= 0) {
+        console.warn(`[Shield] Bypassing entry trade for User ${userId}. Negative or zero Gas Tank.`);
+        return;
+      }
       const _leverage = leverage || 1;
       const totalNotionalExposure = virtualBalance * _leverage;
       const order = await executeTrade(
@@ -525,7 +594,7 @@ var worker = new import_bullmq.Worker("qa-test-queue", async (job) => {
     throw error;
   }
 }, {
-  connection: {
+  connection: process.env.REDIS_URL ? new (require("ioredis"))(process.env.REDIS_URL, { maxRetriesPerRequest: null, family: 0 }) : {
     host: process.env.REDIS_HOST || "localhost",
     port: parseInt(process.env.REDIS_PORT || "6379")
   }
