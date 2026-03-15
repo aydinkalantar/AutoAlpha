@@ -135,7 +135,7 @@ export default async function DashboardPage() {
                                     <h4 className="text-sm font-bold text-rose-500">API Key Missing</h4>
                                     <p className="text-xs font-medium text-rose-500/80">Connect your exchange to enable live trading.</p>
                                 </div>
-                                <Link href="/dashboard/settings" className="w-full sm:w-auto px-4 py-2 bg-rose-500 text-white text-xs font-bold uppercase rounded-lg hover:bg-rose-600 transition-colors text-center whitespace-nowrap">
+                                <Link href="/dashboard/settings?tab=api-keys" className="w-full sm:w-auto px-4 py-2 bg-rose-500 text-white text-xs font-bold uppercase rounded-lg hover:bg-rose-600 transition-colors text-center whitespace-nowrap">
                                     Connect API
                                 </Link>
                             </div>
