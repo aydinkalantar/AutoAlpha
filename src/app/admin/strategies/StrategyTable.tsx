@@ -1,10 +1,18 @@
 "use client";
 
-import { useTransition, useState } from 'react';
-import { createPortal } from 'react-dom';
+import { useTransition } from 'react';
 import { Strategy } from '@prisma/client';
 import { toggleStrategyActive, generateWebhook, deleteStrategy, toggleStrategyPublic, updateStrategySafeSettings } from './actions';
 import Link from 'next/link';
+import { toast } from 'sonner';
+import { 
+    DropdownMenu, 
+    DropdownMenuContent, 
+    DropdownMenuItem, 
+    DropdownMenuSeparator, 
+    DropdownMenuTrigger 
+} from '@/components/ui/dropdown-menu';
+import { MoreHorizontal } from 'lucide-react';
 
 export default function StrategyTable({ strategies }: { strategies: Strategy[] }) {
     return (
@@ -39,7 +47,6 @@ export default function StrategyTable({ strategies }: { strategies: Strategy[] }
 
 function StrategyRow({ strategy }: { strategy: Strategy }) {
     const [isPending, startTransition] = useTransition();
-    const [showInstructions, setShowInstructions] = useState(false);
 
     const handleToggle = () => {
         if (!strategy.isActive || window.confirm(`EMERGENCY PAUSE: Are you sure you want to pause ${strategy.name}? All future TradingView webhooks will be permanently ignored until Reactivated.`)) {
@@ -96,9 +103,9 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                     <button
                         onClick={handlePublicToggle}
                         disabled={isPending}
-                        className={`px-3 py-1 font-bold rounded-full transition-colors disabled:opacity-50 border ${strategy.isPublic
-                            ? 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-500/20 hover:bg-blue-100 dark:hover:bg-blue-500/20'
-                            : 'bg-black/5 dark:bg-white/5 text-muted-foreground border-black/5 dark:border-white/10 hover:bg-black/10 dark:hover:bg-white/10'
+                        className={`px-3 py-1 font-bold rounded-full transition-all disabled:opacity-50 ring-1 ring-inset ${strategy.isPublic
+                            ? 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 ring-blue-500/20 hover:bg-blue-100 dark:hover:bg-blue-500/20'
+                            : 'bg-black/5 dark:bg-white/5 text-muted-foreground ring-black/10 dark:ring-white/10 hover:bg-black/10 dark:hover:bg-white/10'
                             }`}
                     >
                         {strategy.isPublic ? 'Public' : 'Private'}
@@ -113,168 +120,56 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                     </span>
                 </td>
                 <td className="px-8 py-5 text-right w-48">
-                    <div className="flex justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
-                        <Link
-                            href={`/admin/strategies/${strategy.id}`}
-                            className="w-10 h-10 bg-black/5 dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 rounded-full flex items-center justify-center text-black/60 dark:text-white/60 hover:text-foreground transition-colors"
-                            title="Edit Settings"
-                        >
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                            </svg>
-                        </Link>
-                        <button
-                            onClick={() => setShowInstructions(true)}
-                            className="w-10 h-10 bg-black/5 dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 rounded-full flex items-center justify-center text-black/60 dark:text-white/60 hover:text-foreground transition-colors"
-                            title="Webhook Instructions"
-                        >
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </button>
-                        <button
-                            onClick={handleWebhook}
-                            disabled={isPending}
-                            className="w-10 h-10 bg-black/5 dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 rounded-full flex items-center justify-center text-black/60 dark:text-white/60 hover:text-foreground transition-colors disabled:opacity-50"
-                            title="Regenerate Webhook"
-                        >
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                            </svg>
-                        </button>
-                        <button
-                            onClick={handleToggle}
-                            disabled={isPending}
-                            className={`${strategy.isActive ? 'text-white bg-red-600 dark:bg-red-500/80 hover:bg-red-700 dark:hover:bg-red-500 shadow-sm shadow-red-500/20' : 'text-green-800 dark:text-green-400 bg-green-100 dark:bg-green-500/10 hover:bg-green-200 dark:hover:bg-green-500/20'} px-5 py-2 rounded-full transition-all flex items-center gap-2 disabled:opacity-50 font-bold text-xs uppercase tracking-tight`}
-                            title={strategy.isActive ? 'Kill Switch (Pause)' : 'Reactivate'}
-                        >
-                            <span className="relative flex h-2 w-2">
-                                {strategy.isActive && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>}
-                                <span className={`relative inline-flex rounded-full h-2 w-2 ${strategy.isActive ? 'bg-white' : 'bg-green-500'}`}></span>
-                            </span>
-                            {strategy.isActive ? (
-                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            ) : (
-                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            )}
-                        </button>
-                        <button
-                            onClick={handleDelete}
-                            disabled={isPending}
-                            className="text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 px-4 py-2 rounded-full transition-colors flex items-center justify-center disabled:opacity-50"
-                            title="Delete Strategy"
-                        >
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                        </button>
-                    </div>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger className="w-8 h-8 flex justify-center items-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors ml-auto focus:outline-none">
+                            <MoreHorizontal className="w-5 h-5 text-foreground/60" />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-56 bg-white/70 dark:bg-black/70 backdrop-blur-xl border-black/5 dark:border-white/10 rounded-xl shadow-xl p-1.5">
+                            <DropdownMenuItem asChild className="cursor-pointer font-medium p-2">
+                                <Link href={`/admin/strategies/${strategy.id}`}>
+                                    Edit Strategy
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild className="cursor-pointer font-medium p-2">
+                                <Link href={`/strategy/${strategy.id}`}>
+                                    View Strategy Report
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem 
+                                className="cursor-pointer font-medium p-2"
+                                onClick={() => {
+                                    const payload = { 
+                                        webhookToken: strategy.webhookToken, 
+                                        symbol: "{{ticker}}", 
+                                        action: "{{strategy.order.action}}", 
+                                        price: "{{strategy.order.price}}", 
+                                        order_id: "{{strategy.order.id}}" 
+                                    };
+                                    navigator.clipboard.writeText(JSON.stringify(payload, null, 2));
+                                    toast.success('Webhook payload copied to clipboard');
+                                }}
+                            >
+                                Copy Webhook Payload
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator className="bg-black/5 dark:bg-white/10 my-1.5" />
+                            <DropdownMenuItem 
+                                className="cursor-pointer font-medium p-2"
+                                onClick={handleToggle}
+                                disabled={isPending}
+                            >
+                                {strategy.isActive ? 'Pause Strategy' : 'Reactivate Strategy'}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem 
+                                className="cursor-pointer font-medium text-red-600 dark:text-red-400 focus:text-red-600 dark:focus:text-red-400 focus:bg-red-500/10 p-2"
+                                onClick={handleDelete}
+                                disabled={isPending}
+                            >
+                                Delete Strategy
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </td>
             </tr>
-            {/* Instructions Modal Overlay (Portaled to body to fix hydration error) */}
-            {showInstructions && typeof document !== 'undefined' && createPortal(
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-opacity">
-                    <div className="bg-white/50 dark:bg-white/5 backdrop-blur-xl rounded-[2rem] shadow-2xl overflow-hidden w-full max-w-2xl transform transition-all border border-black/5 dark:border-white/10">
-                        <div className="p-8 space-y-8">
-                            <div className="flex justify-between items-start">
-                                <div>
-                                    <h3 className="text-2xl font-bold text-foreground tracking-tight">Strategy Instructions</h3>
-                                    <p className="text-foreground/50 mt-1 font-medium">{strategy.name} Connection Guide</p>
-                                </div>
-                                <button
-                                    onClick={() => setShowInstructions(false)}
-                                    title="Close"
-                                    className="p-2 bg-black/5 hover:bg-black/5 rounded-full text-foreground/50 hover:text-black transition-colors"
-                                >
-                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-
-                            <div className="space-y-6">
-                                <div className="space-y-2">
-                                    <h4 className="text-sm font-semibold text-black/60 dark:text-white/60 uppercase tracking-wide">1. Webhook URL</h4>
-                                    <p className="text-sm text-foreground/50 mb-2">Paste this exact URL into your TradingView Alert's Webhook URL field. Note: AutoAlpha uses secure payload authentication, so you DO NOT need to put the secret token in this URL.</p>
-                                    <div className="relative group">
-                                        <code className="block w-full bg-[#1D1D1F] text-white p-4 pr-16 rounded-[1rem] text-sm overflow-x-auto whitespace-pre font-mono shadow-inner">
-                                            {typeof window !== 'undefined' ? `${window.location.origin}/api/webhook/tradingview` : 'https://autoalpha.trade/api/webhook/tradingview'}
-                                        </code>
-                                        <button 
-                                            onClick={(e) => {
-                                                const url = typeof window !== 'undefined' ? `${window.location.origin}/api/webhook/tradingview` : 'https://autoalpha.trade/api/webhook/tradingview';
-                                                navigator.clipboard.writeText(url);
-                                                const target = e.currentTarget;
-                                                const originalHtml = target.innerHTML;
-                                                target.innerHTML = `<svg class="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>`;
-                                                setTimeout(() => target.innerHTML = originalHtml, 2000);
-                                            }}
-                                            className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-white/10 hover:bg-white/20 active:bg-white/30 rounded-lg transition-colors text-white/70 hover:text-white"
-                                            title="Copy URL"
-                                        >
-                                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div className="space-y-4">
-                                    <div>
-                                        <h4 className="text-sm font-semibold text-black/60 dark:text-white/60 uppercase tracking-wide">2. Webhook Security Payload</h4>
-                                        <p className="text-sm text-foreground/50 mb-4 mt-1">
-                                            Your unique <code className="bg-black/5 dark:bg-white/10 px-1 rounded text-pink-600 dark:text-pink-400">ADMIN_WEBHOOK_SECRET</code> token is automatically injected inside the JSON payloads below. Choose one method to transmit signals securely to AutoAlpha.
-                                        </p>
-                                    </div>
-
-                                    {/* Method 1: Universal */}
-                                    <div className="space-y-2 p-4 bg-black/5 dark:bg-white/5 rounded-[1.5rem] border border-black/5 dark:border-white/10">
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <span className="text-xs font-bold text-gray-600 bg-gray-200/50 px-2 py-1 rounded">Method A</span>
-                                            <span className="text-sm font-semibold text-foreground">Universal TV Payload</span>
-                                        </div>
-                                        <p className="text-xs text-foreground/50 mb-2">Paste this exact block into your TradingView Alert Message box. It relies on TV's native `strategy.order.action` system.</p>
-                                        <div className="relative group">
-                                            <code className="block w-full bg-[#1D1D1F] text-white p-4 rounded-[1rem] text-[13px] overflow-x-auto whitespace-pre font-mono shadow-inner">
-                                                {JSON.stringify({ webhookToken: strategy.webhookToken, symbol: "{{ticker}}", action: "{{strategy.order.action}}", price: "{{strategy.order.price}}", order_id: "{{strategy.order.id}}" }, null, 2)}
-                                            </code>
-                                        </div>
-                                    </div>
-
-                                    {/* Method 2: Pine Script Native */}
-                                    <div className="space-y-2 p-4 bg-blue-50/50 dark:bg-blue-500/5 rounded-[1.5rem] border border-blue-100 dark:border-blue-500/20">
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <span className="text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-500/10 px-2 py-1 rounded">Method B</span>
-                                            <span className="text-sm font-semibold text-blue-900 dark:text-blue-300">Advanced Pine Script (Recommended)</span>
-                                        </div>
-                                        <p className="text-xs text-blue-800/60 dark:text-blue-400/60 mb-2">Build the precise JSON string exactly inside your Pine Script code variables (e.g. `msg_long`), and paste only this single variable hook into your TradingView Alert Message box:</p>
-                                        <div className="relative group mb-3">
-                                            <code className="block w-full bg-[#1D1D1F] text-blue-300 p-3 rounded-lg text-[13px] whitespace-pre font-mono shadow-inner font-bold">
-                                                {`{{strategy.order.alert_message}}`}
-                                            </code>
-                                        </div>
-                                        <p className="text-xs text-blue-800/60 dark:text-blue-400/60">Example Pine Script Implementation:</p>
-                                        <div className="relative group">
-                                            <code className="block w-full bg-white dark:bg-[#1C1C1E] border border-blue-100/50 dark:border-blue-500/10 text-blue-900 dark:text-blue-300 p-3 rounded-lg text-[11px] overflow-x-auto whitespace-pre font-mono shadow-sm">
-                                                {`msg_long = '{"webhookToken": "${strategy.webhookToken}", "symbol": "' + syminfo.ticker + '", "action": "long", "price": ' + str.tostring(close) + ', "order_id": "Long_Entry_01"}'\n\nstrategy.entry("Long", strategy.long, alert_message = msg_long)`}
-                                            </code>
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <p className="text-xs text-black/40 dark:text-white/40 font-medium pb-2 text-center">For testing, you can use the `test-webhook.js` Node script to fire signals locally.</p>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>,
-                document.body
-            )}
         </>
     );
 }

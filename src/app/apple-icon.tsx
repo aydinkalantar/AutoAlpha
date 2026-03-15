@@ -20,14 +20,14 @@ export default function Icon() {
       >
         <div
           style={{
-            fontSize: '115px',
+            fontSize: '140px',
             color: 'white',
             fontWeight: 'bold',
             lineHeight: 1,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            paddingBottom: '10px', // Visual center adjustment for alpha
+            paddingBottom: '12px', // Visual center adjustment for alpha
           }}
         >
           α

@@ -109,7 +109,7 @@ export default function AdminMobileMenu({ isMobileMenuOpen, setIsMobileMenuOpen 
             <div className="flex md:hidden fixed top-0 w-full h-16 z-[60] px-4 justify-between items-center bg-background/80 backdrop-blur-md border-b border-black/5 dark:border-white/10 transition-transform duration-300">
                 <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-lg outline-none flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
-                        <span className="text-white font-bold text-lg leading-none pb-[2px]">α</span>
+                        <span className="text-white font-bold text-[22px] leading-none pb-[2px]">α</span>
                     </div>
                     <span className="font-bold text-lg text-foreground tracking-tight">Admin Console</span>
                 </div>
@@ -279,7 +279,7 @@ export default function AdminMobileMenu({ isMobileMenuOpen, setIsMobileMenuOpen 
 
                             <div className="p-8 pb-6 flex flex-col items-center text-center bg-gradient-to-b from-black/5 dark:from-white/5 to-transparent">
                                 <div className="w-20 h-20 rounded-[1.5rem] bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-xl shadow-purple-500/30 mb-6 border border-black/10 dark:border-white/10">
-                                    <span className="text-white font-bold text-4xl leading-none pb-2">α</span>
+                                    <span className="text-white font-bold text-6xl leading-none pb-2">α</span>
                                 </div>
                                 <h2 className="text-2xl font-black tracking-tight text-foreground mb-2">Install Admin Toolkit</h2>
                                 <p className="text-foreground/60 text-sm font-medium">Install the control center on your home screen for quick and easy access when you're on the go.</p>

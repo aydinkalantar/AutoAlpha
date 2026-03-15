@@ -47,7 +47,7 @@ export default function MobileMenu({ notificationBell }: { notificationBell?: Re
                     onClick={() => setIsMobileMenuOpen(false)}
                 >
                     <div className="w-8 h-8 rounded-lg outline-none flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
-                        <span className="text-white font-bold text-lg leading-none pb-[2px]">α</span>
+                        <span className="text-white font-bold text-[22px] leading-none pb-[2px]">α</span>
                     </div>
                     <span className="font-bold text-lg text-foreground tracking-tight">AutoAlpha</span>
                 </Link>

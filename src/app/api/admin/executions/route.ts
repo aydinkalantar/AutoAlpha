@@ -13,12 +13,11 @@ export async function GET() {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
         }
 
-        // Fetch last 50 jobs from BullMQ (completed, failed, active, waiting)
+        // Fetch last 100 jobs from BullMQ (completed, failed, active, waiting)
         const tradeQueue = getTradeQueue();
-        const jobs = await tradeQueue.getJobs(['completed', 'failed', 'active', 'waiting'], 0, 50, true);
+        const jobs = await tradeQueue.getJobs(['completed', 'failed', 'active', 'waiting'], 0, 100, true);
 
         const serializedJobs = jobs
-            .filter(j => j.data?.isPaper !== true)
             .map(j => ({
                 id: j.id,
                 name: j.name,
@@ -29,12 +28,9 @@ export async function GET() {
                 finishedOn: j.finishedOn,
             }));
 
-        // Fetch last 50 Position updates from Prisma
+        // Fetch last 100 Position updates from Prisma
         const positions = await prisma.position.findMany({
-            take: 50,
-            where: {
-                isPaper: false
-            },
+            take: 100,
             orderBy: {
                 updatedAt: 'desc'
             },

@@ -80,7 +80,7 @@ export default function DesktopSidebar() {
             <div className="h-20 flex items-center px-4 border-b border-black/5 dark:border-white/10 shrink-0">
                 <div className="flex items-center gap-3 w-auto opacity-100 relative">
                     <div className="w-8 h-8 rounded-lg outline-none flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
-                        <span className="text-white font-bold text-lg leading-none pb-[2px]">α</span>
+                        <span className="text-white font-bold text-[22px] leading-none pb-[2px]">α</span>
                     </div>
                     <span className="font-bold text-lg text-foreground tracking-tight whitespace-nowrap">AutoAlpha</span>
                 </div>
@@ -111,8 +111,8 @@ export default function DesktopSidebar() {
                 })}
             </nav>
 
-            <div className="p-4 pb-8 border-t border-black/5 dark:border-white/10 flex flex-col items-center gap-2 shrink-0">
-                <div className="w-full flex flex-col gap-2 mt-2">
+            <div className="pt-4 pb-8 border-t border-black/5 dark:border-white/10 flex flex-col items-center gap-2 shrink-0">
+                <div className="w-full flex flex-col gap-2 px-4">
                     <Link href="/dashboard/deposit" className="flex justify-center px-3 items-center gap-3 py-3 text-sm font-bold text-white bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 shadow-md shadow-purple-500/20 rounded-xl transition-all w-full">
                         <Wallet className="w-5 h-5 flex-shrink-0" />
                         <span className="whitespace-nowrap">Fund Gas Tank</span>
@@ -120,7 +120,7 @@ export default function DesktopSidebar() {
                 </div>
 
                 {!isStandalone && !hasInstalled && (deferredPrompt) && (
-                    <div className="w-full flex flex-col gap-2">
+                    <div className="w-full flex flex-col gap-2 px-4">
                         <Button 
                             variant="ghost"
                             onClick={handleInstallClick} 
@@ -134,7 +134,7 @@ export default function DesktopSidebar() {
 
                 <div className="w-full h-px bg-black/5 dark:bg-white/10 my-2" />
 
-                <div className="w-full flex flex-col gap-1">
+                <div className="w-full flex flex-col gap-1 px-4">
                     <Link href="/dashboard/academy" className="flex items-center px-3 justify-start gap-3 py-3 h-auto text-sm font-bold text-foreground/60 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all w-full">
                         <HelpCircle className="w-5 h-5 flex-shrink-0" />
                         <span className="whitespace-nowrap font-bold">Support</span>

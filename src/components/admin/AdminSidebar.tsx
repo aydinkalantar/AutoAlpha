@@ -85,7 +85,7 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
                 <div className="h-20 flex items-center justify-between px-4 border-b border-black/5 dark:border-white/10">
                     <div className={cn("flex items-center gap-3 overflow-hidden transition-all duration-300", isCollapsed ? "w-8 opacity-0 pointer-events-none absolute" : "w-auto opacity-100 relative")}>
                         <div className="w-8 h-8 rounded-lg outline-none flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
-                            <span className="text-white font-bold text-lg leading-none pb-[2px]">α</span>
+                            <span className="text-white font-bold text-[22px] leading-none pb-[2px]">α</span>
                         </div>
                         <span className="font-bold text-lg text-foreground tracking-tight whitespace-nowrap">AutoAlpha</span>
                     </div>
@@ -93,7 +93,7 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
                     {/* Always show the logo icon when collapsed */}
                     {isCollapsed && (
                         <div className="absolute left-6 w-8 h-8 rounded-lg flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
-                            <span className="text-white font-bold text-lg leading-none pb-[2px]">α</span>
+                            <span className="text-white font-bold text-[22px] leading-none pb-[2px]">α</span>
                         </div>
                     )}
 
