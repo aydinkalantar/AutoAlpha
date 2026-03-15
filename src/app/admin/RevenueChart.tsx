@@ -16,8 +16,8 @@ export default function RevenueChart({ data }: { data: { date: string, revenue: 
             >
                 <defs>
                     <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#1D1D1F" stopOpacity={0.1} />
-                        <stop offset="95%" stopColor="#1D1D1F" stopOpacity={0} />
+                        <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.4} />
+                        <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
                     </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E5E5" />
@@ -50,7 +50,7 @@ export default function RevenueChart({ data }: { data: { date: string, revenue: 
                 <Area
                     type="monotone"
                     dataKey="revenue"
-                    stroke="#1D1D1F"
+                    stroke="#06b6d4"
                     strokeWidth={3}
                     fillOpacity={1}
                     fill="url(#colorRevenue)"

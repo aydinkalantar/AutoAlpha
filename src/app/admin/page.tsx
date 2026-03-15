@@ -90,6 +90,7 @@ export default async function AdminOverviewPage() {
                     title="Platform AUM"
                     value={`$${platformAUM.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                     subtitle="Active Subscriptions"
+                    href="/admin/strategies"
                     icon={<Activity className="w-5 h-5 text-foreground/50" />}
                     tooltip="Assets Under Management. The total virtual capital currently allocated to active strategies across all platform users."
                 />
@@ -97,6 +98,7 @@ export default async function AdminOverviewPage() {
                     title="Gas Tank Revenue"
                     value={`$${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                     subtitle="Lifetime API Fees"
+                    href="/admin/ledger"
                     icon={<DollarSign className="w-5 h-5 text-foreground/50" />}
                     tooltip="The aggregate sum of all performance fees collected by the platform across all users."
                 />
@@ -104,6 +106,7 @@ export default async function AdminOverviewPage() {
                     title="Active APIs"
                     value={activeApiConnections.toString()}
                     subtitle="Connected Exchange Valid"
+                    href="/admin/investors"
                     icon={<Network className="w-5 h-5 text-foreground/50" />}
                     tooltip="The total number of valid exchange API connections driving live markets."
                 />
@@ -111,6 +114,7 @@ export default async function AdminOverviewPage() {
                     title="Queue Health"
                     value={waitingJobsCount.toString()}
                     subtitle="Pending Trade Jobs"
+                    href="/admin/executions"
                     icon={<Box className="w-5 h-5 text-foreground/50" />}
                     alert={waitingJobsCount > 10}
                     tooltip="Real-time count of pending trade execution jobs waiting in the internal BullMQ Redis queue."
@@ -123,9 +127,10 @@ export default async function AdminOverviewPage() {
     );
 }
 
-function KPICard({ title, value, subtitle, icon, alert, tooltip }: { title: string, value: string, subtitle: string, icon: React.ReactNode, alert?: boolean, tooltip?: string }) {
-    return (
-        <div className="bg-white/50 dark:bg-white/5 backdrop-blur-2xl p-6 rounded-3xl shadow-xl border border-black/5 dark:border-white/10 flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 transition-all">
+function KPICard({ title, value, subtitle, icon, alert, tooltip, href }: { title: string, value: string, subtitle: string, icon: React.ReactNode, alert?: boolean, tooltip?: string, href?: string }) {
+    const isLongValue = value.length > 9;
+    const content = (
+        <>
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/20 to-transparent" />
             <div className="flex justify-between items-start mb-6 relative z-10">
                 <div className="flex flex-col gap-1">
@@ -134,9 +139,9 @@ function KPICard({ title, value, subtitle, icon, alert, tooltip }: { title: stri
                         {tooltip && (
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <button aria-label={`Info about ${title}`} className="cursor-help focus:outline-none">
+                                    <span aria-label={`Info about ${title}`} className="cursor-help focus:outline-none inline-flex items-center">
                                         <Info className="w-4 h-4 text-foreground/30 hover:text-cyan-500 transition-colors" />
-                                    </button>
+                                    </span>
                                 </TooltipTrigger>
                                 <TooltipContent className="max-w-[250px] bg-white dark:bg-[#1C1C1E] border border-black/10 dark:border-white/10 text-foreground p-3 rounded-xl shadow-2xl backdrop-blur-xl font-medium leading-relaxed">
                                     <p>{tooltip}</p>
@@ -150,9 +155,25 @@ function KPICard({ title, value, subtitle, icon, alert, tooltip }: { title: stri
                 </div>
             </div>
             <div className="relative z-10">
-                <div className="text-3xl font-black text-foreground tracking-tight mb-1">{value}</div>
+                <div className={`font-black text-foreground tracking-tight mb-1 transition-all duration-300 ${isLongValue ? 'text-2xl' : 'text-3xl'}`}>{value}</div>
                 <div className="text-xs font-semibold text-foreground/40">{subtitle}</div>
             </div>
+        </>
+    );
+
+    const cardClassName = "bg-white/50 dark:bg-white/5 backdrop-blur-2xl p-6 rounded-3xl shadow-xl border border-black/5 dark:border-white/10 flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 transition-all";
+
+    if (href) {
+        return (
+            <Link href={href} className={`${cardClassName} cursor-pointer`}>
+                {content}
+            </Link>
+        );
+    }
+
+    return (
+        <div className={cardClassName}>
+            {content}
         </div>
     );
 }
