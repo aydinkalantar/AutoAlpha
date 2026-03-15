@@ -44,7 +44,7 @@ export default function MobileMenu({ notificationBell }: { notificationBell?: Re
                 {['/dashboard', '/dashboard/market', '/dashboard/settings', '/dashboard/accounting'].includes(pathname) ? (
                     <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-lg outline-none flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
-                            <div className="w-3 h-3 bg-white rounded-sm transform rotate-45" />
+                            <span className="text-white font-bold text-lg leading-none pb-[2px]">α</span>
                         </div>
                         <span className="font-bold text-lg text-foreground tracking-tight">AutoAlpha</span>
                     </div>

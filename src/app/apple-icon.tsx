@@ -20,13 +20,18 @@ export default function Icon() {
       >
         <div
           style={{
-            width: '37.5%', 
-            height: '37.5%',
-            backgroundColor: 'white',
-            borderRadius: '12%', 
-            transform: 'rotate(45deg)',
+            fontSize: '115px',
+            color: 'white',
+            fontWeight: 'bold',
+            lineHeight: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingBottom: '10px', // Visual center adjustment for alpha
           }}
-        />
+        >
+          α
+        </div>
       </div>
     ),
     { ...size }

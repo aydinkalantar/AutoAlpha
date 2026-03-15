@@ -23,13 +23,18 @@ export async function GET(req: NextRequest) {
       >
         <div
           style={{
-            width: '37.5%', // 12px on 32px
-            height: '37.5%',
-            backgroundColor: 'white',
-            borderRadius: '12%', // rounded-sm
-            transform: 'rotate(45deg)',
+            fontSize: `${size * 0.7}px`, // Roughly proportional to the container size
+            color: 'white',
+            fontWeight: 'bold',
+            lineHeight: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingBottom: `${size * 0.05}px`, // Visual center adjustment for alpha
           }}
-        />
+        >
+          α
+        </div>
       </div>
     ),
     { 

@@ -64,12 +64,15 @@ export default function PWASplashScreen() {
                             <div className="w-full h-full bg-[#0A0A0B] rounded-[2rem] flex items-center justify-center relative overflow-hidden">
                                 {/* Inner glow */}
                                 <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-purple-500/20 rounded-[2rem]" />
-                                {/* Rotating Diamond */}
+                                {/* Alpha Symbol */}
                                 <motion.div 
-                                    animate={{ rotate: [45, 225, 405] }}
-                                    transition={{ duration: 4, ease: "linear", repeat: Infinity }}
-                                    className="w-8 h-8 bg-white rounded-sm shadow-[0_0_15px_rgba(255,255,255,0.8)]" 
-                                />
+                                    initial={{ scale: 0.8, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    transition={{ duration: 0.5, ease: "easeOut" }}
+                                    className="text-white font-black text-6xl drop-shadow-[0_0_15px_rgba(255,255,255,0.8)] select-none flex items-center justify-center pb-1" 
+                                >
+                                    α
+                                </motion.div>
                             </div>
                         </div>
 

@@ -107,7 +107,7 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
             </button>
             
             <div className="w-11 h-11 rounded-[0.85rem] bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-inner shrink-0 border border-black/10 dark:border-white/10">
-              <div className="w-3.5 h-3.5 bg-white rounded-sm transform rotate-45" />
+              <span className="text-white font-bold text-2xl leading-none pb-1">α</span>
             </div>
             
             <div className="flex-1 min-w-0 flex flex-col justify-center">
@@ -137,7 +137,7 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
         <nav className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
-              <div className="w-3 h-3 bg-white rounded-sm transform rotate-45" />
+              <span className="text-white font-bold text-lg leading-none pb-[2px]">α</span>
             </div>
             <span className="font-bold text-xl tracking-tight">AutoAlpha</span>
           </div>
@@ -417,7 +417,7 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
                <div className="w-32 h-32 rounded-[2rem] bg-gradient-to-br from-cyan-400 to-purple-600 shadow-[0_0_50px_rgba(168,85,247,0.5)] flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
                  <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-xl transform rotate-45 border border-white/50 shadow-inner flex items-center justify-center">
-                    <div className="w-4 h-4 bg-white rounded-sm shadow-sm" />
+                    <span className="text-white font-bold text-2xl leading-none transform -rotate-45 pb-1">α</span>
                  </div>
                </div>
             </div>
@@ -440,7 +440,7 @@ export default function LandingPageClient({ initialStrategies }: { initialStrate
           <div className="w-full flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center">
-                <div className="w-3 h-3 bg-white rounded-sm transform rotate-45" />
+                <span className="text-white font-bold text-lg leading-none pb-[2px]">α</span>
               </div>
               <span className="font-bold text-xl tracking-tight text-foreground/80">AutoAlpha</span>
             </div>

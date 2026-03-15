@@ -80,7 +80,7 @@ export default function DesktopSidebar() {
             <div className="h-20 flex items-center px-4 border-b border-black/5 dark:border-white/10 shrink-0">
                 <div className="flex items-center gap-3 w-auto opacity-100 relative">
                     <div className="w-8 h-8 rounded-lg outline-none flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
-                        <div className="w-3 h-3 bg-white rounded-sm transform rotate-45" />
+                        <span className="text-white font-bold text-lg leading-none pb-[2px]">α</span>
                     </div>
                     <span className="font-bold text-lg text-foreground tracking-tight whitespace-nowrap">AutoAlpha</span>
                 </div>

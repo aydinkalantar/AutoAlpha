@@ -93,7 +93,7 @@ export default function RegisterPage() {
             <div className="flex flex-col md:hidden w-full items-center justify-center pt-16 pb-2 px-6 relative z-20 text-center">
                  <div className="flex items-center gap-4 mb-8">
                      <div className="w-14 h-14 rounded-2xl flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
-                         <div className="w-5 h-5 bg-white rounded-sm transform rotate-45" />
+                         <span className="text-white font-bold text-3xl leading-none pb-1">α</span>
                      </div>
                      <span className="font-bold text-4xl tracking-tight text-foreground">AutoAlpha</span>
                  </div>
@@ -107,7 +107,7 @@ export default function RegisterPage() {
                 <div className="relative z-10 bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-3xl p-12 max-w-lg w-full shadow-2xl">
                     <div className="flex items-center gap-3 mb-8">
                         <div className="w-12 h-12 rounded-xl flex-shrink-0 bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
-                            <div className="w-4 h-4 bg-white rounded-sm transform rotate-45" />
+                            <span className="text-white font-bold text-2xl leading-none pb-1">α</span>
                         </div>
                         <span className="font-bold text-3xl tracking-tight text-foreground">AutoAlpha</span>
                     </div>
