@@ -7,9 +7,10 @@ import { ExchangeKey } from "@prisma/client";
 interface ApiKeyFormProps {
     userId: string;
     existingKeys: ExchangeKey[];
+    isTestnetMode: boolean;
 }
 
-export default function ApiKeyForm({ userId, existingKeys }: ApiKeyFormProps) {
+export default function ApiKeyForm({ userId, existingKeys, isTestnetMode }: ApiKeyFormProps) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [acceptedTerms, setAcceptedTerms] = useState(false);
     const [isPending, startTransition] = useTransition();
@@ -54,7 +55,22 @@ export default function ApiKeyForm({ userId, existingKeys }: ApiKeyFormProps) {
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/20 to-transparent" />
             <h2 className="text-2xl font-bold text-foreground mb-8 tracking-tight relative z-10">Connect Exchange</h2>
 
-            <form onSubmit={handleSubmit} autoComplete="off" className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
+            {isTestnetMode && (
+                <div className="absolute inset-0 z-50 bg-background/50 backdrop-blur-sm flex items-center justify-center p-6 text-center">
+                    <div className="bg-white dark:bg-black/80 border border-black/10 dark:border-white/10 rounded-2xl p-6 shadow-2xl max-w-sm">
+                        <div className="w-12 h-12 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center mx-auto mb-4">
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                        </div>
+                        <h3 className="text-lg font-bold text-foreground tracking-tight mb-2">Testnet Mode Active</h3>
+                        <p className="text-sm text-foreground/60">
+                            Exchange connections are frozen while in testnet mode. Disable Testnet from the global toggle to connect live exchange keys.
+                        </p>
+                    </div>
+                </div>
+            )}
+
+            <form onSubmit={handleSubmit} autoComplete="off" className={`relative z-10 ${isTestnetMode ? 'opacity-30 pointer-events-none' : ''}`}>
+                <fieldset disabled={isTestnetMode} className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
                 <input type="hidden" name="userId" value={userId} />
 
                 {/* Honey-pot inputs to aggressively disable Chrome/Safari password managers from prompting to save non-password API tokens */}
@@ -87,8 +103,10 @@ export default function ApiKeyForm({ userId, existingKeys }: ApiKeyFormProps) {
                         type="text"
                         name="apiKey"
                         required
-                        autoComplete="off"
+                        autoComplete="new-password"
                         spellCheck="false"
+                        data-lpignore="true"
+                        data-1p-ignore="true"
                         className="w-full bg-white/40 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-[1rem] px-5 py-4 text-foreground font-medium placeholder-foreground/30 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all backdrop-blur-md"
                         placeholder="e.g. 1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0t..."
                     />
@@ -100,7 +118,7 @@ export default function ApiKeyForm({ userId, existingKeys }: ApiKeyFormProps) {
                         type="password"
                         name="apiSecret"
                         required
-                        autoComplete="off"
+                        autoComplete="new-password"
                         spellCheck="false"
                         data-lpignore="true"
                         data-1p-ignore="true"
@@ -147,6 +165,7 @@ export default function ApiKeyForm({ userId, existingKeys }: ApiKeyFormProps) {
                         {isSubmitting ? 'Securing Key...' : 'Save & Encrypt Key'}
                     </button>
                 </div>
+                </fieldset>
             </form>
 
             {existingKeys.filter(k => k.isValid).length > 0 && (

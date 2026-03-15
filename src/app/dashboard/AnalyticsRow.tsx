@@ -139,11 +139,11 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
                 <div className="flex flex-col mb-4 relative z-10">
                     <span className="text-sm font-bold tracking-wider uppercase text-foreground/50 mb-1">Gas Tank Balance</span>
                     <span className="text-2xl font-black text-foreground">
-                        ${(usdtBalance + usdcBalance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span className="text-sm font-bold text-foreground/50">USDC</span>
+                        ${(usdtBalance + usdcBalance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                 </div>
                 <Link href="/dashboard/deposit" className="relative z-10 self-start text-xs font-bold tracking-wider uppercase text-purple-600 dark:text-purple-400 hover:text-purple-500 bg-purple-500/10 hover:bg-purple-500/20 px-4 py-2 rounded-xl transition-colors border border-purple-500/20">
-                    Top Up
+                    Fund Gas Tank
                 </Link>
             </div>
 
@@ -273,8 +273,8 @@ export default function AnalyticsRow({ positions, subscriptions, totalBalance, i
                             </Tooltip>
                         </div>
                         <div className="flex flex-col items-start gap-y-1">
-                            <span className="text-3xl font-bold tracking-tight text-rose-500">
-                                {maxDrawdown === 0 ? "0.00%" : `-${Math.abs(maxDrawdown).toFixed(2)}%`}
+                            <span className={`text-xs md:text-sm font-bold tracking-tight ${maxDrawdown === 0 ? "text-foreground/70" : "text-rose-500 font-black"}`}>
+                                {Math.abs(maxDrawdown).toFixed(2) === "0.00" ? "0.00%" : `-${Math.abs(maxDrawdown).toFixed(2)}%`}
                             </span>
                             <span className="text-xs text-rose-500 font-medium whitespace-nowrap truncate">Peak-to-Trough</span>
                         </div>

@@ -36,7 +36,7 @@ export default async function DashboardPage() {
                     orderBy: { createdAt: 'desc' }
                 },
                 exchangeKeys: {
-                    select: { id: true }
+                    select: { id: true, isValid: true }
                 }
             }
         });
@@ -51,7 +51,8 @@ export default async function DashboardPage() {
             paperUsdtBalance: 0,
             paperUsdcBalance: 0,
             subscriptions: [],
-            positions: []
+            positions: [],
+            exchangeKeys: []
         };
     }
 
@@ -70,15 +71,15 @@ export default async function DashboardPage() {
         .filter((p: any) => !p.isOpen)
         .sort((a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
 
-    // Select appropriate balance
-    const totalBalance = isPaperMode
-        ? user.paperUsdtBalance + user.paperUsdcBalance
-        : user.usdtBalance + user.usdcBalance;
-
     // Filter subscriptions based on mode
     const modeSubscriptions = user.subscriptions.filter((s: any) => s.isPaper === isPaperMode);
 
-    const isApiConnected = user.exchangeKeys && user.exchangeKeys.length > 0;
+    const isApiConnected = user.exchangeKeys && user.exchangeKeys.some((k: any) => k.isValid === true);
+
+    // Select appropriate exchange balance. If in Live mode without an API key, exchange balance is 0.
+    const totalBalance = isPaperMode
+        ? user.paperUsdtBalance + user.paperUsdcBalance
+        : (isApiConnected ? (user.usdtBalance + user.usdcBalance) : 0);
 
     return (
         <div className="p-4 pt-8 pb-32 md:p-10 md:pt-12 md:pb-32 max-w-7xl mx-auto space-y-8 md:space-y-12">
